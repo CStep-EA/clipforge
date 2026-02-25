@@ -150,22 +150,37 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                 </a>
               )}
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button size="icon" variant="ghost" className="h-7 w-7 text-[#8B8D97]">
-                  <MoreHorizontal className="w-3.5 h-3.5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED]">
-                <DropdownMenuItem onClick={() => onEdit?.(item)} className="text-xs hover:bg-[#2A2D3A]">
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onDelete?.(item)} className="text-xs text-red-400 hover:bg-[#2A2D3A]">
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-center gap-1">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 text-[10px] text-[#9370DB] hover:bg-[#9370DB]/10 gap-1 px-2"
+                onClick={() => setShowResearch(v => !v)}
+              >
+                AI
+                {showResearch ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="icon" variant="ghost" className="h-7 w-7 text-[#8B8D97]">
+                    <MoreHorizontal className="w-3.5 h-3.5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED]">
+                  <DropdownMenuItem onClick={() => onEdit?.(item)} className="text-xs hover:bg-[#2A2D3A]">
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onDelete?.(item)} className="text-xs text-red-400 hover:bg-[#2A2D3A]">
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
+
+          {showResearch && (
+            <DeepResearchPanel item={item} isPro={isPro} />
+          )}
         </div>
       </Card>
     </motion.div>
