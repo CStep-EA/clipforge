@@ -53,6 +53,7 @@ const PLATFORMS = [
 
 export default function SocialConnectPanel() {
   const [connectDialog, setConnectDialog] = useState(null);
+  const [consentPlatform, setConsentPlatform] = useState(null);
   const [token, setToken] = useState("");
   const [username, setUsername] = useState("");
   const [syncing, setSyncing] = useState(null);
@@ -168,10 +169,10 @@ export default function SocialConnectPanel() {
                     variant={isConnected ? "outline" : "default"}
                     className="flex-1 text-xs h-8"
                     style={!isConnected ? { background: platform.color, color: "white" } : { borderColor: "#2A2D3A" }}
-                    onClick={() => setConnectDialog(platform)}
+                    onClick={() => isConnected ? setConnectDialog(platform) : setConsentPlatform(platform)}
                   >
                     <Link2 className="w-3 h-3 mr-1" />
-                    {isConnected ? "Reconnect" : "Connect"}
+                    {isConnected ? "Reconnect" : `Connect ${platform.name}`}
                   </Button>
                   {isConnected && (
                     <Button
@@ -202,8 +203,16 @@ export default function SocialConnectPanel() {
         </p>
       </div>
 
+      {/* Consent Modal — shown before token dialog for new connections */}
+      <ConsentModal
+        open={!!consentPlatform}
+        platform={consentPlatform}
+        onClose={() => setConsentPlatform(null)}
+        onAccept={() => { setConnectDialog(consentPlatform); setConsentPlatform(null); }}
+      />
+
       {/* Connect Dialog */}
-      <Dialog open={!!connectDialog} onOpenChange={() => setConnectDialog(null)}>
+      <Dialog open={!!connectDialog} onOpenChange={() => { setConnectDialog(null); setToken(""); setUsername(""); }}>
         <DialogContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED]">
           <DialogHeader>
             <DialogTitle>
