@@ -14,16 +14,18 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
-  Zap
+  Zap,
+  Calendar
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 
 const navItems = [
   { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
   { name: "My Saves", icon: Bookmark, page: "Saves" },
   { name: "Boards", icon: Users, page: "Boards" },
   { name: "Shopping", icon: ShoppingCart, page: "ShoppingLists" },
-  { name: "Events", icon: BarChart3, page: "Events" },
+  { name: "Events", icon: Calendar, page: "Events" },
   { name: "Analytics", icon: BarChart3, page: "Analytics" },
   { name: "Search", icon: Search, page: "Search" },
   { name: "AI Assistant", icon: Sparkles, page: "Assistant" },
