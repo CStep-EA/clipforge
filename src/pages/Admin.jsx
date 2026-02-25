@@ -52,6 +52,14 @@ export default function Admin() {
     enabled: user?.role === "admin",
   });
 
+  const { data: allSubs = [] } = useQuery({
+    queryKey: ["allSubscriptions"],
+    queryFn: () => base44.entities.UserSubscription.list(),
+    enabled: user?.role === "admin",
+  });
+
+  const paidSubs = allSubs.filter(s => s.plan !== "free" && s.status === "active");
+
   if (user && user.role !== "admin") {
     return (
       <div className="p-8 text-center">
