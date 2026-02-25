@@ -47,30 +47,32 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import Admin from './pages/Admin';
+import Analytics from './pages/Analytics';
+import Assistant from './pages/Assistant';
+import Boards from './pages/Boards';
 import Dashboard from './pages/Dashboard';
 import Saves from './pages/Saves';
-import Boards from './pages/Boards';
-import ShoppingLists from './pages/ShoppingLists';
-import Analytics from './pages/Analytics';
 import Search from './pages/Search';
-import Assistant from './pages/Assistant';
 import Settings from './pages/Settings';
+import ShoppingLists from './pages/ShoppingLists';
 import Support from './pages/Support';
-import Admin from './pages/Admin';
+import Pricing from './pages/Pricing';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "Admin": Admin,
+    "Analytics": Analytics,
+    "Assistant": Assistant,
+    "Boards": Boards,
     "Dashboard": Dashboard,
     "Saves": Saves,
-    "Boards": Boards,
-    "ShoppingLists": ShoppingLists,
-    "Analytics": Analytics,
     "Search": Search,
-    "Assistant": Assistant,
     "Settings": Settings,
+    "ShoppingLists": ShoppingLists,
     "Support": Support,
-    "Admin": Admin,
+    "Pricing": Pricing,
 }
 
 export const pagesConfig = {
