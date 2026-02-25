@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cf-neon: #00BFFF;
+  --cf-purple: #9370DB;
+  --cf-pink: #FFB6C1;
+  --cf-dark: #0F1117;
+  --cf-dark-card: #1A1D27;
+  --cf-dark-border: #2A2D3A;
+  --cf-text: #E8E8ED;
+  --cf-text-muted: #8B8D97;
+}
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--cf-dark-border) transparent;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 191, 255, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(0, 191, 255, 0.6); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.shimmer-bg {
+  background: linear-gradient(90deg, transparent 0%, rgba(0,191,255,0.05) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+.glass-card {
+  background: rgba(26, 29, 39, 0.8);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(42, 45, 58, 0.6);
+}
+
+.neon-border {
+  border: 1px solid rgba(0, 191, 255, 0.3);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #00BFFF 0%, #9370DB 50%, #FFB6C1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.category-deal { border-left: 3px solid #00BFFF; }
+.category-recipe { border-left: 3px solid #FFB6C1; }
+.category-event { border-left: 3px solid #9370DB; }
+.category-product { border-left: 3px solid #F59E0B; }
+.category-article { border-left: 3px solid #10B981; }
+.category-travel { border-left: 3px solid #3B82F6; }
+.category-gift_idea { border-left: 3px solid #EC4899; }
+.category-other { border-left: 3px solid #6B7280; }
