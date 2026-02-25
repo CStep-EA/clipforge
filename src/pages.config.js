@@ -58,6 +58,8 @@ import Settings from './pages/Settings';
 import ShoppingLists from './pages/ShoppingLists';
 import Support from './pages/Support';
 import Pricing from './pages/Pricing';
+import Events from './pages/Events';
+import Integrations from './pages/Integrations';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +75,8 @@ export const PAGES = {
     "ShoppingLists": ShoppingLists,
     "Support": Support,
     "Pricing": Pricing,
+    "Events": Events,
+    "Integrations": Integrations,
 }
 
 export const pagesConfig = {
