@@ -131,23 +131,45 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Link to={createPageUrl("Search")} className="glass-card rounded-2xl p-5 hover:border-[#00BFFF]/30 transition-all group">
-          <Sparkles className="w-8 h-8 text-[#00BFFF] mb-3 group-hover:animate-pulse" />
-          <h3 className="font-semibold mb-1">AI Search</h3>
-          <p className="text-xs text-[#8B8D97]">Search your saves with natural language</p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Link to={createPageUrl("Search")} className="glass-card rounded-2xl p-4 hover:border-[#00BFFF]/30 transition-all group">
+          <Sparkles className="w-7 h-7 text-[#00BFFF] mb-2 group-hover:animate-pulse" />
+          <h3 className="font-semibold text-sm mb-0.5">AI Search</h3>
+          <p className="text-xs text-[#8B8D97]">Natural language search</p>
         </Link>
-        <Link to={createPageUrl("Boards")} className="glass-card rounded-2xl p-5 hover:border-[#9370DB]/30 transition-all group">
-          <Users className="w-8 h-8 text-[#9370DB] mb-3" />
-          <h3 className="font-semibold mb-1">Shared Boards</h3>
-          <p className="text-xs text-[#8B8D97]">Collaborate with partner or roommates</p>
+        <Link to={createPageUrl("Boards")} className="glass-card rounded-2xl p-4 hover:border-[#9370DB]/30 transition-all group">
+          <Users className="w-7 h-7 text-[#9370DB] mb-2" />
+          <h3 className="font-semibold text-sm mb-0.5">Shared Boards</h3>
+          <p className="text-xs text-[#8B8D97]">Collaborate & share</p>
         </Link>
-        <Link to={createPageUrl("ShoppingLists")} className="glass-card rounded-2xl p-5 hover:border-[#FFB6C1]/30 transition-all group">
-          <ShoppingCart className="w-8 h-8 text-[#FFB6C1] mb-3" />
-          <h3 className="font-semibold mb-1">Shopping Lists</h3>
-          <p className="text-xs text-[#8B8D97]">Auto-generated from your recipe saves</p>
+        <Link to={createPageUrl("Events")} className="glass-card rounded-2xl p-4 hover:border-[#F59E0B]/30 transition-all group">
+          <TrendingUp className="w-7 h-7 text-[#F59E0B] mb-2" />
+          <h3 className="font-semibold text-sm mb-0.5">Events</h3>
+          <p className="text-xs text-[#8B8D97]">AI event reviews</p>
+        </Link>
+        <Link to={createPageUrl("ShoppingLists")} className="glass-card rounded-2xl p-4 hover:border-[#FFB6C1]/30 transition-all group">
+          <ShoppingCart className="w-7 h-7 text-[#FFB6C1] mb-2" />
+          <h3 className="font-semibold text-sm mb-0.5">Shopping</h3>
+          <p className="text-xs text-[#8B8D97]">From recipe saves</p>
         </Link>
       </div>
+
+      {/* Upgrade banner for free users */}
+      {user && (
+        <Link to={createPageUrl("Pricing")} className="glass-card rounded-2xl p-4 border-[#00BFFF]/20 hover:border-[#00BFFF]/40 transition-all block"
+              style={{ background: "linear-gradient(135deg, rgba(0,191,255,0.05), rgba(147,112,219,0.05))" }}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Zap className="w-6 h-6 text-[#00BFFF]" />
+              <div>
+                <p className="text-sm font-semibold">Unlock ClipForge Pro</p>
+                <p className="text-xs text-[#8B8D97]">Unlimited saves, AI research, no ads — starting at $7.99/mo</p>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-[#00BFFF]" />
+          </div>
+        </Link>
+      )}
 
       <AddItemDialog open={addOpen} onOpenChange={setAddOpen} onSave={handleSave} />
     </div>
