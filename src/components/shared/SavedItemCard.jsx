@@ -44,13 +44,15 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -12 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.92 }}
+      whileHover={{ y: -3 }}
       layout
+      transition={{ type: "spring", stiffness: 300, damping: 24 }}
     >
       <Card className={cn(
-        "glass-card overflow-hidden group hover:border-[#00BFFF]/30 transition-all duration-300",
+        "glass-card overflow-hidden group hover:border-[#00BFFF]/40 hover:shadow-[0_0_20px_rgba(0,191,255,0.1)] transition-all duration-300",
         `category-${item.category}`
       )}>
         {item.image_url && (
