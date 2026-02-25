@@ -57,6 +57,24 @@ export default function Analytics() {
     ? (items.reduce((sum, i) => sum + (i.rating || 0), 0) / items.filter(i => i.rating).length).toFixed(1)
     : "—";
 
+  const [aiInsights, setAiInsights] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const generateInsights = async () => {
+    setAiLoading(true);
+    const summary = categoryData.map(c => `${c.name}: ${c.value}`).join(", ");
+    const topTags = items.flatMap(i => i.tags || []).reduce((acc, t) => { acc[t] = (acc[t]||0)+1; return acc; }, {});
+    const tagStr = Object.entries(topTags).sort((a,b) => b[1]-a[1]).slice(0,8).map(([t,c]) => `${t}(${c})`).join(", ");
+    const result = await base44.integrations.Core.InvokeLLM({
+      prompt: `Analyze these personal save patterns and generate insights:\n\nCategories: ${summary}\nTop tags: ${tagStr}\nTotal saves: ${items.length}\nFavorites: ${items.filter(i=>i.is_favorite).length}\n\nProvide 3-4 specific, actionable personal trend insights. Be specific and interesting. Use bullet points. Focus on shopping habits, interests, and recommendations.`,
+    });
+    setAiInsights(result);
+    setAiLoading(false);
+  };
+
+  // Radar data for interest profile
+  const radarData = categoryData.map(c => ({ subject: c.name, A: c.value, fullMark: Math.max(...categoryData.map(d => d.value)) + 2 }));
+
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
       <div>
