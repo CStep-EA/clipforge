@@ -127,6 +127,7 @@ export default function Dashboard() {
                 item={item}
                 onToggleFavorite={handleToggleFavorite}
                 onDelete={handleDelete}
+                isPro={isPro}
               />
             ))}
           </div>
