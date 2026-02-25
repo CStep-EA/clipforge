@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/layout/Sidebar";
 import MobileNav from "@/components/layout/MobileNav";
+import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import { base44 } from "@/api/base44Client";
 
 export default function Layout({ children, currentPageName }) {
