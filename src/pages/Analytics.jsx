@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis,
-  Tooltip, ResponsiveContainer, CartesianGrid, AreaChart, Area
+  Tooltip, ResponsiveContainer, CartesianGrid, AreaChart, Area, RadarChart, Radar, PolarGrid, PolarAngleAxis
 } from "recharts";
-import { TrendingUp, Eye, Heart, Clock } from "lucide-react";
+import { TrendingUp, Eye, Heart, Clock, Sparkles, Loader2 } from "lucide-react";
 import StatsCard from "@/components/shared/StatsCard";
+import ReactMarkdown from "react-markdown";
 
 const COLORS = ["#00BFFF", "#9370DB", "#FFB6C1", "#F59E0B", "#10B981", "#3B82F6", "#EC4899", "#6B7280"];
 
