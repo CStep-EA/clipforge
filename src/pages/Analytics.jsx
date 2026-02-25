@@ -148,7 +148,7 @@ export default function Analytics() {
         </Card>
 
         {/* By source */}
-        <Card className="glass-card p-5 lg:col-span-2">
+        <Card className="glass-card p-5">
           <h3 className="text-sm font-semibold mb-4">By Source</h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={sourceData}>
@@ -166,7 +166,42 @@ export default function Analytics() {
             </BarChart>
           </ResponsiveContainer>
         </Card>
+
+        {/* Interest Radar */}
+        <Card className="glass-card p-5">
+          <h3 className="text-sm font-semibold mb-4">Interest Profile</h3>
+          <ResponsiveContainer width="100%" height={200}>
+            <RadarChart data={radarData}>
+              <PolarGrid stroke="#2A2D3A" />
+              <PolarAngleAxis dataKey="subject" tick={{ fill: "#8B8D97", fontSize: 10 }} />
+              <Radar dataKey="A" stroke="#9370DB" fill="#9370DB" fillOpacity={0.25} strokeWidth={2} />
+            </RadarChart>
+          </ResponsiveContainer>
+        </Card>
       </div>
+
+      {/* AI Deep Insights */}
+      <Card className="glass-card p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold">AI Personal Trend Insights</h3>
+          <Button
+            size="sm"
+            onClick={generateInsights}
+            disabled={aiLoading}
+            className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2 h-8"
+          >
+            {aiLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+            Generate Insights
+          </Button>
+        </div>
+        {aiInsights ? (
+          <div className="prose prose-sm prose-invert max-w-none text-[#E8E8ED]">
+            <ReactMarkdown>{aiInsights}</ReactMarkdown>
+          </div>
+        ) : (
+          <p className="text-xs text-[#8B8D97]">Click "Generate Insights" to get personalized AI analysis of your saving habits and trends.</p>
+        )}
+      </Card>
     </div>
   );
 }
