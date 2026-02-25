@@ -7,10 +7,9 @@ import {
   ExternalLink,
   Share2,
   Star,
-  ShoppingCart,
+  Clock,
   MoreHorizontal
 } from "lucide-react";
-import ReminderBadge from "@/components/shared/ReminderBadge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,7 +39,7 @@ const sourceIcons = {
   web: "🌐",
 };
 
-export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit, onShare, onAutoShoppingList }) {
+export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit, onShare }) {
   const cat = categoryConfig[item.category] || categoryConfig.other;
 
   return (
@@ -115,7 +114,10 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
           )}
 
           {item.reminder_date && (
-            <ReminderBadge date={item.reminder_date} />
+            <div className="flex items-center gap-1 text-[10px] text-[#9370DB]">
+              <Clock className="w-3 h-3" />
+              Reminder set
+            </div>
           )}
 
           <div className="flex items-center justify-between pt-2 border-t border-[#2A2D3A]">
@@ -136,17 +138,6 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
               >
                 <Share2 className="w-3.5 h-3.5" />
               </Button>
-              {item.category === "recipe" && onAutoShoppingList && (
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-7 w-7 text-[#8B8D97] hover:text-[#FFB6C1]"
-                  onClick={() => onAutoShoppingList?.(item)}
-                  title="Export to shopping list"
-                >
-                  <ShoppingCart className="w-3.5 h-3.5" />
-                </Button>
-              )}
               {item.url && (
                 <a href={item.url} target="_blank" rel="noopener noreferrer">
                   <Button size="icon" variant="ghost" className="h-7 w-7 text-[#8B8D97] hover:text-[#00BFFF]">
