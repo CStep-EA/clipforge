@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
   Bookmark, TrendingUp, ShoppingCart, Users,
-  Plus, ArrowRight, Sparkles, Zap
+  Plus, ArrowRight, Sparkles, Zap, Calendar
 } from "lucide-react";
+import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import StatsCard from "@/components/shared/StatsCard";
