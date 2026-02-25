@@ -15,6 +15,7 @@ import { AnimatePresence } from "framer-motion";
 import SavedItemCard from "@/components/shared/SavedItemCard";
 import CategoryFilter from "@/components/shared/CategoryFilter";
 import AddItemDialog from "@/components/shared/AddItemDialog";
+import { useSubscription } from "@/components/shared/useSubscription";
 
 export default function Saves() {
   const [addOpen, setAddOpen] = useState(false);
