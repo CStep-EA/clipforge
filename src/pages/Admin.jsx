@@ -102,6 +102,9 @@ export default function Admin() {
           <TabsTrigger value="users" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF]">
             Users
           </TabsTrigger>
+          <TabsTrigger value="subscriptions" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF]">
+            Subscriptions
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="tickets" className="mt-4">
