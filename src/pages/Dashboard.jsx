@@ -65,15 +65,20 @@ export default function Dashboard() {
         className="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
       >
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold">
-            Welcome back{user?.full_name ? `, ${user.full_name.split(" ")[0]}` : ""} 
+          <div className="flex items-center gap-3 mb-1">
+            <ClipForgeLogo size={32} variant="loading" />
+            <h1 className="text-2xl md:text-3xl font-black tracking-tight gradient-text">
+              ClipForge
+            </h1>
+          </div>
+          <p className="text-[#8B8D97] text-sm">
+            Welcome back{user?.full_name ? `, ${user.full_name.split(" ")[0]}` : ""}
             <span className="inline-block ml-2 animate-float">✨</span>
-          </h1>
-          <p className="text-[#8B8D97] text-sm mt-1">Your digital vault at a glance</p>
+          </p>
         </div>
         <Button
           onClick={() => setAddOpen(true)}
-          className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2 shadow-lg shadow-[#00BFFF]/20"
+          className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2 btn-glow animate-gradient-shift font-bold text-sm uppercase tracking-wide"
         >
           <Plus className="w-4 h-4" /> Quick Save
         </Button>
