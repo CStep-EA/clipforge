@@ -160,6 +160,7 @@ export default function Saves() {
                 onToggleFavorite={handleToggleFavorite}
                 onDelete={handleDelete}
                 onEdit={handleEdit}
+                isPro={isPro}
               />
             ))}
           </AnimatePresence>
