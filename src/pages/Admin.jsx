@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, Ticket, BarChart3, Shield, Loader2 } from "lucide-react";
+import { Users, Ticket, BarChart3, Shield, Loader2, CreditCard } from "lucide-react";
 import StatsCard from "@/components/shared/StatsCard";
 
 export default function Admin() {
@@ -92,6 +92,8 @@ export default function Admin() {
           const d = new Date(u.updated_date || u.created_date);
           return (Date.now() - d.getTime()) < 86400000;
         }).length} icon={Users} accent="#10B981" />
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       </div>
 
       <Tabs defaultValue="tickets" className="w-full">
