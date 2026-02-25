@@ -23,9 +23,11 @@ const navItems = [
   { name: "My Saves", icon: Bookmark, page: "Saves" },
   { name: "Boards", icon: Users, page: "Boards" },
   { name: "Shopping", icon: ShoppingCart, page: "ShoppingLists" },
+  { name: "Events", icon: BarChart3, page: "Events" },
   { name: "Analytics", icon: BarChart3, page: "Analytics" },
   { name: "Search", icon: Search, page: "Search" },
   { name: "AI Assistant", icon: Sparkles, page: "Assistant" },
+  { name: "Upgrade", icon: Zap, page: "Pricing" },
 ];
 
 const bottomItems = [
