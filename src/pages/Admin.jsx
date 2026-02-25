@@ -92,8 +92,6 @@ export default function Admin() {
           const d = new Date(u.updated_date || u.created_date);
           return (Date.now() - d.getTime()) < 86400000;
         }).length} icon={Users} accent="#10B981" />
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       </div>
 
       <Tabs defaultValue="tickets" className="w-full">
