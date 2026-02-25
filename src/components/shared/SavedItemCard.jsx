@@ -90,7 +90,8 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
             </div>
           )}
 
-          <h3 className="font-semibold text-[#E8E8ED] text-sm leading-tight line-clamp-2 group-hover:text-[#00BFFF] transition-colors">
+          <h3 className="font-bold text-[#E8E8ED] text-sm leading-tight line-clamp-2 group-hover:text-[#00BFFF] transition-colors">
+            {item.is_favorite && <span className="mr-1 text-[#FFB6C1] animate-pulse-glow-pink inline-block">♥</span>}
             {item.title}
           </h3>
 
