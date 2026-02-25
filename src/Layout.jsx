@@ -33,6 +33,10 @@ export default function Layout({ children, currentPageName }) {
           --input: 225 14% 18%;
           --ring: 195 100% 50%;
         }
+        /* PWA safe area */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+          .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        }
       `}</style>
 
       {/* Desktop sidebar */}
