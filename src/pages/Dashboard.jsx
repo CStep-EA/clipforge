@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import StatsCard from "@/components/shared/StatsCard";
 import SavedItemCard from "@/components/shared/SavedItemCard";
 import AddItemDialog from "@/components/shared/AddItemDialog";
+import { useSubscription } from "@/components/shared/useSubscription";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
