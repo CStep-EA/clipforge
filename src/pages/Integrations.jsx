@@ -141,28 +141,16 @@ export default function Integrations() {
             <div className="flex items-center gap-3 mb-3">
               <span className="text-xl">🎟️</span>
               <h3 className="font-semibold">Ticketmaster API</h3>
-              <Badge variant="outline" className="text-[10px] border-[#9370DB]/30 text-[#9370DB]">Events</Badge>
+              <Badge variant="outline" className="text-[10px] border-emerald-400/30 text-emerald-400">
+                <CheckCircle2 className="w-2.5 h-2.5 mr-1 inline" />Active
+              </Badge>
             </div>
-            <p className="text-xs text-[#8B8D97] mb-4">Power the Events page with real ticket availability and pricing.</p>
-            <div>
-              <Label className="text-xs text-[#8B8D97]">API Key</Label>
-              <Input
-                type="password"
-                placeholder="Your Ticketmaster API key"
-                value={savedKeys.ticketmaster_key || ""}
-                onChange={(e) => saveKey("ticketmaster_key", e.target.value)}
-                className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED]"
-              />
-            </div>
-            <div className="flex gap-2 mt-3">
-              <Button size="sm" className="bg-[#9370DB] text-white" onClick={() => alert("Key saved")}>
-                Save Key
-              </Button>
-              <a href="https://developer.ticketmaster.com/products-and-docs/apis/getting-started/" target="_blank" rel="noopener noreferrer">
-                <Button size="sm" variant="outline" className="border-[#2A2D3A] text-xs gap-1">
-                  Get Key <ExternalLink className="w-3 h-3" />
-                </Button>
-              </a>
+            <p className="text-xs text-[#8B8D97] mb-3">Real event discovery with live ticket availability and pricing, powered by the Ticketmaster Discovery API.</p>
+            <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
+              <p className="text-xs text-emerald-400 flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3" /> API key configured securely as a server secret
+              </p>
+              <p className="text-[10px] text-[#8B8D97] mt-1">Events page now queries Ticketmaster live data automatically.</p>
             </div>
           </Card>
         </TabsContent>
@@ -172,35 +160,18 @@ export default function Integrations() {
             <div className="flex items-center gap-3 mb-4">
               <Utensils className="w-5 h-5 text-[#FFB6C1]" />
               <h3 className="font-semibold">Spoonacular Recipe API</h3>
-              <Badge variant="outline" className="text-[10px] border-[#FFB6C1]/30 text-[#FFB6C1]">Recipes</Badge>
+              <Badge variant="outline" className="text-[10px] border-emerald-400/30 text-emerald-400">
+                <CheckCircle2 className="w-2.5 h-2.5 mr-1 inline" />Active
+              </Badge>
             </div>
-            <p className="text-xs text-[#8B8D97] mb-4">
-              Automatically extract detailed ingredient lists and nutritional info from recipe saves, then auto-export to shopping lists.
+            <p className="text-xs text-[#8B8D97] mb-3">
+              Extracts detailed ingredient lists, quantities, and nutritional info from recipe URLs — then auto-exports to shopping lists.
             </p>
-            <div>
-              <Label className="text-xs text-[#8B8D97]">Spoonacular API Key</Label>
-              <Input
-                type="password"
-                placeholder="Your Spoonacular API key"
-                value={savedKeys.spoonacular_key || ""}
-                onChange={(e) => saveKey("spoonacular_key", e.target.value)}
-                className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED]"
-              />
-            </div>
-            <div className="flex gap-2 mt-3">
-              <Button size="sm" className="bg-[#FFB6C1] text-[#0F1117]" onClick={() => alert("Key saved")}>
-                Save Key
-              </Button>
-              <a href="https://spoonacular.com/food-api/docs#Authentication" target="_blank" rel="noopener noreferrer">
-                <Button size="sm" variant="outline" className="border-[#2A2D3A] text-xs gap-1">
-                  Get Key <ExternalLink className="w-3 h-3" />
-                </Button>
-              </a>
-            </div>
-            <div className="mt-4 p-3 rounded-xl bg-[#FFB6C1]/5 border border-[#FFB6C1]/20">
-              <p className="text-xs text-[#8B8D97]">
-                Without an API key, ClipForge uses AI to extract ingredients from recipe URLs. Connect Spoonacular for richer nutritional data.
+            <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
+              <p className="text-xs text-emerald-400 flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3" /> API key configured securely as a server secret
               </p>
+              <p className="text-[10px] text-[#8B8D97] mt-1">Shopping Lists now auto-extract real ingredients via Spoonacular with AI fallback.</p>
             </div>
           </Card>
         </TabsContent>
