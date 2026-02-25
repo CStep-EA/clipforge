@@ -110,8 +110,8 @@ export default function Dashboard() {
             animate={{ opacity: 1 }}
             className="glass-card rounded-2xl p-12 text-center"
           >
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00BFFF]/20 to-[#9370DB]/20 flex items-center justify-center mx-auto mb-4">
-              <Zap className="w-8 h-8 text-[#00BFFF]" />
+            <div className="flex justify-center mb-4">
+              <ClipForgeLogo size={56} variant="loading" />
             </div>
             <h3 className="font-semibold text-lg mb-2">Your vault is empty</h3>
             <p className="text-[#8B8D97] text-sm mb-4">Start saving content from the web, social media, or add items manually.</p>
