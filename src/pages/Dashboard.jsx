@@ -148,8 +148,8 @@ export default function Dashboard() {
           <h3 className="font-semibold text-sm mb-0.5">Shared Boards</h3>
           <p className="text-xs text-[#8B8D97]">Collaborate & share</p>
         </Link>
-        <Link to={createPageUrl("Events")} className="glass-card rounded-2xl p-4 hover:border-[#F59E0B]/30 transition-all group">
-          <TrendingUp className="w-7 h-7 text-[#F59E0B] mb-2" />
+        <Link to={createPageUrl("Events")} className="glass-card rounded-2xl p-4 hover:border-[#9370DB]/30 transition-all group">
+          <Calendar className="w-7 h-7 text-[#9370DB] mb-2" />
           <h3 className="font-semibold text-sm mb-0.5">Events</h3>
           <p className="text-xs text-[#8B8D97]">AI event reviews</p>
         </Link>
