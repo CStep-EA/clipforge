@@ -53,40 +53,53 @@ export default function Events() {
     if (!city.trim()) return;
     setSearching(true);
 
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Find 6 real or realistic upcoming events in ${city} for genre: ${genre === "all" ? "any genre (music, sports, arts, comedy)" : genre}. Generate realistic event data as if from Ticketmaster. Include variety of price ranges and venues.`,
-      response_json_schema: {
-        type: "object",
-        properties: {
-          events: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                name: { type: "string" },
-                venue: { type: "string" },
-                date: { type: "string" },
-                city: { type: "string" },
-                category: { type: "string" },
-                min_price: { type: "number" },
-                max_price: { type: "number" },
-                image_url: { type: "string" },
-                ai_review: { type: "string" },
+    try {
+      const response = await base44.functions.invoke('ticketmaster', { city, genre });
+      const tmEvents = response.data?.events || [];
+
+      if (tmEvents.length > 0) {
+        for (const evt of tmEvents) {
+          await base44.entities.EventSuggestion.create(evt);
+        }
+      } else {
+        // Fallback: AI-generated events when no TM results
+        const result = await base44.integrations.Core.InvokeLLM({
+          prompt: `Find 6 upcoming events in ${city} for genre: ${genre === "all" ? "any genre (music, sports, arts, comedy)" : genre}. Include variety of price ranges and venues.`,
+          response_json_schema: {
+            type: "object",
+            properties: {
+              events: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    name: { type: "string" },
+                    venue: { type: "string" },
+                    date: { type: "string" },
+                    city: { type: "string" },
+                    category: { type: "string" },
+                    min_price: { type: "number" },
+                    max_price: { type: "number" },
+                    ai_review: { type: "string" },
+                  },
+                },
               },
             },
           },
-        },
-      },
-      add_context_from_internet: true,
-    });
-
-    for (const evt of result.events || []) {
-      await base44.entities.EventSuggestion.create({
-        ...evt,
-        image_url: evt.image_url || `https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600`,
-        status: "suggested",
-      });
+          add_context_from_internet: true,
+        });
+        for (const evt of result.events || []) {
+          await base44.entities.EventSuggestion.create({
+            ...evt,
+            image_url: `https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600`,
+            status: "suggested",
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Event search error:", err);
     }
+
     queryClient.invalidateQueries({ queryKey: ["events"] });
     setSearching(false);
   };

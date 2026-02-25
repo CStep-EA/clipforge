@@ -33,28 +33,44 @@ export default function ShoppingLists() {
 
   const generateFromRecipe = async (recipe) => {
     setGenerating(true);
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Extract a shopping list from this recipe:\nTitle: ${recipe.title}\nDescription: ${recipe.description || ""}\nSummary: ${recipe.ai_summary || ""}\nURL: ${recipe.url || ""}\n\nReturn a list of ingredients with quantities grouped by grocery category.`,
-      response_json_schema: {
-        type: "object",
-        properties: {
-          items: {
-            type: "array",
+    let listItems = [];
+
+    try {
+      if (recipe.url) {
+        // Try Spoonacular URL extraction first
+        const res = await base44.functions.invoke('spoonacular', { action: 'extract', url: recipe.url });
+        if (res.data?.ingredients?.length > 0) {
+          listItems = res.data.ingredients;
+        }
+      }
+    } catch (err) {
+      console.warn("Spoonacular failed, falling back to AI:", err);
+    }
+
+    if (listItems.length === 0) {
+      // AI fallback
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Extract a shopping list from this recipe:\nTitle: ${recipe.title}\nDescription: ${recipe.description || ""}\nSummary: ${recipe.ai_summary || ""}\n\nReturn ingredients with quantities grouped by grocery category.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
             items: {
-              type: "object",
-              properties: {
-                name: { type: "string" },
-                quantity: { type: "string" },
-                category: { type: "string" },
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  quantity: { type: "string" },
+                  category: { type: "string" },
+                },
               },
             },
           },
         },
-      },
-      add_context_from_internet: !!recipe.url,
-    });
+      });
+      listItems = (result.items || []).map(item => ({ ...item, checked: false }));
+    }
 
-    const listItems = (result.items || []).map(item => ({ ...item, checked: false }));
     await base44.entities.ShoppingList.create({
       name: `🍽️ ${recipe.title}`,
       items: listItems,
