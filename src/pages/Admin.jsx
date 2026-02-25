@@ -95,6 +95,7 @@ export default function Admin() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard title="Total Users" value={users.length} icon={Users} accent="#00BFFF" />
         <StatsCard title="Open Tickets" value={openTickets.length} icon={Ticket} accent="#F59E0B" />
+        <StatsCard title="Paid Subscribers" value={paidSubs.length} icon={CreditCard} accent="#10B981" />
         <StatsCard title="Total Saves" value={allItems.length} icon={BarChart3} accent="#9370DB" />
         <StatsCard title="Active Today" value={users.filter(u => {
           const d = new Date(u.updated_date || u.created_date);
