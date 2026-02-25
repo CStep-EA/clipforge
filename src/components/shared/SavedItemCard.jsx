@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,9 @@ import {
   Share2,
   Star,
   Clock,
-  MoreHorizontal
+  MoreHorizontal,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -18,6 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import DeepResearchPanel from "./DeepResearchPanel";
 
 const categoryConfig = {
   deal: { label: "Deal", color: "bg-[#00BFFF]/15 text-[#00BFFF] border-[#00BFFF]/30" },
