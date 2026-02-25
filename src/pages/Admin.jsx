@@ -213,7 +213,59 @@ export default function Admin() {
             </Table>
           </Card>
         </TabsContent>
+
+        <TabsContent value="subscriptions" className="mt-4">
+          <SubscriptionsTab />
+        </TabsContent>
       </Tabs>
     </div>
+  );
+}
+
+function SubscriptionsTab() {
+  const { data: subs = [] } = useQuery({
+    queryKey: ["allSubscriptions"],
+    queryFn: () => base44.entities.UserSubscription.list("-created_date"),
+  });
+
+  const planColors = { free: "#8B8D97", pro: "#00BFFF", premium: "#9370DB" };
+
+  return (
+    <Card className="glass-card overflow-hidden">
+      <Table>
+        <TableHeader>
+          <TableRow className="border-[#2A2D3A]">
+            <TableHead className="text-[#8B8D97]">Email</TableHead>
+            <TableHead className="text-[#8B8D97]">Plan</TableHead>
+            <TableHead className="text-[#8B8D97]">Status</TableHead>
+            <TableHead className="text-[#8B8D97]">Expires</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {subs.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={4} className="text-center text-[#8B8D97] text-sm py-8">No subscriptions yet</TableCell>
+            </TableRow>
+          ) : subs.map(sub => (
+            <TableRow key={sub.id} className="border-[#2A2D3A] hover:bg-[#1A1D27]">
+              <TableCell className="text-xs text-[#8B8D97]">{sub.user_email}</TableCell>
+              <TableCell>
+                <Badge variant="outline" style={{ color: planColors[sub.plan], borderColor: `${planColors[sub.plan]}40` }}>
+                  {sub.plan}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                <Badge variant="outline" className={sub.status === "active" ? "text-emerald-400 border-emerald-400/30" : "text-red-400 border-red-400/30"}>
+                  {sub.status}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-xs text-[#8B8D97]">
+                {sub.current_period_end ? new Date(sub.current_period_end).toLocaleDateString() : "—"}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Card>
   );
 }
