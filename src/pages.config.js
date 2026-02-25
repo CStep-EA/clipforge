@@ -60,6 +60,7 @@ import Support from './pages/Support';
 import Pricing from './pages/Pricing';
 import Events from './pages/Events';
 import Integrations from './pages/Integrations';
+import Onboarding from './pages/Onboarding';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +78,7 @@ export const PAGES = {
     "Pricing": Pricing,
     "Events": Events,
     "Integrations": Integrations,
+    "Onboarding": Onboarding,
 }
 
 export const pagesConfig = {

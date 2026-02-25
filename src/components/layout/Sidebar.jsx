@@ -31,6 +31,7 @@ const navItems = [
 ];
 
 const bottomItems = [
+  { name: "Integrations", icon: Settings, page: "Integrations" },
   { name: "Settings", icon: Settings, page: "Settings" },
   { name: "Admin", icon: Shield, page: "Admin", adminOnly: true },
   { name: "Support", icon: MessageCircle, page: "Support" },
