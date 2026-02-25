@@ -42,7 +42,8 @@ const sourceIcons = {
   web: "🌐",
 };
 
-export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit, onShare }) {
+export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit, onShare, isPro = false }) {
+  const [showResearch, setShowResearch] = useState(false);
   const cat = categoryConfig[item.category] || categoryConfig.other;
 
   return (
