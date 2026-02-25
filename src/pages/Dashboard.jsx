@@ -160,19 +160,22 @@ export default function Dashboard() {
         </Link>
       </div>
 
-      {/* Upgrade banner for free users */}
+      {/* Upgrade banner */}
       {user && (
-        <Link to={createPageUrl("Pricing")} className="glass-card rounded-2xl p-4 border-[#00BFFF]/20 hover:border-[#00BFFF]/40 transition-all block"
-              style={{ background: "linear-gradient(135deg, rgba(0,191,255,0.05), rgba(147,112,219,0.05))" }}>
-          <div className="flex items-center justify-between">
+        <Link
+          to={createPageUrl("Pricing")}
+          className="block rounded-2xl p-5 neon-border hover:border-[#00BFFF]/60 transition-all animate-gradient-shift"
+          style={{ background: "linear-gradient(135deg, rgba(0,191,255,0.08), rgba(147,112,219,0.12), rgba(255,182,193,0.06))", backgroundSize: "200% 200%" }}
+        >
+          <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <Zap className="w-6 h-6 text-[#00BFFF]" />
+              <ClipForgeLogo size={28} variant="default" />
               <div>
-                <p className="text-sm font-semibold">Unlock ClipForge Pro</p>
-                <p className="text-xs text-[#8B8D97]">Unlimited saves, AI research, no ads — starting at $7.99/mo</p>
+                <p className="text-sm font-black uppercase tracking-wide gradient-text">Unlock ClipForge Pro</p>
+                <p className="text-xs text-[#8B8D97]">Unlimited saves · AI research · No ads — from $7.99/mo</p>
               </div>
             </div>
-            <ArrowRight className="w-4 h-4 text-[#00BFFF]" />
+            <ArrowRight className="w-5 h-5 text-[#00BFFF] flex-shrink-0" />
           </div>
         </Link>
       )}
