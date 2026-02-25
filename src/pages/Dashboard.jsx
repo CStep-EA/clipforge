@@ -16,12 +16,8 @@ import AddItemDialog from "@/components/shared/AddItemDialog";
 import { useSubscription } from "@/components/shared/useSubscription";
 
 export default function Dashboard() {
-  const [user, setUser] = useState(null);
   const [addOpen, setAddOpen] = useState(false);
-
-  useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => {});
-  }, []);
+  const { user, isPro } = useSubscription();
 
   const { data: items = [], refetch } = useQuery({
     queryKey: ["savedItems"],
