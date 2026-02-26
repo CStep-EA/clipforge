@@ -99,6 +99,8 @@ export default function SocialConnectPanel() {
   const [username, setUsername] = useState("");
   const [syncing, setSyncing] = useState(null);
   const queryClient = useQueryClient();
+  const { isPro, isPremium, isLoading: subLoading } = useSubscription();
+  const hasFullAccess = isPro || isPremium;
 
   const { data: connections = [] } = useQuery({
     queryKey: ["socialConnections"],
