@@ -28,6 +28,16 @@ const PLATFORMS = [
     categoryFocus: ["deal", "product", "travel", "gift_idea"],
   },
   {
+    id: "facebook",
+    name: "Facebook",
+    emoji: "👤",
+    color: "#1877F2",
+    description: "Import saved posts & marketplace finds",
+    note: "Paste your Facebook User Access Token (from developers.facebook.com).",
+    categoryHint: "deals, events, gift ideas, articles",
+    categoryFocus: ["deal", "event", "gift_idea", "article"],
+  },
+  {
     id: "pinterest",
     name: "Pinterest",
     emoji: "📌",
