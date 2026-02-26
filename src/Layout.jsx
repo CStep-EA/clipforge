@@ -44,6 +44,11 @@ export default function Layout({ children, currentPageName }) {
         <Sidebar currentPage={currentPageName} userRole={user?.role} />
       </div>
 
+      {/* Mobile top header with logo */}
+      <div className="md:hidden flex items-center px-4 pt-4 pb-2">
+        <ClipForgeLogo size={32} showText variant="default" />
+      </div>
+
       {/* Main content */}
       <main className="md:ml-[240px] pb-20 md:pb-0 pb-safe min-h-screen">
         {children}
