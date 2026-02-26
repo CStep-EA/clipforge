@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { ThemeProvider } from "next-themes";
 import Sidebar from "@/components/layout/Sidebar";
 import MobileNav from "@/components/layout/MobileNav";
 import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
