@@ -13,6 +13,7 @@ import { toast } from "sonner";
 
 export default function Settings() {
   const [user, setUser] = useState(null);
+  const { isFamily } = useSubscription();
   const [preferences, setPreferences] = useState({
     notifications_enabled: true,
     email_digests: true,
