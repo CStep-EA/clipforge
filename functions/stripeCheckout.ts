@@ -20,6 +20,9 @@ Deno.serve(async (req) => {
     const priceId = PRICE_IDS[plan];
     if (!priceId) return Response.json({ error: "Invalid plan" }, { status: 400 });
 
+    // Normalize plan name for subscription storage
+    const planName = plan === "family_monthly" || plan === "family_yearly" ? "family" : plan;
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],
@@ -30,7 +33,7 @@ Deno.serve(async (req) => {
       metadata: {
         base44_app_id: Deno.env.get("BASE44_APP_ID"),
         user_email: user.email,
-        plan,
+        plan: planName,
       },
     });
 
