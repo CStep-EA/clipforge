@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
     // Load config (take first record or use defaults)
     const configs = await base44.asServiceRole.entities.FeedbackConfig.list();
     const config = configs[0] || {};
-    const enabledSources = config.sources?.length ? config.sources : ['reddit', 'producthunt', 'twitter', 'g2', 'appstore'];
+    const enabledSources = config.sources?.length ? config.sources : ['reddit', 'producthunt', 'twitter', 'g2', 'appstore', 'cnet', 'pcmag', 'wired', 'facebook'];
     const keywords = config.keywords?.length ? config.keywords : ['ClipForge', 'clip forge', 'social saving app', 'content organizer'];
     const escalationThreshold = config.escalation_threshold || 'urgent';
     const autoTicket = config.auto_ticket !== false;
