@@ -73,9 +73,13 @@ export default function Dashboard() {
     return pool.slice(0, 6);
   }, [items, searchResults]);
 
+  // Detect child-safe mode: family member with child_safe_mode (passed via URL param or user attribute)
+  const isChildSafe = user?.child_safe_mode === true;
+
   return (
     <div className="space-y-0">
     <TrialBanner user={user} plan={plan} />
+    {isChildSafe && <ChildSafeBanner />}
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <motion.div
