@@ -281,6 +281,8 @@ export default function Pricing() {
       <p className="text-center text-xs text-[#8B8D97]">
         Cancel anytime · Secure payments via Stripe · Prorated billing on upgrades/downgrades
       </p>
+
+      <TrialPrompt open={trialOpen} onOpenChange={setTrialOpen} plan={selectedTrialPlan} />
     </div>
   );
 }
