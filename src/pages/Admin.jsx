@@ -163,6 +163,10 @@ export default function Admin() {
         <TabsContent value="docs" className="mt-4">
           <AdminDocs />
         </TabsContent>
+
+        <TabsContent value="feedback" className="mt-4">
+          <FeedbackIntelligence />
+        </TabsContent>
       </Tabs>
     </div>
   );
