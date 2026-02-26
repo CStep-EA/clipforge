@@ -95,9 +95,10 @@ export default function SocialConnectPanel() {
   const [token, setToken] = useState("");
   const [username, setUsername] = useState("");
   const [syncing, setSyncing] = useState(null);
+  const [tmLoading, setTmLoading] = useState(false);
+  const [tmEvents, setTmEvents] = useState([]);
+  const [tmCity, setTmCity] = useState("Denver");
   const queryClient = useQueryClient();
-  const { isPro, isPremium, isLoading: subLoading } = useSubscription();
-  const hasFullAccess = isPro || isPremium;
 
   const { data: connections = [] } = useQuery({
     queryKey: ["socialConnections"],
