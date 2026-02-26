@@ -194,7 +194,10 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
           </div>
 
           {showResearch && (
-            <DeepResearchPanel item={item} isPro={isPro} />
+            <>
+              <AiSummaryButton item={item} isPro={isPro} />
+              <DeepResearchPanel item={item} isPro={isPro} />
+            </>
           )}
         </div>
       </Card>
