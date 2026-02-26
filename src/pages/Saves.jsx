@@ -10,16 +10,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, SlidersHorizontal, LayoutGrid, List } from "lucide-react";
+import { Plus, Search, SlidersHorizontal, LayoutGrid, List, Share2 } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import SavedItemCard from "@/components/shared/SavedItemCard";
 import CategoryFilter from "@/components/shared/CategoryFilter";
 import AddItemDialog from "@/components/shared/AddItemDialog";
+import ShareModal from "@/components/friends/ShareModal";
 import { useSubscription } from "@/components/shared/useSubscription";
 
 export default function Saves() {
   const [addOpen, setAddOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareItem, setShareItem] = useState(null);
+  const { user, isPro, plan } = useSubscription();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
   const [sortBy, setSortBy] = useState("-created_date");
