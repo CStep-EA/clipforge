@@ -6,6 +6,8 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"));
 const PRICE_IDS = {
   pro: "price_1T4ptiDBNOTwsaYxWLu8liEN",
   premium: "price_1T4ptiDBNOTwsaYxUDlFkgfc",
+  family_monthly: "price_1T550MAzAnx06fD4nJT320Eo",
+  family_yearly: "price_1T550MAzAnx06fD4IDCdTisI",
 };
 
 Deno.serve(async (req) => {
