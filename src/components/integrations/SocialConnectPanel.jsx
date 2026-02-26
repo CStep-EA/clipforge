@@ -327,37 +327,39 @@ export default function SocialConnectPanel() {
 
           {tmEvents.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {tmEvents.map((ev, i) => (
-                <motion.div key={ev.ticketmaster_id || i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                  <div className="rounded-xl overflow-hidden border border-[#2A2D3A] bg-[#0F1117] hover:border-[#00BFFF]/30 transition-colors">
-                    {ev.image_url && <img src={ev.image_url} alt={ev.name} className="w-full h-24 object-cover" />}
-                    <div className="p-3">
-                      <p className="text-xs font-semibold text-[#E8E8ED] line-clamp-1">{ev.name}</p>
-                      <div className="flex items-center gap-1 mt-1 text-[10px] text-[#8B8D97]">
-                        {ev.date && <><Calendar className="w-2.5 h-2.5" /> {ev.date}</>}
-                        {ev.venue && <><MapPin className="w-2.5 h-2.5 ml-2" /> {ev.venue}</>}
-                      </div>
-                      {ev.min_price && <p className="text-[10px] text-emerald-400 mt-1">From ${ev.min_price}</p>}
-                      <div className="flex gap-1.5 mt-2">
-                        <Button
-                          size="sm"
-                          className="flex-1 h-7 text-[10px] bg-[#00BFFF] text-[#0F1117] font-bold"
-                          onClick={() => saveEvent(ev)}
-                        >
-                          + Save Event
-                        </Button>
-                        {ev.ticketmaster_url && (
-                          <a href={ev.ticketmaster_url} target="_blank" rel="noopener noreferrer">
-                            <Button size="sm" variant="outline" className="h-7 border-[#2A2D3A] text-[#8B8D97] px-2">
-                              <ExternalLink className="w-3 h-3" />
-                            </Button>
-                          </a>
-                        )}
+              {tmEvents.map((ev, i) => {
+                return (
+                  <motion.div key={ev.ticketmaster_id || i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+                    <div className="rounded-xl overflow-hidden border border-[#2A2D3A] bg-[#0F1117] hover:border-[#00BFFF]/30 transition-colors">
+                      {ev.image_url && <img src={ev.image_url} alt={ev.name} className="w-full h-24 object-cover" />}
+                      <div className="p-3">
+                        <p className="text-xs font-semibold text-[#E8E8ED] line-clamp-1">{ev.name}</p>
+                        <div className="flex items-center gap-1 mt-1 text-[10px] text-[#8B8D97]">
+                          {ev.date && <><Calendar className="w-2.5 h-2.5" /> {ev.date}</>}
+                          {ev.venue && <><MapPin className="w-2.5 h-2.5 ml-2" /> {ev.venue}</>}
+                        </div>
+                        {ev.min_price && <p className="text-[10px] text-emerald-400 mt-1">From ${ev.min_price}</p>}
+                        <div className="flex gap-1.5 mt-2">
+                          <Button
+                            size="sm"
+                            className="flex-1 h-7 text-[10px] bg-[#00BFFF] text-[#0F1117] font-bold"
+                            onClick={() => saveEvent(ev)}
+                          >
+                            + Save Event
+                          </Button>
+                          {ev.ticketmaster_url && (
+                            <a href={ev.ticketmaster_url} target="_blank" rel="noopener noreferrer">
+                              <Button size="sm" variant="outline" className="h-7 border-[#2A2D3A] text-[#8B8D97] px-2">
+                                <ExternalLink className="w-3 h-3" />
+                              </Button>
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </Card>
