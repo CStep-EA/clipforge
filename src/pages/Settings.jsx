@@ -84,6 +84,22 @@ export default function Settings() {
         </div>
       </Card>
 
+      {/* Family Accounts */}
+      <Card className="glass-card p-6">
+        <div className="flex items-center gap-3 mb-5">
+          <Users className="w-5 h-5 text-[#EC4899]" />
+          <div>
+            <h2 className="font-semibold">Family Accounts</h2>
+            <p className="text-[10px] text-[#8B8D97]">Manage family members, roles & parental controls</p>
+          </div>
+        </div>
+        {isFamily ? (
+          <FamilyManagement user={user} />
+        ) : (
+          <FamilyUpgradePrompt feature="family member management, parental controls & child-safe mode" />
+        )}
+      </Card>
+
       {/* Actions */}
       <div className="flex gap-3">
         <Button onClick={savePreferences} className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2">
