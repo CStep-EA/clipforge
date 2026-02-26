@@ -99,7 +99,7 @@ export default function Dashboard() {
         </div>
         <Button
           onClick={() => setAddOpen(true)}
-          className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2 btn-glow animate-gradient-shift font-bold text-sm uppercase tracking-wide"
+          className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2 btn-glow animate-gradient-shift animate-btn-pulse font-bold text-sm uppercase tracking-wide"
         >
           <Plus className="w-4 h-4" /> Quick Save
         </Button>
