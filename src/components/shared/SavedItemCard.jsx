@@ -56,9 +56,11 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
       transition={{ type: "spring", stiffness: 300, damping: 24 }}
     >
       <Card className={cn(
-        "glass-card overflow-hidden group hover:border-[#00BFFF]/40 hover:shadow-[0_0_20px_rgba(0,191,255,0.1)] transition-all duration-300",
+        "glass-card overflow-hidden group hover:border-[#00BFFF]/40 hover:shadow-[0_0_28px_rgba(0,191,255,0.18),0_0_8px_rgba(147,112,219,0.1)] transition-all duration-300 relative",
         `category-${item.category}`
       )}>
+        {/* shimmer overlay on hover */}
+        <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shimmer-bg z-0" />
         {item.image_url && (
           <div className="relative h-40 overflow-hidden">
             <img
