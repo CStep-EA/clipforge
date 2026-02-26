@@ -21,13 +21,17 @@ export default function PageNotFound({}) {
     });
     
     return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
+        <div className="min-h-screen flex items-center justify-center p-6 bg-[#0F1117]">
             <div className="max-w-md w-full">
                 <div className="text-center space-y-6">
+                    {/* Logo */}
+                    <div className="flex justify-center mb-2">
+                        <ClipForgeLogo size={56} variant="default" showText />
+                    </div>
                     {/* 404 Error Code */}
                     <div className="space-y-2">
-                        <h1 className="text-7xl font-light text-slate-300">404</h1>
-                        <div className="h-0.5 w-16 bg-slate-200 mx-auto"></div>
+                        <h1 className="text-7xl font-light text-[#2A2D3A]">404</h1>
+                        <div className="h-0.5 w-16 bg-[#2A2D3A] mx-auto"></div>
                     </div>
                     
                     {/* Main Message */}
