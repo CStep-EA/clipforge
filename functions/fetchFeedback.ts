@@ -23,17 +23,17 @@ Deno.serve(async (req) => {
     const keywordStr = keywords.join(', ');
 
     // Use AI with internet context to fetch real mentions across sources
-    const feedbackPrompt = `Search the web for recent user reviews, mentions, and feedback about "${appName}" (a social media content saving & AI organization app) from these sources: Reddit, Product Hunt, G2, Capterra, App Store reviews, Google Play Store, Twitter/X, TechCrunch, CNET. 
+    const feedbackPrompt = `Search the web for recent user reviews, mentions, and feedback about "${appName}" (a social media content saving & AI organization app) from these sources: Reddit, Product Hunt, G2, Capterra, App Store reviews, Google Play Store, Twitter/X, TechCrunch, CNET, PCMag, Wired, Facebook. 
 
 Search keywords: ${keywordStr}
 
-For each mention found, return structured data. Find at least 8-12 diverse mentions if possible. Include both positive and negative feedback.
+For each mention found, return structured data. Find at least 8-12 diverse mentions if possible. Include both positive and negative feedback. Do NOT include any personally identifiable information (PII) such as full names, emails, or phone numbers - use usernames/handles only.
 
 Return ONLY a JSON object matching this exact schema:
 {
   "items": [
     {
-      "source": "reddit|twitter|producthunt|g2|capterra|appstore|playstore|technews|manual",
+      "source": "reddit|twitter|producthunt|g2|capterra|appstore|playstore|technews|cnet|pcmag|wired|facebook|manual",
       "source_url": "URL if available or empty string",
       "author": "username or source name",
       "content": "the actual review/feedback text (100-300 chars)",
