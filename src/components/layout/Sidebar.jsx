@@ -53,10 +53,9 @@ export default function Sidebar({ currentPage, userRole }) {
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 h-16 border-b border-[#2A2D3A] overflow-hidden">
         <ClipForgeLogo
-          size={collapsed ? 34 : 34}
+          size={collapsed ? 32 : 36}
           showText={!collapsed}
-          variant="default"
-          className="animate-vault-pulse"
+          variant="morph"
         />
       </div>
 
