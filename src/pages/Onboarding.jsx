@@ -111,12 +111,13 @@ export default function Onboarding() {
 
   return (
     <div className="min-h-screen bg-[#0F1117] flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Y2K retro overlay */}
+      {/* Y2K animated gradient overlay */}
       <div className="pointer-events-none absolute inset-0 y2k-pattern" />
+      <div className="pointer-events-none absolute inset-0 y2k-bg opacity-80" />
       {/* Floating orbs */}
-      <div className="pointer-events-none absolute top-1/4 -left-20 w-64 h-64 rounded-full bg-[#00BFFF]/8 blur-3xl animate-float" />
-      <div className="pointer-events-none absolute bottom-1/4 -right-20 w-64 h-64 rounded-full bg-[#9370DB]/8 blur-3xl animate-float" style={{ animationDelay: "1.5s" }} />
-      <div className="pointer-events-none absolute top-3/4 left-1/3 w-40 h-40 rounded-full bg-[#FFB6C1]/6 blur-2xl animate-float" style={{ animationDelay: "3s" }} />
+      <div className="pointer-events-none absolute top-1/4 -left-20 w-72 h-72 rounded-full bg-[#00BFFF]/10 blur-3xl animate-float-slow" />
+      <div className="pointer-events-none absolute bottom-1/4 -right-20 w-72 h-72 rounded-full bg-[#9370DB]/10 blur-3xl animate-float-slow" style={{ animationDelay: "1.5s" }} />
+      <div className="pointer-events-none absolute top-3/4 left-1/3 w-48 h-48 rounded-full bg-[#FFB6C1]/8 blur-2xl animate-float-slow" style={{ animationDelay: "3s" }} />
       {/* Logo top-left */}
       <div className="fixed top-4 left-4">
         <ClipForgeLogo size={30} showText variant="morph" />
