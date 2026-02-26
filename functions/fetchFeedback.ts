@@ -55,7 +55,9 @@ Rules:
 - Mark as "urgent" priority: explicit bug reports, crashes, data loss complaints, or angry users threatening to leave
 - Mark as "high" priority: repeated feature requests, moderate complaints  
 - Only include sources that are enabled: ${enabledSources.join(', ')}
-- Be realistic - if no real data found for a source, skip it rather than fabricate`;
+- Be realistic - if no real data found for a source, skip it rather than fabricate
+- Never include PII (full names, emails, phone numbers) - use @handles or generic "user123" format only
+- Anonymize any identifiable personal details in content`;
 
     const analysis = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt: feedbackPrompt,
