@@ -111,6 +111,11 @@ export default function Onboarding() {
 
   return (
     <div className="min-h-screen bg-[#0F1117] flex items-center justify-center p-4">
+      {/* Logo top-left */}
+      <div className="fixed top-4 left-4">
+        <ClipForgeLogo size={28} showText variant="default" />
+      </div>
+
       {/* Skip button */}
       <button
         onClick={handleSkip}
