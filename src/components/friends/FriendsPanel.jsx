@@ -84,7 +84,7 @@ export default function FriendsPanel({ user, plan = "free" }) {
           <p className="text-xs text-[#8B8D97]">{accepted.length}/{limit === 999 ? "∞" : limit} connections</p>
         </div>
         <Button size="sm" onClick={() => setInviteOpen(true)}
-          className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-1.5 text-xs">
+          className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-1.5 text-xs animate-share-pulse">
           <UserPlus className="w-3.5 h-3.5" /> Add Friend
         </Button>
       </div>
@@ -203,7 +203,7 @@ export default function FriendsPanel({ user, plan = "free" }) {
           <DialogFooter>
             <Button variant="ghost" onClick={() => setInviteOpen(false)} className="text-[#8B8D97]">Cancel</Button>
             <Button disabled={!email} onClick={sendInvite}
-              className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white">
+              className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white animate-btn-pulse">
               Send Invite
             </Button>
           </DialogFooter>
