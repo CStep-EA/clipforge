@@ -51,10 +51,11 @@ export default function Boards() {
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 relative">
-      {/* Y2K retro background pattern */}
+      {/* Y2K animated gradient background */}
       <div className="pointer-events-none fixed inset-0 -z-10 y2k-pattern opacity-60" />
-      <div className="pointer-events-none fixed top-0 right-0 w-96 h-96 rounded-full bg-[#9370DB]/5 blur-3xl -z-10" />
-      <div className="pointer-events-none fixed bottom-0 left-0 w-80 h-80 rounded-full bg-[#00BFFF]/5 blur-3xl -z-10" />
+      <div className="pointer-events-none fixed inset-0 -z-10 y2k-bg opacity-50" />
+      <div className="pointer-events-none fixed top-0 right-0 w-96 h-96 rounded-full bg-[#9370DB]/8 blur-3xl -z-10 animate-float-slow" />
+      <div className="pointer-events-none fixed bottom-0 left-0 w-80 h-80 rounded-full bg-[#00BFFF]/8 blur-3xl -z-10 animate-float-slow" style={{ animationDelay: "2s" }} />
 
       <div className="flex items-center justify-between">
         <div>
