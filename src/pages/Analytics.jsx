@@ -212,6 +212,14 @@ export default function Analytics() {
           <p className="text-xs text-[#8B8D97]">Click "Generate Insights" to get personalized AI analysis of your saving habits and trends.</p>
         )}
       </Card>
+      <ShareModal
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        item={{ title: "My Analytics Report", description: `${items.length} saves · ${items.filter(i=>i.is_favorite).length} favorites · Avg rating ${avgRating}` }}
+        type="analytics"
+        plan={plan}
+        user={user}
+      />
     </div>
   );
 }
