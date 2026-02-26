@@ -20,6 +20,7 @@ import { useSubscription } from "@/components/shared/useSubscription";
 import TrendCharts from "@/components/dashboard/TrendCharts";
 import SharingModePanel from "@/components/dashboard/SharingModePanel";
 import DashboardSearch from "@/components/dashboard/DashboardSearch";
+import TrialAndReferralBanner from "@/components/subscription/TrialAndReferralBanner";
 
 // AI-driven priority ranking: deals first, then by rating, then recent
 function rankItems(items) {
