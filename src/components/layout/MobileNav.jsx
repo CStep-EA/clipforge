@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import {
   LayoutDashboard,
   Bookmark,
