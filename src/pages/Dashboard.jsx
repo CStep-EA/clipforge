@@ -198,6 +198,23 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Family Premium banner for existing family members */}
+      {isFamily && (
+        <div className="flex items-center gap-3 p-4 rounded-2xl border border-[#9370DB]/30 animate-gradient-shift"
+          style={{ background: "linear-gradient(135deg, rgba(147,112,219,0.08), rgba(255,182,193,0.06))", backgroundSize: "200% 200%" }}>
+          <ClipForgeLogo size={24} variant="default" />
+          <div className="flex-1">
+            <p className="text-sm font-bold" style={{ background: "linear-gradient(135deg,#9370DB,#FFB6C1)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+              Family Premium Active
+            </p>
+            <p className="text-xs text-[#8B8D97]">Shared boards · child-safe modes · family sharing enabled</p>
+          </div>
+          <Link to={createPageUrl("Friends")} className="text-xs text-[#9370DB] hover:underline flex items-center gap-1">
+            Manage <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
+      )}
+
       {/* Upgrade banner */}
       {user && !isPro && (
         <Link
