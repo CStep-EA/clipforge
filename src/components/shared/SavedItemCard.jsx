@@ -129,7 +129,8 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
           )}
 
           <div className="flex items-center justify-between pt-2 border-t border-[#2A2D3A]">
-            <div className="flex gap-1">
+            <div className="flex gap-1 flex-wrap items-center">
+              <RecipeExportButton item={item} />
               <motion.div whileHover={{ scale: 1.3 }} whileTap={{ scale: 0.85 }}>
               <Button
                 size="icon"
