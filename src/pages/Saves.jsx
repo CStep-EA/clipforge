@@ -188,6 +188,14 @@ export default function Saves() {
         onSave={handleSave}
         editItem={editItem}
       />
+      <ShareModal
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        item={shareItem}
+        type="save"
+        plan={plan}
+        user={user}
+      />
     </div>
   );
 }
