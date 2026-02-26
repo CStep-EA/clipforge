@@ -144,5 +144,6 @@ export default function Layout({ children, currentPageName }) {
       {/* Mobile nav */}
       <MobileNav currentPage={currentPageName} />
     </div>
+    </ThemeProvider>
   );
 }
