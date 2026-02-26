@@ -21,10 +21,12 @@ export default function Layout({ children, currentPageName }) {
           --card-foreground: 240 6% 93%;
           --popover: 225 14% 12%;
           --popover-foreground: 240 6% 93%;
-          --primary: 195 100% 50%;
-          --primary-foreground: 0 0% 100%;
-          --secondary: 259 52% 65%;
+          --primary: 195 100% 50%;       /* #00BFFF neon blue */
+          --primary-foreground: 220 15% 8%;
+          --secondary: 263 47% 58%;      /* #9370DB purple */
           --secondary-foreground: 0 0% 100%;
+          --destructive-foreground: 0 0% 98%;
+          --ring: 195 100% 50%;
           --muted: 225 14% 18%;
           --muted-foreground: 240 4% 57%;
           --accent: 225 14% 18%;
