@@ -86,6 +86,65 @@
 .animate-slide-up         { animation: slide-up 0.4s ease forwards; }
 .animate-bounce-in        { animation: bounce-in 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
 
+/* ── Extra brand keyframes (Tailwind variants) ─── */
+@keyframes neon-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(0,191,255,0.35), 0 0 0 0 rgba(0,191,255,0.25); }
+  50%       { box-shadow: 0 0 24px rgba(0,191,255,0.75), 0 0 0 6px rgba(0,191,255,0); }
+}
+@keyframes accent-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(147,112,219,0.35), 0 0 0 0 rgba(147,112,219,0.25); }
+  50%       { box-shadow: 0 0 24px rgba(147,112,219,0.75), 0 0 0 6px rgba(147,112,219,0); }
+}
+@keyframes pink-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255,182,193,0.35); }
+  50%       { box-shadow: 0 0 20px rgba(255,182,193,0.7); }
+}
+@keyframes y2k-gradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50%       { transform: translateY(-12px) scale(1.02); }
+}
+.animate-neon-pulse   { animation: neon-pulse 2.2s ease-in-out infinite; }
+.animate-accent-pulse { animation: accent-pulse 2.4s ease-in-out infinite; }
+.animate-pink-pulse   { animation: pink-pulse 2.6s ease-in-out infinite; }
+.animate-y2k-gradient { background-size: 200% 200%; animation: y2k-gradient 6s ease infinite; }
+.animate-float-slow   { animation: float-slow 5s ease-in-out infinite; }
+
+/* ── Y2K gradient bg helper ────────────────────── */
+.y2k-bg {
+  background: linear-gradient(135deg,
+    rgba(0,191,255,0.07)   0%,
+    rgba(147,112,219,0.08) 45%,
+    rgba(255,182,193,0.06) 100%
+  );
+  background-size: 200% 200%;
+  animation: y2k-gradient 8s ease infinite;
+}
+
+/* ── Bright CTA button ─────────────────────────── */
+.btn-primary {
+  background: linear-gradient(135deg, #00BFFF 0%, #0099CC 100%);
+  color: #0a0e1a;
+  font-weight: 800;
+  transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-primary:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(0,191,255,0.4);
+}
+
+/* ── Accent link ───────────────────────────────── */
+.link-accent {
+  color: hsl(263 47% 58%);
+  transition: color 0.15s;
+}
+.link-accent:hover { color: hsl(351 100% 86%); }
+
 /* ── Pulsing button glow ───────────────────────── */
 @keyframes btn-pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(0,191,255,0.4), 0 4px 20px rgba(0,191,255,0.2); }
