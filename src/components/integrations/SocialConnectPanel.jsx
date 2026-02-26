@@ -111,24 +111,24 @@ export default function SocialConnectPanel() {
   const fetchTicketmasterEvents = async () => {
     setTmLoading(true);
     setTmEvents([]);
-    const result = await base44.functions.invoke("ticketmaster", { city: tmCity, size: 6 });
-    const events = result?.data?._embedded?.events || [];
+    const result = await base44.functions.invoke("ticketmaster", { city: tmCity });
+    const events = result?.data?.events || [];
     setTmEvents(events.slice(0, 6));
     setTmLoading(false);
   };
 
   const saveEvent = async (ev) => {
-    const start = ev.dates?.start?.localDate;
     await base44.entities.SavedItem.create({
       title: ev.name,
-      description: ev.info || ev.pleaseNote || ev.classifications?.[0]?.segment?.name || "Live event",
-      url: ev.url,
-      image_url: ev.images?.[0]?.url || "",
+      description: ev.category || "Live event",
+      url: ev.ticketmaster_url || "",
+      image_url: ev.image_url || "",
       category: "event",
       source: "web",
-      tags: [ev.classifications?.[0]?.genre?.name, ev.classifications?.[0]?.segment?.name].filter(Boolean),
-      ai_summary: `Live event at ${ev._embedded?.venues?.[0]?.name || "venue TBD"}${start ? ` on ${start}` : ""}`,
+      tags: [ev.category].filter(Boolean),
+      ai_summary: `Live event at ${ev.venue || "venue TBD"}${ev.date ? ` on ${ev.date}` : ""}`,
       rating: 8,
+      price: ev.min_price || null,
     });
     queryClient.invalidateQueries({ queryKey: ["savedItems"] });
   };
