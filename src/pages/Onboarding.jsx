@@ -8,6 +8,7 @@ import {
   Zap, Bookmark, Users, ShoppingCart,
   Sparkles, ArrowRight, CheckCircle2, X
 } from "lucide-react";
+import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import { createPageUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
 
