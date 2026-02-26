@@ -8,11 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import SocialConnectPanel from "@/components/integrations/SocialConnectPanel";
+import StreamingPlatformsPanel from "@/components/integrations/StreamingPlatformsPanel";
 import FindFriendsPanel from "@/components/friends/FindFriendsPanel";
 import { useSubscription } from "@/components/shared/useSubscription";
 import {
   ShoppingBag, Utensils, ExternalLink,
-  CheckCircle2, AlertCircle, Users2
+  CheckCircle2, AlertCircle, Users2, Radio
 } from "lucide-react";
 
 const HEALTH_APPS = [
