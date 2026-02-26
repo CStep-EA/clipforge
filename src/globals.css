@@ -86,6 +86,22 @@
 .animate-slide-up         { animation: slide-up 0.4s ease forwards; }
 .animate-bounce-in        { animation: bounce-in 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
 
+/* ── Pulsing button glow ───────────────────────── */
+@keyframes btn-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,191,255,0.4), 0 4px 20px rgba(0,191,255,0.2); }
+  50%       { box-shadow: 0 0 0 6px rgba(0,191,255,0), 0 4px 28px rgba(0,191,255,0.45); }
+}
+@keyframes btn-pulse-purple {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(147,112,219,0.4), 0 4px 20px rgba(147,112,219,0.2); }
+  50%       { box-shadow: 0 0 0 6px rgba(147,112,219,0), 0 4px 28px rgba(147,112,219,0.45); }
+}
+@keyframes card-hover-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,191,255,0.0); }
+  50%       { box-shadow: 0 0 24px rgba(0,191,255,0.18), 0 0 8px rgba(147,112,219,0.1); }
+}
+.animate-btn-pulse        { animation: btn-pulse 2.2s ease-in-out infinite; }
+.animate-btn-pulse-purple { animation: btn-pulse-purple 2.2s ease-in-out infinite; }
+
 .shimmer-bg {
   background: linear-gradient(90deg, transparent 0%, rgba(0,191,255,0.05) 50%, transparent 100%);
   background-size: 200% 100%;
