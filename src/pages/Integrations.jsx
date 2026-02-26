@@ -8,9 +8,11 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import SocialConnectPanel from "@/components/integrations/SocialConnectPanel";
+import FindFriendsPanel from "@/components/friends/FindFriendsPanel";
+import { useSubscription } from "@/components/shared/useSubscription";
 import {
-  ShoppingBag, Heart, Utensils, ExternalLink,
-  CheckCircle2, Settings, AlertCircle
+  ShoppingBag, Utensils, ExternalLink,
+  CheckCircle2, AlertCircle, Users2
 } from "lucide-react";
 
 const HEALTH_APPS = [
@@ -23,6 +25,7 @@ export default function Integrations() {
   const [user, setUser] = useState(null);
   const [savedKeys, setSavedKeys] = useState({});
   const queryClient = useQueryClient();
+  const { plan, isPro } = useSubscription();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
@@ -30,13 +33,7 @@ export default function Integrations() {
     setSavedKeys(keys);
   }, []);
 
-  const { data: subData = [] } = useQuery({
-    queryKey: ["subscription", user?.email],
-    queryFn: () => base44.entities.UserSubscription.filter({ user_email: user.email }),
-    enabled: !!user?.email,
-  });
-
-  const isPremium = subData[0]?.plan === "premium";
+  const isPremium = isPro;
 
   const saveKey = (key, value) => {
     const updated = { ...savedKeys, [key]: value };
