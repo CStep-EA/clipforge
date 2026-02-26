@@ -61,6 +61,7 @@ import Search from './pages/Search';
 import Settings from './pages/Settings';
 import ShoppingLists from './pages/ShoppingLists';
 import Support from './pages/Support';
+import Friends from './pages/Friends';
 import __Layout from './Layout.jsx';
 
 
@@ -79,6 +80,7 @@ export const PAGES = {
     "Settings": Settings,
     "ShoppingLists": ShoppingLists,
     "Support": Support,
+    "Friends": Friends,
 }
 
 export const pagesConfig = {
