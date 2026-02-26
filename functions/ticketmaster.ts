@@ -2,11 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 Deno.serve(async (req) => {
   try {
-    const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-
-    const { city, genre, keyword } = await req.json();
+    const { city, genre, keyword, size } = await req.json();
     if (!city) return Response.json({ error: 'city is required' }, { status: 400 });
 
     const apiKey = Deno.env.get('TICKETMASTER_API_KEY');
