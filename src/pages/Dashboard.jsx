@@ -248,6 +248,14 @@ export default function Dashboard() {
       )}
 
       <AddItemDialog open={addOpen} onOpenChange={setAddOpen} onSave={handleSave} />
+      <ShareModal
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        item={shareItem}
+        type="save"
+        plan={plan}
+        user={user}
+      />
     </div>
     </div>
   );
