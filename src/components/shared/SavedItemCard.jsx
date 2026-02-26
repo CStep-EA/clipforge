@@ -136,14 +136,16 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
               >
                 <Heart className={cn("w-3.5 h-3.5", item.is_favorite && "fill-[#FFB6C1] text-[#FFB6C1]")} />
               </Button>
+              <motion.div whileHover={{ scale: 1.25, rotate: -8 }} whileTap={{ scale: 0.9 }}>
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-7 w-7 text-[#8B8D97] hover:text-[#9370DB]"
+                className="h-7 w-7 text-[#8B8D97] hover:text-[#9370DB] hover:bg-[#9370DB]/10"
                 onClick={() => onShare?.(item)}
               >
                 <Share2 className="w-3.5 h-3.5" />
               </Button>
+              </motion.div>
               {item.url && (
                 <a href={item.url} target="_blank" rel="noopener noreferrer">
                   <Button size="icon" variant="ghost" className="h-7 w-7 text-[#8B8D97] hover:text-[#00BFFF]">
