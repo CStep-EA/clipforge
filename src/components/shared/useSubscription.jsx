@@ -25,8 +25,9 @@ export function useSubscription() {
 
   return {
     plan,
-    isPro: isActive && (plan === "pro" || plan === "premium"),
-    isPremium: isActive && plan === "premium",
+    isPro: isActive && (plan === "pro" || plan === "premium" || plan === "family"),
+    isPremium: isActive && (plan === "premium" || plan === "family"),
+    isFamily: isActive && plan === "family",
     isLoading: userLoading || subLoading,
     user,
   };
