@@ -100,12 +100,21 @@ export default function Dashboard() {
             <span className="inline-block ml-2 animate-float">✨</span>
           </p>
         </div>
-        <Button
-          onClick={() => setAddOpen(true)}
-          className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2 btn-glow animate-gradient-shift animate-btn-pulse font-bold text-sm uppercase tracking-wide"
-        >
-          <Plus className="w-4 h-4" /> Quick Save
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => { setShareItem(null); setShareOpen(true); }}
+            variant="outline"
+            className="border-[#2A2D3A] text-[#E8E8ED] gap-2 text-sm animate-share-pulse"
+          >
+            <Share2 className="w-4 h-4" /> Share
+          </Button>
+          <Button
+            onClick={() => setAddOpen(true)}
+            className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2 btn-glow animate-gradient-shift animate-btn-pulse font-bold text-sm uppercase tracking-wide"
+          >
+            <Plus className="w-4 h-4" /> Quick Save
+          </Button>
+        </div>
       </motion.div>
 
       {/* Stats */}
