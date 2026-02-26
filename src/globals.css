@@ -226,3 +226,25 @@
 
 /* ── Mobile PWA safe area ──────────────────────── */
 .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+
+/* ── Child-safe mode: simpler, softer UI ─────── */
+.child-safe .glass-card { border-color: rgba(0,191,255,0.15) !important; }
+.child-safe .gradient-text {
+  background: linear-gradient(135deg, #00BFFF 0%, #9370DB 100%) !important;
+}
+/* Hide ads / promo banners in child-safe view */
+.child-safe .upgrade-banner { display: none !important; }
+
+/* ── Friends/share button pulse ──────────────── */
+@keyframes share-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,191,255,0.45), 0 4px 18px rgba(0,191,255,0.2); }
+  50%       { box-shadow: 0 0 0 7px rgba(0,191,255,0), 0 4px 28px rgba(0,191,255,0.4); }
+}
+.animate-share-pulse { animation: share-pulse 2.2s ease-in-out infinite; }
+
+/* ── Family badge glow ───────────────────────── */
+@keyframes family-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(147,112,219,0.3); }
+  50%       { box-shadow: 0 0 22px rgba(147,112,219,0.65), 0 0 8px rgba(255,182,193,0.25); }
+}
+.animate-family-glow { animation: family-glow 2.8s ease-in-out infinite; }
