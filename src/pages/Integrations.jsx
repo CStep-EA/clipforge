@@ -98,6 +98,10 @@ export default function Integrations() {
           <SocialConnectPanel />
         </TabsContent>
 
+        <TabsContent value="streaming" className="mt-4">
+          <StreamingPlatformsPanel />
+        </TabsContent>
+
         <TabsContent value="shopping" className="mt-4 space-y-4">
           <Card className="glass-card p-5">
             <div className="flex items-center gap-3 mb-4">
