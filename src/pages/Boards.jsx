@@ -62,12 +62,12 @@ export default function Boards() {
           <p className="text-[#8B8D97] text-sm font-medium mt-0.5">Collaborate with your partner, roommates, or friends</p>
         </div>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>
-        <Button
-          onClick={() => setCreateOpen(true)}
-          className="bg-gradient-to-r from-[#9370DB] to-[#FFB6C1] text-white gap-2 font-bold animate-btn-pulse-purple"
-        >
-          <Plus className="w-4 h-4" /> New Board
-        </Button>
+          <Button
+            onClick={() => setCreateOpen(true)}
+            className="bg-gradient-to-r from-[#9370DB] to-[#FFB6C1] text-white gap-2 font-bold animate-btn-pulse-purple"
+          >
+            <Plus className="w-4 h-4" /> New Board
+          </Button>
         </motion.div>
       </div>
 
