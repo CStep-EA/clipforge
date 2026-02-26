@@ -118,8 +118,11 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
+      {/* Trial & Referral Banners */}
+      {!isPro && <TrialAndReferralBanner />}
+
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard title="Total Saves" value={stats.total} icon={Bookmark} accent="#00BFFF" trend={12} className="animate-pulse-glow" />
         <StatsCard title="Active Deals" value={stats.deals} icon={TrendingUp} accent="#9370DB" />
         <StatsCard title="Favorites" value={stats.favorites} icon={Sparkles} accent="#FFB6C1" className="animate-pulse-glow-pink" />
