@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
     const params = new URLSearchParams({
       apikey: apiKey,
       city,
-      size: '9',
+      size: String(size || 9),
       sort: 'date,asc',
     });
     if (genre && genre !== 'all') params.set('classificationName', genre);
