@@ -33,7 +33,7 @@ function rankItems(items) {
 export default function Dashboard() {
   const [addOpen, setAddOpen] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
-  const { user, isPro, plan } = useSubscription();
+  const { user, isPro, isFamily, plan } = useSubscription();
   const queryClient = useQueryClient();
 
   const { data: items = [] } = useQuery({
