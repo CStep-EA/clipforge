@@ -176,6 +176,22 @@ export default function FeedbackConfig({ onBack }) {
           </div>
         </div>
 
+        {/* Negative mention threshold */}
+        <div>
+          <Label className="text-xs text-[#8B8D97] mb-1.5 block">
+            Escalation: Negative Mention Count Threshold
+          </Label>
+          <p className="text-[10px] text-[#8B8D97] mb-2">Auto-escalate if a single run returns more than this many negative items</p>
+          <Input
+            type="number"
+            min={1}
+            max={100}
+            value={form.escalation_negative_count}
+            onChange={(e) => setForm(f => ({ ...f, escalation_negative_count: parseInt(e.target.value) || 5 }))}
+            className="bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] h-8 text-sm w-32"
+          />
+        </div>
+
         {/* Auto-ticket */}
         <div className="flex items-center justify-between">
           <div>
