@@ -92,17 +92,21 @@ export default function Boards() {
                 transition={{ delay: i * 0.05 }}
               >
                 <Link to={createPageUrl(`Saves?board=${board.id}`)}>
-                  <Card className="glass-card p-5 hover:border-opacity-50 transition-all cursor-pointer group"
-                        style={{ borderColor: `${board.color || "#00BFFF"}30` }}>
+                  <Card
+                    className="glass-card p-5 transition-all duration-300 cursor-pointer group hover:shadow-[0_0_28px_rgba(0,191,255,0.15),0_0_8px_rgba(147,112,219,0.1)] hover:-translate-y-1"
+                    style={{ borderColor: `${board.color || "#00BFFF"}30` }}
+                  >
+                    {/* Y2K shimmer on hover */}
+                    <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 shimmer-bg pointer-events-none" />
                     <div className="flex items-start justify-between mb-3">
-                      <span className="text-3xl">{board.icon || "🏠"}</span>
+                      <span className="text-3xl group-hover:scale-110 transition-transform duration-200 inline-block">{board.icon || "🏠"}</span>
                       {board.is_public ? (
                         <Globe className="w-4 h-4 text-[#8B8D97]" />
                       ) : (
                         <Lock className="w-4 h-4 text-[#8B8D97]" />
                       )}
                     </div>
-                    <h3 className="font-semibold group-hover:text-[#00BFFF] transition-colors">{board.name}</h3>
+                    <h3 className="font-black text-base group-hover:text-[#00BFFF] transition-colors">{board.name}</h3>
                     {board.description && (
                       <p className="text-xs text-[#8B8D97] mt-1 line-clamp-2">{board.description}</p>
                     )}
