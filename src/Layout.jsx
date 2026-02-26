@@ -48,7 +48,7 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Mobile top header with logo */}
       <div className="md:hidden flex items-center px-4 pt-4 pb-2">
-        <ClipForgeLogo size={32} showText variant="default" />
+        <ClipForgeLogo size={36} showText variant="morph" />
       </div>
 
       {/* Main content */}
