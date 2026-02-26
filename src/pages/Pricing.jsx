@@ -236,20 +236,34 @@ export default function Pricing() {
                   ))}
                 </ul>
 
-                <Button
-                  className="w-full text-sm"
-                  disabled={isCurrentPlan || plan.disabled || loading === plan.id}
-                  onClick={() => !isCurrentPlan && !plan.disabled && handleUpgrade(plan)}
-                  style={!isCurrentPlan && !plan.disabled ? {
-                    background: `linear-gradient(135deg, ${plan.accent}, ${plan.accent}99)`,
-                    color: "white",
-                  } : {}}
-                  variant={isCurrentPlan || plan.disabled ? "outline" : "default"}
-                >
-                  {loading === plan.id ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : isCurrentPlan ? "Current Plan" : plan.cta}
-                </Button>
+                <div className="space-y-2">
+                  <Button
+                    className="w-full text-sm"
+                    disabled={isCurrentPlan || plan.disabled || loading === plan.id}
+                    onClick={() => !isCurrentPlan && !plan.disabled && handleUpgrade(plan)}
+                    style={!isCurrentPlan && !plan.disabled ? {
+                      background: `linear-gradient(135deg, ${plan.accent}, ${plan.accent}99)`,
+                      color: "white",
+                    } : {}}
+                    variant={isCurrentPlan || plan.disabled ? "outline" : "default"}
+                  >
+                    {loading === plan.id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : isCurrentPlan ? "Current Plan" : plan.cta}
+                  </Button>
+                  {(plan.id === "premium" || plan.id === "family") && !isCurrentPlan && (
+                    <Button
+                      variant="outline"
+                      className="w-full text-xs border-[#9370DB]/30 text-[#9370DB] hover:bg-[#9370DB]/5"
+                      onClick={() => {
+                        setSelectedTrialPlan(plan.id === "family" ? "family" : "premium");
+                        setTrialOpen(true);
+                      }}
+                    >
+                      {plan.id === "family" ? "Try 14 Days Free" : "Try 7 Days Free"}
+                    </Button>
+                  )}
+                </div>
               </Card>
             </motion.div>
           );
