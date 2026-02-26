@@ -55,8 +55,8 @@ export default function Integrations() {
         <div className="p-4 rounded-xl bg-[#9370DB]/5 border border-[#9370DB]/20 flex items-center gap-3">
           <AlertCircle className="w-5 h-5 text-[#9370DB] flex-shrink-0" />
           <div className="flex-1">
-            <p className="text-sm font-medium">Premium required for social & health integrations</p>
-            <p className="text-xs text-[#8B8D97]">Upgrade to Premium to unlock all integrations</p>
+            <p className="text-sm font-medium">Upgrade for advanced health integrations</p>
+            <p className="text-xs text-[#8B8D97]">Social & recipe connections are free — health sync requires Premium</p>
           </div>
           <Button size="sm" className="bg-[#9370DB] text-white" onClick={() => window.location.href = "/Pricing"}>
             Upgrade
