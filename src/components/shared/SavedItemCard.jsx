@@ -23,6 +23,7 @@ import {
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import DeepResearchPanel from "./DeepResearchPanel";
+import AiSummaryButton from "@/components/saves/AiSummaryButton";
 
 const categoryConfig = {
   deal: { label: "Deal", color: "bg-[#00BFFF]/15 text-[#00BFFF] border-[#00BFFF]/30" },
