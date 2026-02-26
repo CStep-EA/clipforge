@@ -15,7 +15,7 @@ import { toast } from "sonner";
 
 export default function Settings() {
   const [user, setUser] = useState(null);
-  const { isFamily } = useSubscription();
+  const { isFamily, plan } = useSubscription();
   const [preferences, setPreferences] = useState({
     notifications_enabled: true,
     email_digests: true,
@@ -84,6 +84,23 @@ export default function Settings() {
             />
           </div>
         </div>
+      </Card>
+
+      {/* Friends & Connections */}
+      <Card className="glass-card p-6">
+        <div className="flex items-center gap-3 mb-5">
+          <UserPlus className="w-5 h-5 text-[#00BFFF]" />
+          <div>
+            <h2 className="font-semibold">Friends & Connections</h2>
+            <p className="text-[10px] text-[#8B8D97]">Manage friends, invites & sharing permissions</p>
+          </div>
+        </div>
+        <FriendsPanel user={user} plan={plan} />
+      </Card>
+
+      {/* Referrals */}
+      <Card className="glass-card p-6">
+        <ReferralPanel user={user} />
       </Card>
 
       {/* Family Accounts */}
