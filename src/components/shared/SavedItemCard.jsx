@@ -128,14 +128,16 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
 
           <div className="flex items-center justify-between pt-2 border-t border-[#2A2D3A]">
             <div className="flex gap-1">
+              <motion.div whileHover={{ scale: 1.3 }} whileTap={{ scale: 0.85 }}>
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-7 w-7 text-[#8B8D97] hover:text-[#FFB6C1]"
+                className="h-7 w-7 text-[#8B8D97] hover:text-[#FFB6C1] hover:bg-[#FFB6C1]/10"
                 onClick={() => onToggleFavorite?.(item)}
               >
-                <Heart className={cn("w-3.5 h-3.5", item.is_favorite && "fill-[#FFB6C1] text-[#FFB6C1]")} />
+                <Heart className={cn("w-3.5 h-3.5", item.is_favorite && "fill-[#FFB6C1] text-[#FFB6C1] animate-pulse-glow-pink")} />
               </Button>
+              </motion.div>
               <motion.div whileHover={{ scale: 1.25, rotate: -8 }} whileTap={{ scale: 0.9 }}>
               <Button
                 size="icon"
