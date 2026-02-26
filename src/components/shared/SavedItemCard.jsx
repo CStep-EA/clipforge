@@ -151,6 +151,11 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                 <Share2 className="w-3.5 h-3.5" />
               </Button>
               </motion.div>
+              {item.category === "gift_idea" && (
+                <span title="Gift Idea" className="text-[#EC4899] px-1">
+                  <Gift className="w-3.5 h-3.5" />
+                </span>
+              )}
               {item.url && (
                 <a href={item.url} target="_blank" rel="noopener noreferrer">
                   <Button size="icon" variant="ghost" className="h-7 w-7 text-[#8B8D97] hover:text-[#00BFFF]">
