@@ -10,8 +10,10 @@ import {
   Clock,
   MoreHorizontal,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Gift
 } from "lucide-react";
+import RecipeExportButton from "@/components/dashboard/RecipeExportButton";
 import {
   DropdownMenu,
   DropdownMenuContent,

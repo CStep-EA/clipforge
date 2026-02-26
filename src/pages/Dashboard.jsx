@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
@@ -14,14 +14,29 @@ import StatsCard from "@/components/shared/StatsCard";
 import SavedItemCard from "@/components/shared/SavedItemCard";
 import AddItemDialog from "@/components/shared/AddItemDialog";
 import { useSubscription } from "@/components/shared/useSubscription";
+import TrendCharts from "@/components/dashboard/TrendCharts";
+import SharingModePanel from "@/components/dashboard/SharingModePanel";
+import DashboardSearch from "@/components/dashboard/DashboardSearch";
+
+// AI-driven priority ranking: deals first, then by rating, then recent
+function rankItems(items) {
+  const PRIORITY = { deal: 5, product: 4, recipe: 3, gift_idea: 3, event: 2, travel: 2, article: 1, other: 0 };
+  return [...items].sort((a, b) => {
+    const pa = (PRIORITY[a.category] || 0) + (a.rating || 0) / 10 + (a.is_favorite ? 2 : 0);
+    const pb = (PRIORITY[b.category] || 0) + (b.rating || 0) / 10 + (b.is_favorite ? 2 : 0);
+    return pb - pa;
+  });
+}
 
 export default function Dashboard() {
   const [addOpen, setAddOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState(null);
   const { user, isPro } = useSubscription();
+  const queryClient = useQueryClient();
 
-  const { data: items = [], refetch } = useQuery({
+  const { data: items = [] } = useQuery({
     queryKey: ["savedItems"],
-    queryFn: () => base44.entities.SavedItem.list("-created_date", 20),
+    queryFn: () => base44.entities.SavedItem.list("-created_date", 50),
   });
 
   const { data: boards = [] } = useQuery({
@@ -31,17 +46,17 @@ export default function Dashboard() {
 
   const handleSave = async (formData) => {
     await base44.entities.SavedItem.create(formData);
-    refetch();
+    queryClient.invalidateQueries({ queryKey: ["savedItems"] });
   };
 
   const handleToggleFavorite = async (item) => {
     await base44.entities.SavedItem.update(item.id, { is_favorite: !item.is_favorite });
-    refetch();
+    queryClient.invalidateQueries({ queryKey: ["savedItems"] });
   };
 
   const handleDelete = async (item) => {
     await base44.entities.SavedItem.delete(item.id);
-    refetch();
+    queryClient.invalidateQueries({ queryKey: ["savedItems"] });
   };
 
   const stats = {
@@ -51,10 +66,13 @@ export default function Dashboard() {
     boards: boards.length,
   };
 
-  const recentItems = items.slice(0, 6);
+  const displayItems = useMemo(() => {
+    const pool = searchResults !== null ? searchResults : rankItems(items);
+    return pool.slice(0, 6);
+  }, [items, searchResults]);
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -64,9 +82,7 @@ export default function Dashboard() {
         <div>
           <div className="flex items-center gap-3 mb-1">
             <ClipForgeLogo size={32} variant="loading" />
-            <h1 className="text-2xl md:text-3xl font-black tracking-tight gradient-text">
-              ClipForge
-            </h1>
+            <h1 className="text-2xl md:text-3xl font-black tracking-tight gradient-text">ClipForge</h1>
           </div>
           <p className="text-[#8B8D97] text-sm">
             Welcome back{user?.full_name ? `, ${user.full_name.split(" ")[0]}` : ""}
@@ -89,39 +105,45 @@ export default function Dashboard() {
         <StatsCard title="Boards" value={stats.boards} icon={Users} accent="#10B981" />
       </div>
 
-      {/* Recent Saves */}
+      {/* Search */}
+      <DashboardSearch items={items} onResults={setSearchResults} />
+
+      {/* Trend Charts */}
+      {items.length > 0 && <TrendCharts items={items} />}
+
+      {/* Recent / Ranked Saves */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Recent Saves</h2>
-          <Link
-            to={createPageUrl("Saves")}
-            className="text-xs text-[#00BFFF] hover:underline flex items-center gap-1"
-          >
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold">
+              {searchResults !== null ? "Search Results" : "Top Picks"}
+            </h2>
+            {searchResults === null && (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00BFFF]/10 text-[#00BFFF] border border-[#00BFFF]/20 flex items-center gap-1">
+                <Zap className="w-2.5 h-2.5" /> AI Ranked
+              </span>
+            )}
+          </div>
+          <Link to={createPageUrl("Saves")} className="text-xs text-[#00BFFF] hover:underline flex items-center gap-1">
             View all <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
 
-        {recentItems.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="glass-card rounded-2xl p-12 text-center"
-          >
+        {displayItems.length === 0 ? (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            className="glass-card rounded-2xl p-12 text-center">
             <div className="flex justify-center mb-4">
               <ClipForgeLogo size={56} variant="loading" />
             </div>
             <h3 className="font-semibold text-lg mb-2">Your vault is empty</h3>
             <p className="text-[#8B8D97] text-sm mb-4">Start saving content from the web, social media, or add items manually.</p>
-            <Button
-              onClick={() => setAddOpen(true)}
-              className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white"
-            >
+            <Button onClick={() => setAddOpen(true)} className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white">
               <Plus className="w-4 h-4 mr-2" /> Add Your First Save
             </Button>
           </motion.div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {recentItems.map((item) => (
+            {displayItems.map((item) => (
               <SavedItemCard
                 key={item.id}
                 item={item}
@@ -134,32 +156,37 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Link to={createPageUrl("Search")} className="glass-card rounded-2xl p-4 hover:border-[#00BFFF]/30 transition-all group">
-          <Sparkles className="w-7 h-7 text-[#00BFFF] mb-2 group-hover:animate-pulse" />
-          <h3 className="font-semibold text-sm mb-0.5">AI Search</h3>
-          <p className="text-xs text-[#8B8D97]">Natural language search</p>
-        </Link>
-        <Link to={createPageUrl("Boards")} className="glass-card rounded-2xl p-4 hover:border-[#9370DB]/30 transition-all group">
-          <Users className="w-7 h-7 text-[#9370DB] mb-2" />
-          <h3 className="font-semibold text-sm mb-0.5">Shared Boards</h3>
-          <p className="text-xs text-[#8B8D97]">Collaborate & share</p>
-        </Link>
-        <Link to={createPageUrl("Events")} className="glass-card rounded-2xl p-4 hover:border-[#9370DB]/30 transition-all group">
-          <Calendar className="w-7 h-7 text-[#9370DB] mb-2" />
-          <h3 className="font-semibold text-sm mb-0.5">Events</h3>
-          <p className="text-xs text-[#8B8D97]">AI event reviews</p>
-        </Link>
-        <Link to={createPageUrl("ShoppingLists")} className="glass-card rounded-2xl p-4 hover:border-[#FFB6C1]/30 transition-all group">
-          <ShoppingCart className="w-7 h-7 text-[#FFB6C1] mb-2" />
-          <h3 className="font-semibold text-sm mb-0.5">Shopping</h3>
-          <p className="text-xs text-[#8B8D97]">From recipe saves</p>
-        </Link>
+      {/* Sharing Modes + Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <SharingModePanel />
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-2 gap-3">
+          <Link to={createPageUrl("Search")} className="glass-card rounded-2xl p-4 hover:border-[#00BFFF]/30 transition-all group">
+            <Sparkles className="w-7 h-7 text-[#00BFFF] mb-2 group-hover:animate-pulse" />
+            <h3 className="font-semibold text-sm mb-0.5">AI Search</h3>
+            <p className="text-xs text-[#8B8D97]">Natural language</p>
+          </Link>
+          <Link to={createPageUrl("Boards")} className="glass-card rounded-2xl p-4 hover:border-[#9370DB]/30 transition-all group">
+            <Users className="w-7 h-7 text-[#9370DB] mb-2" />
+            <h3 className="font-semibold text-sm mb-0.5">Shared Boards</h3>
+            <p className="text-xs text-[#8B8D97]">Collaborate</p>
+          </Link>
+          <Link to={createPageUrl("Events")} className="glass-card rounded-2xl p-4 hover:border-[#9370DB]/30 transition-all group">
+            <Calendar className="w-7 h-7 text-[#9370DB] mb-2" />
+            <h3 className="font-semibold text-sm mb-0.5">Events</h3>
+            <p className="text-xs text-[#8B8D97]">AI event reviews</p>
+          </Link>
+          <Link to={createPageUrl("ShoppingLists")} className="glass-card rounded-2xl p-4 hover:border-[#FFB6C1]/30 transition-all group">
+            <ShoppingCart className="w-7 h-7 text-[#FFB6C1] mb-2" />
+            <h3 className="font-semibold text-sm mb-0.5">Shopping</h3>
+            <p className="text-xs text-[#8B8D97]">From recipes</p>
+          </Link>
+        </div>
       </div>
 
       {/* Upgrade banner */}
-      {user && (
+      {user && !isPro && (
         <Link
           to={createPageUrl("Pricing")}
           className="block rounded-2xl p-5 neon-border hover:border-[#00BFFF]/60 transition-all animate-gradient-shift"
