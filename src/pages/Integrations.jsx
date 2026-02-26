@@ -58,21 +58,37 @@ export default function Integrations() {
         </div>
       )}
 
-      <Tabs defaultValue="social">
-        <TabsList className="bg-[#1A1D27] border border-[#2A2D3A]">
-          <TabsTrigger value="social" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF]">
+      <Tabs defaultValue="friends">
+        <TabsList className="bg-[#1A1D27] border border-[#2A2D3A] flex-wrap h-auto gap-1 p-1">
+          <TabsTrigger value="friends" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
+            👥 Find Friends
+          </TabsTrigger>
+          <TabsTrigger value="social" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
             Social Media
           </TabsTrigger>
-          <TabsTrigger value="shopping" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF]">
+          <TabsTrigger value="shopping" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
             Shopping
           </TabsTrigger>
-          <TabsTrigger value="recipes" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF]">
+          <TabsTrigger value="recipes" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
             Recipes
           </TabsTrigger>
-          <TabsTrigger value="health" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF]">
+          <TabsTrigger value="health" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
             Health
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="friends" className="mt-4">
+          <Card className="glass-card p-5">
+            <div className="flex items-center gap-3 mb-4">
+              <Users2 className="w-5 h-5 text-[#00BFFF]" />
+              <div>
+                <h3 className="font-semibold">Find Friends</h3>
+                <p className="text-xs text-[#8B8D97]">Discover followers from your social platforms who are already on ClipForge</p>
+              </div>
+            </div>
+            <FindFriendsPanel user={user} plan={plan} />
+          </Card>
+        </TabsContent>
 
         <TabsContent value="social" className="mt-4">
           <SocialConnectPanel />
