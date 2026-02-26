@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Check, Zap, Crown, Sparkles, Loader2, Users } from "lucide-react";
 import { motion } from "framer-motion";
+import TrialPrompt from "@/components/subscription/TrialPrompt";
 
 const plans = [
   {
