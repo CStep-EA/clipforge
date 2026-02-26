@@ -174,6 +174,7 @@ export default function Saves() {
                 onToggleFavorite={handleToggleFavorite}
                 onDelete={handleDelete}
                 onEdit={handleEdit}
+                onShare={handleShare}
                 isPro={isPro}
               />
             ))}
