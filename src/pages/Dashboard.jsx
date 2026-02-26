@@ -185,6 +185,11 @@ export default function Dashboard() {
             <h3 className="font-semibold text-sm mb-0.5">Shopping</h3>
             <p className="text-xs text-[#8B8D97]">From recipes</p>
           </Link>
+          <Link to={createPageUrl("Friends")} className="glass-card rounded-2xl p-4 hover:border-[#00BFFF]/30 transition-all group">
+            <UserPlus className="w-7 h-7 text-[#00BFFF] mb-2" />
+            <h3 className="font-semibold text-sm mb-0.5">Friends</h3>
+            <p className="text-xs text-[#8B8D97]">Connect & share</p>
+          </Link>
         </div>
       </div>
 
