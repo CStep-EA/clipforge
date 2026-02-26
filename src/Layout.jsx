@@ -14,7 +14,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-    <div className="min-h-screen bg-[#0F1117] text-[#E8E8ED]">
+    <div className="min-h-screen bg-[#0F1117] text-[#E8E8ED] dark">
       <style>{`
         /* ── Dark mode (default) ─────────────────────────── */
         :root, .dark {
