@@ -257,10 +257,10 @@ export default function SocialConnectPanel() {
                   <div className="flex gap-2">
                     <Button
                       size="sm"
-                      className="flex-1 text-xs h-8 font-semibold gap-1.5"
+                      className={`flex-1 text-xs h-8 font-semibold gap-1.5 transition-all duration-200 ${!isConnected ? "animate-btn-pulse" : ""}`}
                       style={isConnected
                         ? { background: "transparent", border: `1px solid ${platform.color}60`, color: platform.color }
-                        : { background: platform.color, color: "white" }
+                        : { background: `linear-gradient(135deg, ${platform.color}, ${platform.color}cc)`, color: "white", boxShadow: `0 0 18px ${platform.color}55` }
                       }
                       onClick={() => isConnected ? setConnectDialog(platform) : setConsentPlatform(platform)}
                     >
@@ -271,7 +271,7 @@ export default function SocialConnectPanel() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-8 border-[#2A2D3A] text-[#8B8D97] hover:text-[#00BFFF]"
+                        className="h-8 border-[#2A2D3A] text-[#8B8D97] hover:text-[#00BFFF] hover:border-[#00BFFF]/40"
                         onClick={() => handleSync(platform)}
                         disabled={syncing === platform.id}
                         title="Sync now"
