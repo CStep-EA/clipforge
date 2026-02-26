@@ -12,12 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CheckCircle2, Link2, RefreshCw, Loader2, AlertCircle, WifiOff, Wifi, Lock, Zap } from "lucide-react";
+import { CheckCircle2, Link2, RefreshCw, Loader2, AlertCircle, WifiOff, Wifi, MapPin, Calendar, Ticket, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import ConsentModal from "./ConsentModal";
-import { useSubscription } from "@/components/shared/useSubscription";
-
-const FREE_PLATFORM_LIMIT = 2;
 
 const PLATFORMS = [
   {
