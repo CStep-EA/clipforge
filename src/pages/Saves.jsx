@@ -93,12 +93,18 @@ export default function Saves() {
           <h1 className="text-2xl font-bold">My Saves</h1>
           <p className="text-[#8B8D97] text-sm">{items.length} items in your vault</p>
         </div>
-        <Button
-          onClick={() => { setEditItem(null); setAddOpen(true); }}
-          className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2"
-        >
-          <Plus className="w-4 h-4" /> Add Save
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" className="border-[#2A2D3A] text-[#E8E8ED] gap-2 animate-share-pulse"
+            onClick={() => { setShareItem(null); setShareOpen(true); }}>
+            <Share2 className="w-4 h-4" /> Share
+          </Button>
+          <Button
+            onClick={() => { setEditItem(null); setAddOpen(true); }}
+            className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2"
+          >
+            <Plus className="w-4 h-4" /> Add Save
+          </Button>
+        </div>
       </div>
 
       {/* Search & Filters */}
