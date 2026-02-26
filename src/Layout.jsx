@@ -14,27 +14,110 @@ export default function Layout({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-[#0F1117] text-[#E8E8ED]">
       <style>{`
-        :root {
-          --background: 222 15% 7%;
-          --foreground: 240 6% 93%;
-          --card: 225 14% 12%;
+        /* ── Dark mode (default) ─────────────────────────── */
+        :root, .dark {
+          --background:    222 15% 7%;
+          --foreground:    240 6% 93%;
+          --card:          225 14% 12%;
           --card-foreground: 240 6% 93%;
-          --popover: 225 14% 12%;
+          --popover:       225 14% 12%;
           --popover-foreground: 240 6% 93%;
-          --primary: 195 100% 50%;       /* #00BFFF neon blue */
+
+          /* PRIMARY → neon blue #00BFFF */
+          --primary:           195 100% 50%;
           --primary-foreground: 220 15% 8%;
-          --secondary: 263 47% 58%;      /* #9370DB purple */
+
+          /* SECONDARY → purple #9370DB */
+          --secondary:           263 47% 58%;
           --secondary-foreground: 0 0% 100%;
-          --destructive-foreground: 0 0% 98%;
-          --ring: 195 100% 50%;
-          --muted: 225 14% 18%;
+
+          /* ACCENT → soft pink #FFB6C1 */
+          --accent:           351 100% 86%;
+          --accent-foreground: 220 15% 8%;
+
+          --muted:            225 14% 18%;
           --muted-foreground: 240 4% 57%;
-          --accent: 225 14% 18%;
-          --accent-foreground: 240 6% 93%;
-          --border: 225 14% 18%;
-          --input: 225 14% 18%;
-          --ring: 195 100% 50%;
+          --destructive:      0 72% 51%;
+          --destructive-foreground: 0 0% 98%;
+          --border:  225 14% 18%;
+          --input:   225 14% 18%;
+          --ring:    195 100% 50%;
+          --radius:  0.65rem;
+
+          /* Charts */
+          --chart-1: 195 100% 50%;
+          --chart-2: 263 47% 58%;
+          --chart-3: 351 100% 86%;
+          --chart-4: 45 93% 47%;
+          --chart-5: 160 60% 40%;
+
+          /* Sidebar */
+          --sidebar-background:        222 15% 7%;
+          --sidebar-foreground:        240 6% 93%;
+          --sidebar-primary:           195 100% 50%;
+          --sidebar-primary-foreground: 220 15% 8%;
+          --sidebar-accent:            225 14% 18%;
+          --sidebar-accent-foreground: 240 6% 93%;
+          --sidebar-border:            225 14% 18%;
+          --sidebar-ring:              195 100% 50%;
         }
+
+        /* ── Light mode ──────────────────────────────────── */
+        .light {
+          --background:    0 0% 98%;
+          --foreground:    220 15% 10%;
+          --card:          0 0% 100%;
+          --card-foreground: 220 15% 10%;
+          --popover:       0 0% 100%;
+          --popover-foreground: 220 15% 10%;
+
+          --primary:           195 100% 40%;   /* slightly darker neon for contrast */
+          --primary-foreground: 0 0% 100%;
+
+          --secondary:           263 47% 52%;
+          --secondary-foreground: 0 0% 100%;
+
+          --accent:           351 100% 78%;
+          --accent-foreground: 220 15% 10%;
+
+          --muted:            210 10% 94%;
+          --muted-foreground: 215 12% 45%;
+          --destructive:      0 72% 51%;
+          --destructive-foreground: 0 0% 98%;
+          --border:  210 10% 88%;
+          --input:   210 10% 88%;
+          --ring:    195 100% 40%;
+          --radius:  0.65rem;
+
+          --chart-1: 195 100% 40%;
+          --chart-2: 263 47% 52%;
+          --chart-3: 351 100% 74%;
+          --chart-4: 45 93% 42%;
+          --chart-5: 160 60% 35%;
+
+          --sidebar-background:        0 0% 97%;
+          --sidebar-foreground:        220 15% 10%;
+          --sidebar-primary:           195 100% 40%;
+          --sidebar-primary-foreground: 0 0% 100%;
+          --sidebar-accent:            210 10% 92%;
+          --sidebar-accent-foreground: 220 15% 10%;
+          --sidebar-border:            210 10% 88%;
+          --sidebar-ring:              195 100% 40%;
+        }
+
+        /* ── Global button overrides ─────────────────────── */
+        button[class*="bg-primary"], a[class*="bg-primary"] {
+          transition: filter 0.15s ease, transform 0.15s ease;
+        }
+        button[class*="bg-primary"]:hover, a[class*="bg-primary"]:hover {
+          filter: brightness(1.12);
+        }
+
+        /* ── Link accent colour ──────────────────────────── */
+        a:not([class]):hover {
+          color: hsl(var(--accent));
+        }
+
         /* PWA safe area */
         @supports (padding-bottom: env(safe-area-inset-bottom)) {
           .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
