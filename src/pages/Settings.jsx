@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { User, Bell, Shield, LogOut, Save, Users } from "lucide-react";
+import { User, Bell, Shield, LogOut, Save, Users, UserPlus, Gift } from "lucide-react";
 import { useSubscription } from "@/components/shared/useSubscription";
 import FamilyManagement from "@/components/family/FamilyManagement";
 import FamilyUpgradePrompt from "@/components/family/FamilyUpgradePrompt";
+import FriendsPanel from "@/components/friends/FriendsPanel";
+import ReferralPanel from "@/components/referral/ReferralPanel";
 import { toast } from "sonner";
 
 export default function Settings() {
