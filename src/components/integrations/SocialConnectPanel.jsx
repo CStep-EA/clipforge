@@ -184,36 +184,57 @@ export default function SocialConnectPanel() {
           const isConnected = conn?.connected;
           return (
             <motion.div key={platform.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
-              <Card className="glass-card p-4" style={{ borderColor: isConnected ? `${platform.color}40` : "" }}>
+              <Card className="glass-card p-4 relative overflow-hidden" style={{ borderColor: isConnected ? `${platform.color}50` : "" }}>
+                {/* connected glow strip */}
+                {isConnected && (
+                  <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-xl" style={{ background: platform.color }} />
+                )}
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{platform.emoji}</span>
                     <div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         <h3 className="font-semibold text-sm">{platform.name}</h3>
-                        {isConnected && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
+                        {isConnected
+                          ? <Wifi className="w-3.5 h-3.5 text-emerald-400" />
+                          : <WifiOff className="w-3 h-3 text-[#8B8D97]" />
+                        }
                       </div>
                       <p className="text-[10px] text-[#8B8D97]">{platform.description}</p>
                     </div>
                   </div>
+                  {isConnected && (
+                    <Badge className="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 gap-1">
+                      <CheckCircle2 className="w-2.5 h-2.5" /> Connected
+                    </Badge>
+                  )}
                 </div>
 
-                {isConnected && conn?.username && (
+                {isConnected && (
                   <p className="text-[10px] text-[#8B8D97] mb-3">
-                    Connected as <span style={{ color: platform.color }}>@{conn.username}</span>
-                    {conn.last_synced && ` · Synced ${conn.sync_count || 0} items`}
+                    {conn?.username && <><span style={{ color: platform.color }}>@{conn.username}</span> · </>}
+                    {conn?.sync_count ? `${conn.sync_count} items synced` : "Ready to sync"}
                   </p>
                 )}
+
+                {/* Category hints */}
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {platform.categoryFocus?.map(c => (
+                    <span key={c} className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#2A2D3A] text-[#8B8D97] capitalize">{c.replace("_", " ")}</span>
+                  ))}
+                </div>
 
                 <div className="flex gap-2">
                   <Button
                     size="sm"
-                    variant={isConnected ? "outline" : "default"}
-                    className="flex-1 text-xs h-8"
-                    style={!isConnected ? { background: platform.color, color: "white" } : { borderColor: "#2A2D3A" }}
+                    className="flex-1 text-xs h-8 font-semibold gap-1.5"
+                    style={isConnected
+                      ? { background: "transparent", border: `1px solid ${platform.color}60`, color: platform.color }
+                      : { background: platform.color, color: "white" }
+                    }
                     onClick={() => isConnected ? setConnectDialog(platform) : setConsentPlatform(platform)}
                   >
-                    <Link2 className="w-3 h-3 mr-1" />
+                    <Link2 className="w-3 h-3" />
                     {isConnected ? "Reconnect" : `Connect ${platform.name}`}
                   </Button>
                   {isConnected && (
@@ -223,6 +244,7 @@ export default function SocialConnectPanel() {
                       className="h-8 border-[#2A2D3A] text-[#8B8D97] hover:text-[#00BFFF]"
                       onClick={() => handleSync(platform)}
                       disabled={syncing === platform.id}
+                      title="Sync now"
                     >
                       {syncing === platform.id ? (
                         <Loader2 className="w-3 h-3 animate-spin" />
