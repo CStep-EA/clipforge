@@ -106,6 +106,20 @@ Rules:
       });
     }
 
+    // Check bulk negative mention threshold and escalate if exceeded
+    const negativeCount = items.filter(i => i.sentiment === 'negative').length;
+    if (autoTicket && negativeCount > escalationNegativeCount) {
+      await base44.asServiceRole.entities.SupportTicket.create({
+        subject: `[Alert] High negative feedback volume: ${negativeCount} negative mentions detected`,
+        message: `A feedback scan (run ${runId}) returned ${negativeCount} negative mentions, exceeding the threshold of ${escalationNegativeCount}.\n\nTop issues:\n${(analysis?.top_issues || []).map(i => '• ' + i).join('\n')}\n\nSummary:\n${analysis?.summary || 'N/A'}`,
+        status: 'open',
+        priority: 'urgent',
+        category: 'general',
+      });
+      ticketsCreated++;
+      console.log(`[fetchFeedback] Bulk escalation triggered: ${negativeCount} negative mentions > threshold ${escalationNegativeCount}`);
+    }
+
     // Update config last_run
     if (configs[0]) {
       await base44.asServiceRole.entities.FeedbackConfig.update(configs[0].id, { last_run: new Date().toISOString() });
