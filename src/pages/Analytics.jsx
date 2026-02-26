@@ -7,8 +7,10 @@ import {
   BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis,
   Tooltip, ResponsiveContainer, CartesianGrid, AreaChart, Area, RadarChart, Radar, PolarGrid, PolarAngleAxis
 } from "recharts";
-import { TrendingUp, Eye, Heart, Clock, Sparkles, Loader2 } from "lucide-react";
+import { TrendingUp, Eye, Heart, Clock, Sparkles, Loader2, Share2 } from "lucide-react";
 import StatsCard from "@/components/shared/StatsCard";
+import ShareModal from "@/components/friends/ShareModal";
+import { useSubscription } from "@/components/shared/useSubscription";
 import ReactMarkdown from "react-markdown";
 
 const COLORS = ["#00BFFF", "#9370DB", "#FFB6C1", "#F59E0B", "#10B981", "#3B82F6", "#EC4899", "#6B7280"];
@@ -59,6 +61,8 @@ export default function Analytics() {
 
   const [aiInsights, setAiInsights] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const { user, plan, isPro } = useSubscription();
 
   const generateInsights = async () => {
     setAiLoading(true);
@@ -77,9 +81,15 @@ export default function Analytics() {
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Analytics</h1>
-        <p className="text-[#8B8D97] text-sm">Personal trends and insights</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Analytics</h1>
+          <p className="text-[#8B8D97] text-sm">Personal trends and insights</p>
+        </div>
+        <Button variant="outline" className="border-[#2A2D3A] text-[#E8E8ED] gap-2 animate-share-pulse"
+          onClick={() => setShareOpen(true)}>
+          <Share2 className="w-4 h-4" /> Share Analytics
+        </Button>
       </div>
 
       {/* Top stats */}
