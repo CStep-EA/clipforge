@@ -60,23 +60,26 @@ export default function Integrations() {
       )}
 
       <Tabs defaultValue="friends">
-        <TabsList className="bg-[#1A1D27] border border-[#2A2D3A] flex-wrap h-auto gap-1 p-1">
-          <TabsTrigger value="friends" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
-            👥 Find Friends
-          </TabsTrigger>
-          <TabsTrigger value="social" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
-            Social Media
-          </TabsTrigger>
-          <TabsTrigger value="shopping" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
-            Shopping
-          </TabsTrigger>
-          <TabsTrigger value="recipes" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
-            Recipes
-          </TabsTrigger>
-          <TabsTrigger value="health" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
-            Health
-          </TabsTrigger>
-        </TabsList>
+         <TabsList className="bg-[#1A1D27] border border-[#2A2D3A] flex-wrap h-auto gap-1 p-1">
+           <TabsTrigger value="friends" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
+             👥 Find Friends
+           </TabsTrigger>
+           <TabsTrigger value="social" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
+             Social Media
+           </TabsTrigger>
+           <TabsTrigger value="streaming" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
+             🎵 Streaming
+           </TabsTrigger>
+           <TabsTrigger value="shopping" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
+             Shopping
+           </TabsTrigger>
+           <TabsTrigger value="recipes" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
+             Recipes
+           </TabsTrigger>
+           <TabsTrigger value="health" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
+             Health
+           </TabsTrigger>
+         </TabsList>
 
         <TabsContent value="friends" className="mt-4">
           <Card className="glass-card p-5">
