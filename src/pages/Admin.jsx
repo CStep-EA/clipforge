@@ -106,6 +106,9 @@ export default function Admin() {
           <TabsTrigger value="docs" className="data-[state=active]:bg-[#9370DB]/10 data-[state=active]:text-[#9370DB] gap-1.5">
             <BookOpen className="w-3.5 h-3.5" /> Docs Generator
           </TabsTrigger>
+          <TabsTrigger value="feedback" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] gap-1.5">
+            <Radio className="w-3.5 h-3.5" /> Feedback Intel
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="tickets" className="mt-4">
