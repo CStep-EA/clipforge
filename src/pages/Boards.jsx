@@ -68,6 +68,7 @@ export default function Boards() {
         >
           <Plus className="w-4 h-4" /> New Board
         </Button>
+        </motion.div>
       </div>
 
       {boards.length === 0 ? (
