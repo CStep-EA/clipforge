@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
   Bookmark, TrendingUp, ShoppingCart, Users,
-  Plus, ArrowRight, Sparkles, Zap, Calendar, UserPlus
+  Plus, ArrowRight, Sparkles, Zap, Calendar, UserPlus, Share2
 } from "lucide-react";
+import ShareModal from "@/components/friends/ShareModal";
 import TrialBanner from "@/components/subscription/TrialBanner";
 import ChildSafeBanner from "@/components/family/ChildSafeBanner";
 import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
@@ -32,6 +33,8 @@ function rankItems(items) {
 
 export default function Dashboard() {
   const [addOpen, setAddOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareItem, setShareItem] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const { user, isPro, isFamily, plan } = useSubscription();
   const queryClient = useQueryClient();
