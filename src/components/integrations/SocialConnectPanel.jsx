@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CheckCircle2, Link2, RefreshCw, Loader2, AlertCircle } from "lucide-react";
+import { CheckCircle2, Link2, RefreshCw, Loader2, AlertCircle, WifiOff, Wifi } from "lucide-react";
 import { motion } from "framer-motion";
 import ConsentModal from "./ConsentModal";
 
