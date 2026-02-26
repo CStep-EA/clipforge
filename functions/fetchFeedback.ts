@@ -18,6 +18,7 @@ Deno.serve(async (req) => {
     const keywords = config.keywords?.length ? config.keywords : ['ClipForge', 'clip forge', 'social saving app', 'content organizer'];
     const escalationThreshold = config.escalation_threshold || 'urgent';
     const autoTicket = config.auto_ticket !== false;
+    const escalationNegativeCount = config.escalation_negative_count ?? 5;
 
     const appName = 'ClipForge';
     const keywordStr = keywords.join(', ');
