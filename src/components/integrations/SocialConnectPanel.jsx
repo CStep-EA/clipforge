@@ -183,14 +183,34 @@ export default function SocialConnectPanel() {
 
   return (
     <div className="space-y-4">
+      {!hasFullAccess && !subLoading && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-[#9370DB]/10 to-[#00BFFF]/10 border border-[#9370DB]/30 flex items-center gap-3">
+          <Lock className="w-5 h-5 text-[#9370DB] flex-shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-[#E8E8ED]">Pro/Premium required for all social connections</p>
+            <p className="text-xs text-[#8B8D97]">Free plan: connect up to {FREE_PLATFORM_LIMIT} platforms. Upgrade for unlimited connections + advanced AI sync.</p>
+          </div>
+          <Button size="sm" className="bg-[#9370DB] text-white gap-1 shrink-0" onClick={() => window.location.href = "/Pricing"}>
+            <Zap className="w-3 h-3" /> Upgrade
+          </Button>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {PLATFORMS.map((platform, i) => {
           const conn = getConnection(platform.id);
           const isConnected = conn?.connected;
+          const isLocked = !hasFullAccess && i >= FREE_PLATFORM_LIMIT && !isConnected;
           return (
             <motion.div key={platform.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
-              <Card className="glass-card p-4 relative overflow-hidden" style={{ borderColor: isConnected ? `${platform.color}50` : "" }}>
-                {/* connected glow strip */}
+              <Card className={`glass-card p-4 relative overflow-hidden ${isLocked ? "opacity-60" : ""}`} style={{ borderColor: isConnected ? `${platform.color}50` : "" }}>
+                {isLocked && (
+                  <div className="absolute inset-0 z-10 rounded-xl bg-[#0F1117]/60 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2">
+                    <Lock className="w-6 h-6 text-[#9370DB]" />
+                    <span className="text-xs text-[#8B8D97]">Pro required</span>
+                    <Button size="sm" className="bg-[#9370DB] text-white text-xs h-7" onClick={() => window.location.href = "/Pricing"}>Upgrade</Button>
+                  </div>
+                )}
                 {isConnected && (
                   <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-xl" style={{ background: platform.color }} />
                 )}
@@ -222,7 +242,6 @@ export default function SocialConnectPanel() {
                   </p>
                 )}
 
-                {/* Category hints */}
                 <div className="flex flex-wrap gap-1 mb-3">
                   {platform.categoryFocus?.map(c => (
                     <span key={c} className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#2A2D3A] text-[#8B8D97] capitalize">{c.replace("_", " ")}</span>
@@ -268,7 +287,7 @@ export default function SocialConnectPanel() {
       <div className="p-3 rounded-xl bg-[#F59E0B]/5 border border-[#F59E0B]/20 flex gap-2">
         <AlertCircle className="w-4 h-4 text-[#F59E0B] mt-0.5 flex-shrink-0" />
         <p className="text-xs text-[#8B8D97]">
-          Social connections require official API access tokens from each platform's developer portal. AI-powered categorization automatically organizes your saves into deals, recipes, events, and more.
+          Social connections require official API access tokens from each platform's developer portal. AI-powered categorization automatically organizes your saves.
         </p>
       </div>
 
