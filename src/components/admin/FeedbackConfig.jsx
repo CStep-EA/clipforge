@@ -20,6 +20,10 @@ const ALL_SOURCES = [
   { id: "appstore", label: "App Store", emoji: "🍎" },
   { id: "playstore", label: "Play Store", emoji: "🤖" },
   { id: "technews", label: "Tech News", emoji: "📰" },
+  { id: "cnet", label: "CNET", emoji: "💻" },
+  { id: "pcmag", label: "PCMag", emoji: "🖥️" },
+  { id: "wired", label: "Wired", emoji: "⚡" },
+  { id: "facebook", label: "Facebook", emoji: "📘" },
 ];
 
 export default function FeedbackConfig({ onBack }) {
