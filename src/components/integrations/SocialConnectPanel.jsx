@@ -161,7 +161,8 @@ export default function SocialConnectPanel() {
         sync_count: (conn.sync_count || 0) + (result.items?.length || 0),
       });
     }
-    queryClient.invalidateQueries({ queryKey: ["socialConnections", "savedItems"] });
+    queryClient.invalidateQueries({ queryKey: ["socialConnections"] });
+    queryClient.invalidateQueries({ queryKey: ["savedItems"] });
     setSyncing(null);
   };
 
