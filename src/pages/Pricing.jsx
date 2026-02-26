@@ -100,6 +100,8 @@ export default function Pricing() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(null);
   const [billing, setBilling] = useState("monthly");
+  const [trialOpen, setTrialOpen] = useState(false);
+  const [selectedTrialPlan, setSelectedTrialPlan] = useState("premium");
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
