@@ -169,15 +169,16 @@ export default function Onboarding() {
 
           {/* Text */}
           <div className="space-y-3">
-            <h1 className="text-2xl font-bold">{currentStep.title}</h1>
-            <p className="text-sm font-medium" style={{ color: currentStep.accent }}>{currentStep.subtitle}</p>
+            <h1 className="text-3xl font-black tracking-tight leading-tight">{currentStep.title}</h1>
+            <p className="text-sm font-bold uppercase tracking-widest" style={{ color: currentStep.accent }}>{currentStep.subtitle}</p>
             <p className="text-sm text-[#8B8D97] leading-relaxed">{currentStep.description}</p>
           </div>
 
           {/* CTA */}
+          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
           <Button
             onClick={handleNext}
-            className="w-full text-white gap-2 py-6 text-base"
+            className="w-full text-white gap-2 py-6 text-base font-black tracking-wide animate-btn-pulse"
             style={{ background: `linear-gradient(135deg, ${currentStep.accent}, ${currentStep.accent}99)` }}
           >
             {currentStep.action}
