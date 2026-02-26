@@ -5,7 +5,7 @@ import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import {
   LayoutDashboard,
   Bookmark,
-  Users,
+  UserPlus,
   Search,
   Sparkles
 } from "lucide-react";
@@ -15,7 +15,7 @@ const mobileItems = [
   { name: "Home", icon: LayoutDashboard, page: "Dashboard" },
   { name: "Saves", icon: Bookmark, page: "Saves" },
   { name: "Search", icon: Search, page: "Search" },
-  { name: "Boards", icon: Users, page: "Boards" },
+  { name: "Friends", icon: UserPlus, page: "Friends" },
   { name: "AI", icon: Sparkles, page: "Assistant" },
 ];
 
