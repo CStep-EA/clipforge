@@ -50,15 +50,21 @@ export default function Boards() {
   };
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 relative">
+      {/* Y2K retro background pattern */}
+      <div className="pointer-events-none fixed inset-0 -z-10 y2k-pattern opacity-60" />
+      <div className="pointer-events-none fixed top-0 right-0 w-96 h-96 rounded-full bg-[#9370DB]/5 blur-3xl -z-10" />
+      <div className="pointer-events-none fixed bottom-0 left-0 w-80 h-80 rounded-full bg-[#00BFFF]/5 blur-3xl -z-10" />
+
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Shared Boards</h1>
-          <p className="text-[#8B8D97] text-sm">Collaborate with your partner, roommates, or friends</p>
+          <h1 className="text-3xl font-black tracking-tight">Shared Boards</h1>
+          <p className="text-[#8B8D97] text-sm font-medium mt-0.5">Collaborate with your partner, roommates, or friends</p>
         </div>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>
         <Button
           onClick={() => setCreateOpen(true)}
-          className="bg-gradient-to-r from-[#9370DB] to-[#FFB6C1] text-white gap-2"
+          className="bg-gradient-to-r from-[#9370DB] to-[#FFB6C1] text-white gap-2 font-bold animate-btn-pulse-purple"
         >
           <Plus className="w-4 h-4" /> New Board
         </Button>
