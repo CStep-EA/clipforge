@@ -30,7 +30,6 @@ export default function Saves() {
   const [viewMode, setViewMode] = useState("grid");
 
   const queryClient = useQueryClient();
-  const { isPro } = useSubscription();
 
   const { data: items = [], isLoading } = useQuery({
     queryKey: ["savedItems"],
