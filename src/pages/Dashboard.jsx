@@ -169,6 +169,7 @@ export default function Dashboard() {
                 item={item}
                 onToggleFavorite={handleToggleFavorite}
                 onDelete={handleDelete}
+                onShare={(i) => { setShareItem(i); setShareOpen(true); }}
                 isPro={isPro}
               />
             ))}
