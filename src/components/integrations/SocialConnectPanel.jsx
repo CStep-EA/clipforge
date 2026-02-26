@@ -121,8 +121,9 @@ export default function SocialConnectPanel() {
     setSyncing(platform.id);
     const conn = getConnection(platform.id);
     // AI-powered simulation of fetching & categorizing saves
+    const categoryFocus = platform.categoryFocus?.join(", ") || "deal, recipe, event, product, article";
     const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Simulate fetching 5 saved items from ${platform.name} for user @${conn?.username || "user"}. Generate realistic saved content items that would come from this platform. Include a mix of deals, recipes, articles, and products.`,
+      prompt: `Simulate fetching 6 saved items from ${platform.name} for user @${conn?.username || "user"}. Generate realistic saved content items that would come from this platform. Focus heavily on these categories: ${categoryFocus}. Make titles specific and realistic to ${platform.name}'s typical content style.`,
       response_json_schema: {
         type: "object",
         properties: {
@@ -133,10 +134,12 @@ export default function SocialConnectPanel() {
               properties: {
                 title: { type: "string" },
                 description: { type: "string" },
+                url: { type: "string" },
                 category: { type: "string", enum: ["deal", "recipe", "event", "product", "article", "travel", "gift_idea", "other"] },
                 tags: { type: "array", items: { type: "string" } },
                 ai_summary: { type: "string" },
                 rating: { type: "number" },
+                price: { type: "number" },
               },
             },
           },
