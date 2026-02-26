@@ -9,7 +9,7 @@ import { RefreshCw, Loader2, AlertTriangle, ThumbsUp, ThumbsDown, Minus, Zap, Ex
 import { toast } from "sonner";
 import FeedbackConfig from "./FeedbackConfig";
 
-const SOURCE_EMOJI = { reddit: "🟠", twitter: "🐦", producthunt: "🚀", g2: "⭐", capterra: "📋", appstore: "🍎", playstore: "🤖", technews: "📰", manual: "✍️" };
+const SOURCE_EMOJI = { reddit: "🟠", twitter: "🐦", producthunt: "🚀", g2: "⭐", capterra: "📋", appstore: "🍎", playstore: "🤖", technews: "📰", cnet: "💻", pcmag: "🖥️", wired: "⚡", facebook: "📘", manual: "✍️" };
 const SENTIMENT_COLOR = { positive: "#10B981", negative: "#EF4444", neutral: "#8B8D97", mixed: "#F59E0B" };
 const CATEGORY_COLOR = { bug: "#EF4444", feature_request: "#00BFFF", praise: "#10B981", complaint: "#F59E0B", question: "#9370DB", other: "#8B8D97" };
 
