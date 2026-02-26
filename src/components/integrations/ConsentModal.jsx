@@ -10,9 +10,12 @@ export default function ConsentModal({ open, onClose, onAccept, platform }) {
 
   const dataPoints = {
     instagram: ["Your saved posts & collections", "Post captions and media URLs", "Account username"],
+    facebook: ["Your saved posts & marketplace items", "Post titles, links, and descriptions", "Account display name"],
     pinterest: ["Your boards and saved pins", "Pin titles, descriptions, and URLs", "Board names"],
     twitter: ["Your bookmarked tweets", "Tweet text and linked URLs", "Account handle"],
     tiktok: ["Your favorited videos", "Video descriptions and author info", "Account username"],
+    web: ["Your Etsy favorites", "Item titles, prices, and URLs", "Shop/username"],
+    manual: ["Your saved recipes", "Recipe titles and URLs", "Username"],
   };
 
   const points = dataPoints[platform.id] || ["Account data and saved content"];
