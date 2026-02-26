@@ -8,6 +8,7 @@ import {
   Plus, ArrowRight, Sparkles, Zap, Calendar, UserPlus
 } from "lucide-react";
 import TrialBanner from "@/components/subscription/TrialBanner";
+import ChildSafeBanner from "@/components/family/ChildSafeBanner";
 import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
