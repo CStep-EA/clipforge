@@ -184,6 +184,7 @@ export default function Onboarding() {
             {currentStep.action}
             <ArrowRight className="w-4 h-4" />
           </Button>
+          </motion.div>
 
           <p className="text-xs text-[#8B8D97]">
             Step {step + 1} of {STEPS.length}
