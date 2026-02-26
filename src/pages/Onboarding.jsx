@@ -119,7 +119,7 @@ export default function Onboarding() {
       <div className="pointer-events-none absolute top-3/4 left-1/3 w-40 h-40 rounded-full bg-[#FFB6C1]/6 blur-2xl animate-float" style={{ animationDelay: "3s" }} />
       {/* Logo top-left */}
       <div className="fixed top-4 left-4">
-        <ClipForgeLogo size={28} showText variant="default" />
+        <ClipForgeLogo size={30} showText variant="morph" />
       </div>
 
       {/* Skip button */}
