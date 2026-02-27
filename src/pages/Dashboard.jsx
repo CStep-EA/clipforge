@@ -125,7 +125,7 @@ export default function Dashboard() {
       </motion.div>
 
       {/* Trial & Referral Banners */}
-      {!isPro && <TrialAndReferralBanner />}
+      {!isPro && <TrialAndReferralBanner user={user} />}
 
       {/* Stats */}
        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
