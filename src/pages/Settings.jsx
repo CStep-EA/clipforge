@@ -105,12 +105,36 @@ export default function Settings() {
             <h2 className="font-semibold">Friends & Connections</h2>
             <p className="text-[10px] text-[#8B8D97]">Manage friends, invites & sharing permissions</p>
           </div>
+          {!isPro && (
+            <Link to={createPageUrl("Pricing")} className="ml-auto">
+              <span className="text-[10px] px-2 py-0.5 rounded-full border border-[#00BFFF]/30 text-[#00BFFF]">Pro+</span>
+            </Link>
+          )}
         </div>
-        <FriendsPanel user={user} plan={plan} />
+        {isPro ? (
+          <FriendsPanel user={user} plan={plan} />
+        ) : (
+          <div className="p-4 rounded-xl border border-[#00BFFF]/15 bg-[#00BFFF]/5 text-center space-y-3">
+            <Lock className="w-6 h-6 text-[#00BFFF] mx-auto" />
+            <p className="text-sm text-[#8B8D97]">Friends & sharing features require <strong className="text-[#E8E8ED]">Pro</strong> or higher.</p>
+            <Link to={createPageUrl("Pricing")}>
+              <button className="flex items-center gap-1.5 mx-auto px-4 py-2 rounded-xl text-xs font-semibold bg-[#00BFFF]/15 text-[#00BFFF] border border-[#00BFFF]/30 hover:bg-[#00BFFF]/25 transition-all">
+                Upgrade to Pro <ArrowRight className="w-3 h-3" />
+              </button>
+            </Link>
+          </div>
+        )}
       </Card>
 
       {/* Referrals */}
       <Card className="glass-card p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <Gift className="w-5 h-5 text-[#FFB6C1]" />
+          <div>
+            <h2 className="font-semibold">Referrals</h2>
+            <p className="text-[10px] text-[#8B8D97]">Invite friends and earn bonuses</p>
+          </div>
+        </div>
         <ReferralPanel user={user} />
       </Card>
 
@@ -122,6 +146,11 @@ export default function Settings() {
             <h2 className="font-semibold">Family Accounts</h2>
             <p className="text-[10px] text-[#8B8D97]">Manage family members, roles & parental controls</p>
           </div>
+          {!isFamily && (
+            <Link to={createPageUrl("Pricing")} className="ml-auto">
+              <span className="text-[10px] px-2 py-0.5 rounded-full border border-[#EC4899]/30 text-[#EC4899]">Family+</span>
+            </Link>
+          )}
         </div>
         {isFamily ? (
           <FamilyManagement user={user} />
