@@ -101,7 +101,18 @@ export default function Integrations() {
         </TabsContent>
 
         <TabsContent value="streaming" className="mt-4">
-          <StreamingPlatformsPanel />
+          {isPremium ? (
+            <StreamingPlatformsPanel />
+          ) : (
+            <div className="p-8 rounded-2xl border border-[#9370DB]/20 bg-[#9370DB]/5 text-center space-y-4">
+              <Lock className="w-8 h-8 text-[#9370DB] mx-auto" />
+              <h3 className="font-semibold">Streaming platforms require Premium</h3>
+              <p className="text-xs text-[#8B8D97] max-w-sm mx-auto">Connect Discord, Twitch, YouTube, Spotify, and Apple Podcasts to auto-sync your saved content.</p>
+              <Link to={createPageUrl("Pricing")}>
+                <Button size="sm" className="bg-[#9370DB] text-white mx-auto">Upgrade to Premium</Button>
+              </Link>
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="shopping" className="mt-4 space-y-4">
