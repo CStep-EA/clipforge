@@ -46,9 +46,30 @@ export default function Integrations() {
 
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Integrations</h1>
-        <p className="text-[#8B8D97] text-sm">Connect your favorite platforms</p>
+      <div className="flex items-start justify-between gap-3 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <span className="text-2xl">🔌</span> Integrations
+          </h1>
+          <p className="text-[#8B8D97] text-sm">Connect Discord, Twitch, YouTube, Spotify & more to sync your saves automatically</p>
+        </div>
+      </div>
+
+      {/* Streaming hero banner */}
+      <div className="rounded-2xl p-4 md:p-5 border border-[#9370DB]/25 animate-gradient-shift overflow-hidden relative"
+        style={{ background: "linear-gradient(135deg, rgba(0,191,255,0.06), rgba(147,112,219,0.10), rgba(255,182,193,0.05))", backgroundSize: "200% 200%" }}>
+        <div className="flex flex-col md:flex-row md:items-center gap-4">
+          <div className="flex-1">
+            <p className="text-xs font-bold uppercase tracking-wider text-[#9370DB] mb-1">🎮 Streaming Platforms</p>
+            <h2 className="text-lg font-black gradient-text mb-1">Auto-sync Discord, Twitch, YouTube & Podcasts</h2>
+            <p className="text-xs text-[#8B8D97]">Connect once, sync all your bookmarks, liked videos, followed channels, and podcast episodes directly to your ClipForge vault.</p>
+          </div>
+          <div className="flex gap-3 flex-wrap">
+            {["🎮", "📺", "▶️", "🎵", "🎧"].map((e, i) => (
+              <span key={i} className="text-2xl w-10 h-10 rounded-xl bg-[#1A1D27] border border-[#2A2D3A] flex items-center justify-center">{e}</span>
+            ))}
+          </div>
+        </div>
       </div>
 
       {!isPremium && (
@@ -61,7 +82,7 @@ export default function Integrations() {
         </div>
       )}
 
-      <Tabs defaultValue="friends">
+      <Tabs defaultValue="streaming">
          <TabsList className="bg-[#1A1D27] border border-[#2A2D3A] flex-wrap h-auto gap-1 p-1">
            <TabsTrigger value="friends" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
              👥 Find Friends
