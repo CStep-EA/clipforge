@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar, ChevronDown, ExternalLink, Bell, BellOff, Lock, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
-import useSubscription from "@/components/shared/useSubscription";
+import { useSubscription } from "@/components/shared/useSubscription";
 
 // ── ICS helpers ──────────────────────────────────────────────────────────────
 
