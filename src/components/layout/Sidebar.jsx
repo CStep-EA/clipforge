@@ -76,7 +76,9 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group",
                 isActive
                   ? "bg-[#00BFFF]/10 text-[#00BFFF]"
-                  : "text-[#8B8D97] hover:text-[#E8E8ED] hover:bg-[#1A1D27]"
+                  : isDark
+                    ? "text-[#8B8D97] hover:text-[#E8E8ED] hover:bg-[#1A1D27]"
+                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
               )}
             >
               <item.icon className={cn("w-5 h-5 flex-shrink-0", isActive && "drop-shadow-[0_0_6px_rgba(0,191,255,0.5)]")} />
