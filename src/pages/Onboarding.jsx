@@ -247,7 +247,7 @@ export default function Onboarding() {
       const payload = {
         completed: true,
         current_step: TOTAL_STEPS,
-        completed_steps: [...INFO_STEPS.map(s => s.id), "connections", "monitoring"],
+        completed_steps: [...INFO_STEPS.map(s => s.id), "connections", "monitoring", "growth"],
         ...extraData,
       };
       if (existing.length > 0) {
