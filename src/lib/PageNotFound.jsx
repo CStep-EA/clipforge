@@ -26,12 +26,12 @@ export default function PageNotFound({}) {
                 <div className="text-center space-y-6">
                     {/* Logo */}
                     <div className="flex justify-center mb-2">
-                        <ClipForgeLogo size={56} variant="default" showText />
+                        <ClipForgeLogo size={64} variant="morph" showText />
                     </div>
                     {/* 404 Error Code */}
                     <div className="space-y-2">
-                        <h1 className="text-7xl font-light text-[#2A2D3A]">404</h1>
-                        <div className="h-0.5 w-16 bg-[#2A2D3A] mx-auto"></div>
+                        <h1 className="text-7xl font-black gradient-text">404</h1>
+                        <div className="h-0.5 w-16 mx-auto" style={{ background: "linear-gradient(90deg,#00BFFF,#9370DB)" }}></div>
                     </div>
                     
                     {/* Main Message */}
