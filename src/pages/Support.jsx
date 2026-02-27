@@ -14,8 +14,9 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
   MessageCircle, Plus, Clock, CheckCircle2, Search, Bug, Lightbulb,
-  BookOpen, Map, Shield, FileText, Sparkles, ChevronRight, Loader2, Edit3
+  BookOpen, Map, Shield, FileText, Sparkles, ChevronRight, Loader2, Edit3, Info
 } from "lucide-react";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import SupportBot from "@/components/support/SupportBot";
 import TicketDetail from "@/components/support/TicketDetail";
@@ -94,6 +95,7 @@ export default function Support() {
     setCreateOpen(false);
     setSaving(false);
     setForm({ subject: "", message: "", category: "general", priority: "medium" });
+    toast.success("Ticket submitted! We'll respond within 24 hours.");
   };
 
   const filteredTickets = tickets
