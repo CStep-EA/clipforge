@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Ticket, BarChart3, CreditCard, Sparkles, BookOpen, Loader2, Radio, UserPlus, Bug } from "lucide-react";
+import { Shield, Users, Ticket, BarChart3, CreditCard, Sparkles, BookOpen, Loader2, Radio, UserPlus, Bug, TrendingUp, Map } from "lucide-react";
 import DebugModeToggle from "@/components/admin/DebugModeToggle";
 import StatsCard from "@/components/shared/StatsCard";
 import AdminTickets from "@/components/admin/AdminTickets";
@@ -12,6 +12,8 @@ import AdminDocs from "@/components/admin/AdminDocs";
 import FeedbackIntelligence from "@/components/admin/FeedbackIntelligence";
 import CreateSpecialAccountDialog from "@/components/admin/CreateSpecialAccountDialog";
 import SpecialAccountsList from "@/components/admin/SpecialAccountsList";
+import AdminMetrics from "@/components/admin/AdminMetrics";
+import DevLogManager from "@/components/admin/DevLogManager";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -109,8 +111,11 @@ export default function Admin() {
         }).length} icon={Users} accent="#FFB6C1" />
       </div>
 
-      <Tabs defaultValue="tickets" className="w-full">
+      <Tabs defaultValue="metrics" className="w-full">
         <TabsList className="bg-[#1A1D27] border border-[#2A2D3A] flex-wrap h-auto gap-1 p-1">
+          <TabsTrigger value="metrics" className="data-[state=active]:bg-[#10B981]/10 data-[state=active]:text-[#10B981] gap-1.5">
+            <TrendingUp className="w-3.5 h-3.5" /> Metrics
+          </TabsTrigger>
           <TabsTrigger value="tickets" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] gap-1.5">
             <Ticket className="w-3.5 h-3.5" /> Support Tickets
             {openTickets.length > 0 && <span className="ml-1 px-1.5 py-0.5 rounded-full bg-[#F59E0B]/20 text-[#F59E0B] text-[9px] font-bold">{openTickets.length}</span>}
@@ -133,10 +138,17 @@ export default function Admin() {
           <TabsTrigger value="special" className="data-[state=active]:bg-[#9370DB]/10 data-[state=active]:text-[#9370DB] gap-1.5">
             <UserPlus className="w-3.5 h-3.5" /> Special Accounts
           </TabsTrigger>
+          <TabsTrigger value="devlog" className="data-[state=active]:bg-[#9370DB]/10 data-[state=active]:text-[#9370DB] gap-1.5">
+            <Map className="w-3.5 h-3.5" /> Dev Log
+          </TabsTrigger>
           <TabsTrigger value="debug" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-400 gap-1.5">
             <Bug className="w-3.5 h-3.5" /> Debug
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="metrics" className="mt-4">
+          <AdminMetrics tickets={tickets} users={users} subs={allSubs} />
+        </TabsContent>
 
         <TabsContent value="tickets" className="mt-4">
           <AdminTickets />
@@ -193,6 +205,12 @@ export default function Admin() {
 
         <TabsContent value="feedback" className="mt-4">
           <FeedbackIntelligence />
+        </TabsContent>
+
+        <TabsContent value="devlog" className="mt-4">
+          <Card className="glass-card p-5">
+            <DevLogManager />
+          </Card>
         </TabsContent>
 
         <TabsContent value="debug" className="mt-4">
