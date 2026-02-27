@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
   MessageCircle, Plus, Clock, CheckCircle2, Search, Bug, Lightbulb,
-  BookOpen, Map, Shield, FileText, Globe, Sparkles, ChevronRight, Loader2
+  BookOpen, Map, Shield, FileText, Sparkles, ChevronRight, Loader2, Edit3
 } from "lucide-react";
 import { motion } from "framer-motion";
 import SupportBot from "@/components/support/SupportBot";
@@ -61,6 +61,13 @@ export default function Support() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [form, setForm] = useState({ subject: "", message: "", category: "general", priority: "medium" });
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState("tickets");
+
+  // Pre-fill form with category shortcut
+  const openTicketForm = (category, priority = "medium") => {
+    setForm({ subject: "", message: "", category, priority });
+    setCreateOpen(true);
+  };
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -97,6 +104,19 @@ export default function Support() {
     </div>
   );
 
+  if (!user) return (
+    <div className="p-8 max-w-md mx-auto mt-20 text-center space-y-4">
+      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00BFFF]/20 to-[#9370DB]/20 flex items-center justify-center mx-auto">
+        <MessageCircle className="w-8 h-8 text-[#00BFFF]" />
+      </div>
+      <h2 className="text-lg font-semibold">Sign in to access Support</h2>
+      <p className="text-sm text-[#8B8D97]">You need to be logged in to create or track support tickets.</p>
+      <Button onClick={() => base44.auth.redirectToLogin()} className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white">
+        Sign In
+      </Button>
+    </div>
+  );
+
   const roadmapStatusColors = {
     planned: "text-[#8B8D97]",
     in_progress: "text-[#00BFFF]",
@@ -120,7 +140,7 @@ export default function Support() {
         )}
       </div>
 
-      <Tabs defaultValue={user ? "tickets" : "docs"} className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="bg-[#1A1D27] border border-[#2A2D3A] flex-wrap h-auto gap-1 p-1">
           {user && (
             <TabsTrigger value="tickets" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] gap-1.5 text-xs">
@@ -147,18 +167,24 @@ export default function Support() {
         {user && (
           <TabsContent value="tickets" className="mt-4 space-y-4">
             {/* Quick actions */}
-            <div className="grid grid-cols-2 gap-3">
-              <button onClick={() => { setForm({ ...form, category: "bug", priority: "high" }); setCreateOpen(true); }}
+            <div className="grid grid-cols-3 gap-3">
+              <button onClick={() => openTicketForm("bug", "high")}
                 className="glass-card rounded-xl p-3 text-left hover:border-red-400/30 transition-all group">
                 <Bug className="w-5 h-5 text-red-400 mb-1.5 group-hover:scale-110 transition-transform" />
-                <p className="text-xs font-semibold">Report a Bug</p>
-                <p className="text-[10px] text-[#8B8D97]">Something broken? Let us know</p>
+                <p className="text-xs font-semibold">Report Bug</p>
+                <p className="text-[10px] text-[#8B8D97]">Something broken</p>
               </button>
-              <button onClick={() => { setForm({ ...form, category: "feature_request", priority: "low" }); setCreateOpen(true); }}
+              <button onClick={() => openTicketForm("feature_request", "low")}
                 className="glass-card rounded-xl p-3 text-left hover:border-[#9370DB]/30 transition-all group">
                 <Lightbulb className="w-5 h-5 text-[#9370DB] mb-1.5 group-hover:scale-110 transition-transform" />
-                <p className="text-xs font-semibold">Suggest a Feature</p>
-                <p className="text-[10px] text-[#8B8D97]">Have an idea? Share it</p>
+                <p className="text-xs font-semibold">Suggest Feature</p>
+                <p className="text-[10px] text-[#8B8D97]">Have an idea</p>
+              </button>
+              <button onClick={() => openTicketForm("general", "medium")}
+                className="glass-card rounded-xl p-3 text-left hover:border-[#00BFFF]/30 transition-all group">
+                <Edit3 className="w-5 h-5 text-[#00BFFF] mb-1.5 group-hover:scale-110 transition-transform" />
+                <p className="text-xs font-semibold">General Help</p>
+                <p className="text-[10px] text-[#8B8D97]">Any question</p>
               </button>
             </div>
 
@@ -188,7 +214,12 @@ export default function Support() {
               <Card className="glass-card p-10 text-center">
                 <MessageCircle className="w-10 h-10 text-[#9370DB] mx-auto mb-3" />
                 <h3 className="font-semibold mb-2">{tickets.length === 0 ? "No tickets yet" : "No matching tickets"}</h3>
-                <p className="text-sm text-[#8B8D97]">{tickets.length === 0 ? "Create a ticket if you need help" : "Try adjusting your filters"}</p>
+                <p className="text-sm text-[#8B8D97] mb-4">{tickets.length === 0 ? "Or try our AI bot for instant answers" : "Try adjusting your filters"}</p>
+                {tickets.length === 0 && (
+                  <Button size="sm" onClick={() => setActiveTab("bot")} variant="outline" className="border-[#9370DB]/30 text-[#9370DB] gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" /> Try AI Assistant
+                  </Button>
+                )}
               </Card>
             ) : (
               <div className="space-y-2">
@@ -228,7 +259,15 @@ export default function Support() {
 
         {/* AI Bot Tab */}
         <TabsContent value="bot" className="mt-4">
-          <SupportBot user={user} floating={false} />
+          <div className="space-y-3">
+            <div className="p-3 rounded-xl bg-[#9370DB]/5 border border-[#9370DB]/20 flex items-start gap-2.5">
+              <Sparkles className="w-4 h-4 text-[#9370DB] shrink-0 mt-0.5" />
+              <div className="text-xs text-[#8B8D97] leading-relaxed">
+                <strong className="text-[#E8E8ED]">AI Support Bot</strong> — answers questions about ClipForge instantly. For issues needing human review, click <strong className="text-[#FFB6C1]">Human</strong> in the chat header to escalate and auto-create a ticket with your conversation context. <em>AI responses are for informational purposes only.</em>
+              </div>
+            </div>
+            <SupportBot user={user} floating={false} />
+          </div>
         </TabsContent>
 
         {/* Roadmap Tab */}
