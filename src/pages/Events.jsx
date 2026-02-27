@@ -23,6 +23,7 @@ import {
   Calendar, MapPin, Ticket, Sparkles, Loader2,
   ExternalLink, Star, DollarSign, Search
 } from "lucide-react";
+import AddToCalendarButton from "@/components/events/AddToCalendarButton";
 import { motion } from "framer-motion";
 
 const statusColors = {
@@ -221,7 +222,7 @@ export default function Events() {
                       <DollarSign className="w-3 h-3" /> ${event.min_price}–${event.max_price}
                     </div>
                   )}
-                  <div className="flex gap-2 pt-1">
+                  <div className="flex gap-2 pt-1 flex-wrap">
                     <Button size="sm" variant="ghost" className="h-7 text-[10px] text-[#8B8D97] hover:text-[#9370DB] px-2"
                             onClick={(e) => { e.stopPropagation(); updateStatus(event, "interested"); }}>
                       Interested
@@ -230,6 +231,9 @@ export default function Events() {
                             onClick={(e) => { e.stopPropagation(); updateStatus(event, "booked"); }}>
                       <Ticket className="w-3 h-3 mr-1" /> Book
                     </Button>
+                    <div onClick={e => e.stopPropagation()}>
+                      <AddToCalendarButton event={event} size="sm" />
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -278,7 +282,7 @@ export default function Events() {
                 </Button>
               )}
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 <Button
                   className="flex-1 bg-gradient-to-r from-[#9370DB] to-[#00BFFF] text-white gap-2"
                   onClick={() => updateStatus(selectedEvent, "booked")}
@@ -292,6 +296,7 @@ export default function Events() {
                     </Button>
                   </a>
                 )}
+                <AddToCalendarButton event={selectedEvent} />
               </div>
             </div>
           )}

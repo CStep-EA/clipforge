@@ -4,6 +4,9 @@ import MobileNav from "@/components/layout/MobileNav";
 import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import { base44 } from "@/api/base44Client";
 import { Sun, Moon } from "lucide-react";
+import SupportBot from "@/components/support/SupportBot";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
@@ -166,6 +169,19 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Mobile nav */}
       <MobileNav currentPage={currentPageName} />
+
+      {/* Floating support bot (not on Support or Admin page) */}
+      {currentPageName !== "Support" && currentPageName !== "Admin" && (
+        <SupportBot user={user} floating={true} />
+      )}
+
+      {/* Footer links */}
+      <div className={`hidden md:flex fixed bottom-0 left-[240px] right-0 z-10 px-6 py-2 justify-end gap-4 text-[10px] ${isDark ? "text-[#8B8D97] border-t border-[#2A2D3A] bg-[#0F1117]/80" : "text-gray-400 border-t border-gray-200 bg-white/80"} backdrop-blur-sm`}>
+        <Link to={createPageUrl("Privacy")} className="hover:text-[#00BFFF] transition-colors">Privacy</Link>
+        <Link to={createPageUrl("Terms")} className="hover:text-[#00BFFF] transition-colors">Terms</Link>
+        <Link to={createPageUrl("Support")} className="hover:text-[#00BFFF] transition-colors">Support</Link>
+        <span>© 2026 ClipForge</span>
+      </div>
     </div>
   );
 }
