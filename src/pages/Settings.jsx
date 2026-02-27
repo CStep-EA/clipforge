@@ -38,7 +38,16 @@ export default function Settings() {
 
   return (
     <div className="p-4 md:p-8 max-w-3xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">Settings</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Settings</h1>
+        {!isPro && (
+          <Link to={createPageUrl("Pricing")}>
+            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border border-[#9370DB]/40 text-[#9370DB] hover:bg-[#9370DB]/10 transition-all">
+              <Crown className="w-3 h-3" /> Upgrade
+            </button>
+          </Link>
+        )}
+      </div>
 
       {/* Profile */}
       <Card className="glass-card p-6">
