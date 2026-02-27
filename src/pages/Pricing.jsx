@@ -111,6 +111,7 @@ export default function Pricing() {
     queryKey: ["subscription", user?.email],
     queryFn: () => base44.entities.UserSubscription.filter({ user_email: user.email }),
     enabled: !!user?.email,
+    placeholderData: [],
   });
 
   const currentPlan = subData[0]?.plan || "free";
