@@ -338,9 +338,11 @@ export default function Events() {
                 <Button size="sm" variant={selectedEvent.ticket_purchased ? "default" : "outline"}
                   className={selectedEvent.ticket_purchased ? "h-7 text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "h-7 text-xs border-[#2A2D3A] text-[#8B8D97]"}
                   onClick={async () => {
-                    const updated = await base44.entities.EventSuggestion.update(selectedEvent.id, { ticket_purchased: !selectedEvent.ticket_purchased, status: "booked" });
-                    setSelectedEvent({ ...selectedEvent, ticket_purchased: !selectedEvent.ticket_purchased });
+                    const newVal = !selectedEvent.ticket_purchased;
+                    await base44.entities.EventSuggestion.update(selectedEvent.id, { ticket_purchased: newVal, status: "booked" });
+                    setSelectedEvent({ ...selectedEvent, ticket_purchased: newVal });
                     queryClient.invalidateQueries({ queryKey: ["events"] });
+                    toast.success(newVal ? "🎟 Ticket purchase confirmed! Reminders disabled." : "Ticket purchase cleared");
                   }}>
                   {selectedEvent.ticket_purchased ? "✓ Purchased" : "Mark Purchased"}
                 </Button>
