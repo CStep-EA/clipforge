@@ -223,6 +223,7 @@ export default function Analytics() {
         plan={plan}
         user={user}
       />
+      </div>
     </div>
   );
 }
