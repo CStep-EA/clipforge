@@ -21,10 +21,14 @@ import {
 } from "@/components/ui/dialog";
 import {
   Calendar, MapPin, Ticket, Sparkles, Loader2,
-  ExternalLink, Star, DollarSign, Search
+  ExternalLink, Star, DollarSign, Search, Bell
 } from "lucide-react";
 import AddToCalendarButton from "@/components/events/AddToCalendarButton";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { useSubscription } from "@/components/shared/useSubscription";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 const statusColors = {
   suggested: "bg-[#00BFFF]/10 text-[#00BFFF] border-[#00BFFF]/30",
@@ -39,6 +43,7 @@ export default function Events() {
   const [genre, setGenre] = useState("all");
   const [selectedEvent, setSelectedEvent] = useState(null);
   const queryClient = useQueryClient();
+  const { isPro, isPremium, isFamily, plan } = useSubscription();
 
   const { data: events = [], isLoading } = useQuery({
     queryKey: ["events"],
@@ -52,6 +57,10 @@ export default function Events() {
 
   const searchEvents = async () => {
     if (!city.trim()) return;
+    if (!isPro) {
+      toast.error("Event search requires Pro or higher. Upgrade to unlock.");
+      return;
+    }
     setSearching(true);
 
     try {
@@ -103,11 +112,13 @@ export default function Events() {
 
     queryClient.invalidateQueries({ queryKey: ["events"] });
     setSearching(false);
+    toast.success("Events loaded!");
   };
 
   const updateStatus = async (event, status) => {
     await base44.entities.EventSuggestion.update(event.id, { status });
     queryClient.invalidateQueries({ queryKey: ["events"] });
+    toast.success(status === "booked" ? "Marked as booked! 🎟" : "Status updated");
   };
 
   const getAIReview = async (event) => {
