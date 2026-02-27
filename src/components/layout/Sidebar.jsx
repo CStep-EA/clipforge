@@ -21,7 +21,9 @@ import {
   UserPlus,
   Sun,
   Moon,
-  Plug
+  Plug,
+  TrendingUp,
+  Info
 } from "lucide-react";
 
 const navItems = [
@@ -41,7 +43,9 @@ const navItems = [
 const bottomItems = [
   { name: "Settings", icon: Settings, page: "Settings" },
   { name: "Admin", icon: Shield, page: "Admin", adminOnly: true },
+  { name: "Marketing", icon: TrendingUp, page: "MarketingLaunch", adminOnly: true },
   { name: "Support", icon: MessageCircle, page: "Support" },
+  { name: "About", icon: Info, page: "About" },
 ];
 
 export default function Sidebar({ currentPage, userRole, theme = "dark", onToggleTheme }) {
