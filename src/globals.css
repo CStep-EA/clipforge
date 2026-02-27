@@ -237,6 +237,14 @@
 /* ── Mobile PWA safe area ──────────────────────── */
 .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
 
+/* ── Light mode text overrides ───────────────── */
+.light .gradient-text {
+  background: linear-gradient(135deg, #0099CC 0%, #7B5EA7 50%, #E8748A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 /* ── Child-safe mode: simpler, softer UI ─────── */
 .child-safe .glass-card { border-color: rgba(0,191,255,0.15) !important; }
 .child-safe .gradient-text {
