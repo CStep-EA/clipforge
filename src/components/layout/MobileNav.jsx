@@ -19,8 +19,20 @@ const mobileItems = [
 ];
 
 export default function MobileNav({ currentPage }) {
+  const isDark = typeof document !== "undefined"
+    ? document.documentElement.classList.contains("light") === false
+    : true;
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#0F1117]/95 backdrop-blur-xl border-t border-[#2A2D3A] px-2 pb-[env(safe-area-inset-bottom)]">
+    <nav className={cn(
+      "fixed bottom-0 left-0 right-0 z-50 md:hidden backdrop-blur-xl px-2 pb-[env(safe-area-inset-bottom)]",
+      "bg-[#0F1117]/95 border-t border-[#2A2D3A]",
+      ".light & bg-white/95 .light & border-t .light & border-gray-200"
+    )}
+    style={{
+      background: document?.documentElement?.classList?.contains("light") ? "rgba(255,255,255,0.95)" : undefined,
+      borderTopColor: document?.documentElement?.classList?.contains("light") ? "#e5e7eb" : undefined,
+    }}>
       <div className="flex items-center justify-around py-2">
         {mobileItems.map((item) => {
           const isActive = currentPage === item.page;
