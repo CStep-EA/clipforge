@@ -18,7 +18,9 @@ import {
   Sparkles,
   Zap,
   Calendar,
-  UserPlus
+  UserPlus,
+  Sun,
+  Moon
 } from "lucide-react";
 
 const navItems = [
