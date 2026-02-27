@@ -21,6 +21,7 @@ import TrendCharts from "@/components/dashboard/TrendCharts";
 import SharingModePanel from "@/components/dashboard/SharingModePanel";
 import DashboardSearch from "@/components/dashboard/DashboardSearch";
 import TrialAndReferralBanner from "@/components/subscription/TrialAndReferralBanner";
+import IntegrationQuickBar from "@/components/dashboard/IntegrationQuickBar";
 
 // AI-driven priority ranking: deals first, then by rating, then recent
 function rankItems(items) {
@@ -37,7 +38,7 @@ export default function Dashboard() {
   const [shareOpen, setShareOpen] = useState(false);
   const [shareItem, setShareItem] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
-  const { user, isPro, isFamily, plan } = useSubscription();
+  const { user, isPro, isFamily, isDebugMode, plan } = useSubscription();
   const queryClient = useQueryClient();
 
   const { data: items = [] } = useQuery({
@@ -54,6 +55,12 @@ export default function Dashboard() {
     queryKey: ["boards"],
     queryFn: () => base44.entities.SharedBoard.list("-created_date", 5),
     placeholderData: [{ id: "b1", name: "Family Wishlist" }, { id: "b2", name: "Date Night Ideas" }],
+  });
+
+  const { data: streamingConnections = [] } = useQuery({
+    queryKey: ["streamingConnections", user?.email],
+    queryFn: () => base44.entities.StreamingConnection.filter({ user_email: user?.email }),
+    enabled: !!user?.email,
   });
 
   const handleSave = async (formData) => {
@@ -126,6 +133,14 @@ export default function Dashboard() {
 
       {/* Trial & Referral Banners */}
       {!isPro && <TrialAndReferralBanner user={user} />}
+      {isDebugMode && (
+        <div className="p-2 rounded-lg border border-amber-500/30 bg-amber-500/5 flex items-center gap-2">
+          <span className="text-xs text-amber-400">🐛 Debug mode active — viewing as <strong>{plan}</strong> tier</span>
+        </div>
+      )}
+
+      {/* Integration quick bar */}
+      <IntegrationQuickBar connections={streamingConnections} />
 
       {/* Stats */}
        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
