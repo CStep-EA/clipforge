@@ -127,6 +127,16 @@ export default function Privacy() {
           </button>
         </Link>
       </div>
+
+      <div className="flex gap-4 text-xs text-[#8B8D97] justify-center flex-wrap pt-2">
+        <Link to={createPageUrl("Terms")} className="hover:text-[#9370DB]">Terms of Service</Link>
+        <span>·</span>
+        <Link to={createPageUrl("Cookies")} className="hover:text-[#F59E0B]">Cookie Policy</Link>
+        <span>·</span>
+        <Link to={createPageUrl("Support")} className="hover:text-[#00BFFF]">Support</Link>
+        <span>·</span>
+        <span>© 2026 ClipForge</span>
+      </div>
     </div>
   );
 }
