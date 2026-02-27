@@ -279,6 +279,18 @@ export default function Pricing() {
         <p>• All family data is stored securely. You can remove members and delete data at any time.</p>
       </div>
 
+      {/* Referral Banner */}
+      <div className="glass-card rounded-2xl p-4 border border-[#FFB6C1]/20 flex flex-col sm:flex-row items-center gap-4">
+        <div className="text-2xl">🎁</div>
+        <div className="flex-1 text-center sm:text-left">
+          <p className="font-semibold text-sm text-[#E8E8ED]">Have a referral code?</p>
+          <p className="text-xs text-[#8B8D97]">Enter your friend's code in Settings → Referrals for bonus features on signup.</p>
+        </div>
+        <Button size="sm" variant="outline" className="border-[#FFB6C1]/30 text-[#FFB6C1] text-xs" onClick={() => window.location.href = "/Settings"}>
+          Enter Code
+        </Button>
+      </div>
+
       <p className="text-center text-xs text-[#8B8D97]">
         Cancel anytime · Secure payments via Stripe · Prorated billing on upgrades/downgrades
       </p>
