@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Zap, Bookmark, Users, ShoppingCart,
-  Sparkles, ArrowRight, X, Plug, Bell, Check, Gift, Crown, UserPlus
+  Sparkles, ArrowRight, X, Plug, Bell, Check, Gift, Crown, UserPlus, Calendar, MessageCircle
 } from "lucide-react";
 import { toast } from "sonner";
 import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
@@ -226,11 +226,23 @@ const INFO_STEPS = [
     id: "ai", icon: Sparkles, accent: "#F59E0B",
     title: "Your AI assistant is ready", subtitle: "Research, summarize, suggest",
     description: "Ask anything about your saves. Get deeper research, price comparisons, gift ideas, and personalized recommendations.",
+    action: "Almost done!",
+  },
+  {
+    id: "events", icon: Calendar, accent: "#9370DB",
+    title: "Events & calendar reminders", subtitle: "Never miss a show",
+    description: "Search events in your city, add them directly to Google, Apple, or Outlook calendars, and get reminder emails 7 days & 24 hours before — so you don't forget to buy tickets.",
+    action: "Got it!",
+  },
+  {
+    id: "support", icon: MessageCircle, accent: "#FFB6C1",
+    title: "Support is always here", subtitle: "Tickets, AI bot & docs",
+    description: "Have a question? Our AI support bot answers instantly. For billing, bugs, or complex issues — submit a ticket and our team responds within 24 hours.",
     action: "Let's set up!",
   },
 ];
 
-// step indices: 0-4 = info slides, 5 = connections, 6 = monitoring, 7 = growth
+// step indices: 0-6 = info slides, 7 = connections, 8 = monitoring, 9 = growth
 const TOTAL_STEPS = INFO_STEPS.length + 3;
 
 export default function Onboarding() {
