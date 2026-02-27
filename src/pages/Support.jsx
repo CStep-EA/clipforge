@@ -310,32 +310,59 @@ export default function Support() {
 
         {/* Docs Tab */}
         <TabsContent value="docs" className="mt-4 space-y-4">
-          {/* Links */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <Link to={createPageUrl("Privacy")} className="glass-card rounded-xl p-4 hover:border-[#00BFFF]/30 transition-all flex items-center gap-3 group">
-              <Shield className="w-5 h-5 text-[#00BFFF] group-hover:scale-110 transition-transform" />
-              <div>
-                <p className="text-xs font-semibold">Privacy Policy</p>
-                <p className="text-[10px] text-[#8B8D97]">GDPR, COPPA, data use</p>
-              </div>
-              <ChevronRight className="w-3.5 h-3.5 text-[#8B8D97] ml-auto" />
-            </Link>
-            <Link to={createPageUrl("Terms")} className="glass-card rounded-xl p-4 hover:border-[#9370DB]/30 transition-all flex items-center gap-3 group">
-              <FileText className="w-5 h-5 text-[#9370DB] group-hover:scale-110 transition-transform" />
-              <div>
-                <p className="text-xs font-semibold">Terms of Service</p>
-                <p className="text-[10px] text-[#8B8D97]">Usage & billing terms</p>
-              </div>
-              <ChevronRight className="w-3.5 h-3.5 text-[#8B8D97] ml-auto" />
-            </Link>
-            <a href="#ai-whitepaper" className="glass-card rounded-xl p-4 hover:border-[#FFB6C1]/30 transition-all flex items-center gap-3 group">
-              <Sparkles className="w-5 h-5 text-[#FFB6C1] group-hover:scale-110 transition-transform" />
-              <div>
-                <p className="text-xs font-semibold">AI Transparency</p>
-                <p className="text-[10px] text-[#8B8D97]">How AI is used</p>
-              </div>
-              <ChevronRight className="w-3.5 h-3.5 text-[#8B8D97] ml-auto" />
-            </a>
+          {/* Doc search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#8B8D97]" />
+            <Input
+              placeholder="Search documentation..."
+              value={docSearch}
+              onChange={e => setDocSearch(e.target.value)}
+              className="pl-9 bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED] h-9 text-sm placeholder:text-[#8B8D97]/50"
+            />
+          </div>
+
+          {/* AI doc search results */}
+          {docSearch.trim().length > 2 && (
+            <DocSearchResults query={docSearch} onAskBot={() => { setDocSearch(""); setActiveTab("bot"); }} />
+          )}
+
+          {/* Links grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              { to: "Privacy", icon: Shield, color: "#00BFFF", label: "Privacy Policy", sub: "GDPR, COPPA, data collection" },
+              { to: "Terms", icon: FileText, color: "#9370DB", label: "Terms of Service", sub: "Usage, billing & liability" },
+              { to: "Cookies", icon: BookOpen, color: "#F59E0B", label: "Cookie Policy", sub: "Minimal tracking, no ad cookies" },
+              { anchor: "#ai-whitepaper", icon: Sparkles, color: "#FFB6C1", label: "AI Transparency Whitepaper", sub: "How AI is used & disclaimers" },
+            ].filter(d => !docSearch.trim() || d.label.toLowerCase().includes(docSearch.toLowerCase()) || d.sub.toLowerCase().includes(docSearch.toLowerCase())).map((doc, i) => (
+              doc.to ? (
+                <Link key={i} to={createPageUrl(doc.to)} className="glass-card rounded-xl p-4 hover:border-[#00BFFF]/20 transition-all flex items-center gap-3 group">
+                  <doc.icon className="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform" style={{ color: doc.color }} />
+                  <div className="flex-1">
+                    <p className="text-xs font-semibold">{doc.label}</p>
+                    <p className="text-[10px] text-[#8B8D97]">{doc.sub}</p>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-[#8B8D97] group-hover:text-[#00BFFF] transition-colors" />
+                </Link>
+              ) : (
+                <a key={i} href={doc.anchor} className="glass-card rounded-xl p-4 hover:border-[#FFB6C1]/20 transition-all flex items-center gap-3 group">
+                  <doc.icon className="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform" style={{ color: doc.color }} />
+                  <div className="flex-1">
+                    <p className="text-xs font-semibold">{doc.label}</p>
+                    <p className="text-[10px] text-[#8B8D97]">{doc.sub}</p>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-[#8B8D97] transition-colors" />
+                </a>
+              )
+            ))}
+          </div>
+
+          {/* Compliance badges */}
+          <div className="flex flex-wrap gap-2 px-1">
+            {["GDPR Compliant", "COPPA Compliant", "No PHI Stored", "PCI DSS via Stripe", "No Ad Tracking"].map(b => (
+              <span key={b} className="text-[10px] px-2.5 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 font-medium">
+                ✓ {b}
+              </span>
+            ))}
           </div>
 
           {/* AI Whitepaper */}
@@ -343,6 +370,10 @@ export default function Support() {
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-[#FFB6C1]" />
               <h2 className="font-semibold">AI Transparency Whitepaper</h2>
+              <span className="ml-auto text-[10px] text-[#8B8D97]">v1.0 · Feb 2026</span>
+            </div>
+            <div className="p-3 rounded-xl bg-amber-400/5 border border-amber-400/20 text-[11px] text-[#8B8D97] leading-relaxed">
+              ⚠️ <strong className="text-amber-400">Disclaimer:</strong> AI-generated content in ClipForge is for informational purposes only and does not constitute legal, medical, financial, or professional advice. Always verify important information from authoritative sources.
             </div>
             <div className="prose prose-sm max-w-none text-[#8B8D97] space-y-3">
               {AI_DOC.trim().split("\n\n").map((paragraph, i) => {
@@ -360,6 +391,11 @@ export default function Support() {
                   </div>
                 );
               })}
+            </div>
+            <div className="pt-3 border-t border-[#2A2D3A] flex gap-4 text-[10px] text-[#8B8D97] flex-wrap">
+              <Link to={createPageUrl("Privacy")} className="hover:text-[#00BFFF] transition-colors">Privacy Policy</Link>
+              <Link to={createPageUrl("Terms")} className="hover:text-[#9370DB] transition-colors">Terms of Service</Link>
+              <Link to={createPageUrl("Cookies")} className="hover:text-[#F59E0B] transition-colors">Cookie Policy</Link>
             </div>
           </div>
         </TabsContent>
