@@ -144,12 +144,19 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Desktop sidebar */}
       <div className="hidden md:block">
-        <Sidebar currentPage={currentPageName} userRole={user?.role} />
+        <Sidebar currentPage={currentPageName} userRole={user?.role} theme={theme} onToggleTheme={toggleTheme} />
       </div>
 
       {/* Mobile top header with logo */}
-      <div className="md:hidden flex items-center px-4 pt-4 pb-2">
+      <div className={`md:hidden flex items-center justify-between px-4 pt-4 pb-2 ${isDark ? "border-b border-[#2A2D3A]" : "border-b border-gray-200"}`}>
         <ClipForgeLogo size={36} showText variant="morph" />
+        <button
+          onClick={toggleTheme}
+          className={`p-2 rounded-xl transition-all ${isDark ? "bg-[#1A1D27] text-[#8B8D97] hover:text-[#00BFFF]" : "bg-white text-gray-500 hover:text-[#00BFFF] shadow-sm border border-gray-200"}`}
+          aria-label="Toggle theme"
+        >
+          {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+        </button>
       </div>
 
       {/* Main content */}
