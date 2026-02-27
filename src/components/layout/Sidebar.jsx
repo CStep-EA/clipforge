@@ -20,7 +20,8 @@ import {
   Calendar,
   UserPlus,
   Sun,
-  Moon
+  Moon,
+  Plug
 } from "lucide-react";
 
 const navItems = [
@@ -28,6 +29,7 @@ const navItems = [
   { name: "My Saves", icon: Bookmark, page: "Saves" },
   { name: "Friends", icon: UserPlus, page: "Friends" },
   { name: "Boards", icon: Users, page: "Boards" },
+  { name: "Integrations", icon: Plug, page: "Integrations", highlight: true },
   { name: "Shopping", icon: ShoppingCart, page: "ShoppingLists" },
   { name: "Events", icon: Calendar, page: "Events" },
   { name: "Analytics", icon: BarChart3, page: "Analytics" },
@@ -37,7 +39,6 @@ const navItems = [
 ];
 
 const bottomItems = [
-  { name: "Integrations", icon: Settings, page: "Integrations" },
   { name: "Settings", icon: Settings, page: "Settings" },
   { name: "Admin", icon: Shield, page: "Admin", adminOnly: true },
   { name: "Support", icon: MessageCircle, page: "Support" },
@@ -81,8 +82,11 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
                     : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
               )}
             >
-              <item.icon className={cn("w-5 h-5 flex-shrink-0", isActive && "drop-shadow-[0_0_6px_rgba(0,191,255,0.5)]")} />
+              <item.icon className={cn("w-5 h-5 flex-shrink-0", isActive && "drop-shadow-[0_0_6px_rgba(0,191,255,0.5)]", item.highlight && !isActive && "text-[#9370DB]")} />
               {!collapsed && <span className="text-sm font-medium">{item.name}</span>}
+              {!collapsed && item.highlight && !isActive && (
+                <span className="ml-auto text-[8px] px-1.5 py-0.5 rounded-full bg-[#9370DB]/20 text-[#9370DB] font-bold">NEW</span>
+              )}
               {isActive && !collapsed && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#00BFFF] animate-pulse" />
               )}
