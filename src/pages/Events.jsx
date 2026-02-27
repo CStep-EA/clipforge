@@ -229,10 +229,11 @@ export default function Events() {
                     </Button>
                     <Button size="sm" className="h-7 text-[10px] bg-[#9370DB]/20 text-[#9370DB] hover:bg-[#9370DB]/30 px-2"
                             onClick={(e) => { e.stopPropagation(); updateStatus(event, "booked"); }}>
-                      <Ticket className="w-3 h-3 mr-1" /> Book
+                      <Ticket className="w-3 h-3 mr-1" /> Booked
                     </Button>
                     <div onClick={e => e.stopPropagation()}>
-                      <AddToCalendarButton event={event} size="sm" />
+                      <AddToCalendarButton event={event} entity="EventSuggestion" size="sm"
+                        onEventUpdated={() => queryClient.invalidateQueries({ queryKey: ["events"] })} />
                     </div>
                   </div>
                 </div>
@@ -283,20 +284,39 @@ export default function Events() {
               )}
 
               <div className="flex gap-2 flex-wrap">
-                <Button
-                  className="flex-1 bg-gradient-to-r from-[#9370DB] to-[#00BFFF] text-white gap-2"
-                  onClick={() => updateStatus(selectedEvent, "booked")}
-                >
-                  <Ticket className="w-4 h-4" /> Book Tickets
-                </Button>
-                {selectedEvent.ticketmaster_url && (
-                  <a href={selectedEvent.ticketmaster_url} target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline" className="border-[#2A2D3A]">
-                      <ExternalLink className="w-4 h-4" />
+                {selectedEvent.ticketmaster_url ? (
+                  <a href={selectedEvent.ticketmaster_url} target="_blank" rel="noopener noreferrer"
+                    className="flex-1" onClick={() => updateStatus(selectedEvent, "booked")}>
+                    <Button className="w-full bg-gradient-to-r from-[#9370DB] to-[#00BFFF] text-white gap-2">
+                      <Ticket className="w-4 h-4" /> Get Tickets
+                      <ExternalLink className="w-3.5 h-3.5" />
                     </Button>
                   </a>
+                ) : (
+                  <Button className="flex-1 bg-gradient-to-r from-[#9370DB] to-[#00BFFF] text-white gap-2"
+                    onClick={() => updateStatus(selectedEvent, "booked")}>
+                    <Ticket className="w-4 h-4" /> Mark as Booked
+                  </Button>
                 )}
-                <AddToCalendarButton event={selectedEvent} />
+                <AddToCalendarButton event={selectedEvent} entity="EventSuggestion"
+                  onEventUpdated={(updated) => { setSelectedEvent(updated); queryClient.invalidateQueries({ queryKey: ["events"] }); }} />
+              </div>
+
+              {/* Ticket purchased toggle */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-[#0F1117] border border-[#2A2D3A]">
+                <div>
+                  <p className="text-xs font-medium">Ticket purchased?</p>
+                  <p className="text-[10px] text-[#8B8D97]">Disables buy reminders once confirmed</p>
+                </div>
+                <Button size="sm" variant={selectedEvent.ticket_purchased ? "default" : "outline"}
+                  className={selectedEvent.ticket_purchased ? "h-7 text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "h-7 text-xs border-[#2A2D3A] text-[#8B8D97]"}
+                  onClick={async () => {
+                    const updated = await base44.entities.EventSuggestion.update(selectedEvent.id, { ticket_purchased: !selectedEvent.ticket_purchased, status: "booked" });
+                    setSelectedEvent({ ...selectedEvent, ticket_purchased: !selectedEvent.ticket_purchased });
+                    queryClient.invalidateQueries({ queryKey: ["events"] });
+                  }}>
+                  {selectedEvent.ticket_purchased ? "✓ Purchased" : "Mark Purchased"}
+                </Button>
               </div>
             </div>
           )}
