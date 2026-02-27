@@ -51,7 +51,7 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
     <aside
       className={cn(
         "fixed left-0 top-0 h-full z-40 flex flex-col transition-all duration-300",
-        "bg-[#0F1117] border-r border-[#2A2D3A]",
+        isDark ? "bg-[#0F1117] border-r border-[#2A2D3A]" : "bg-white border-r border-gray-200 shadow-sm",
         collapsed ? "w-[68px]" : "w-[240px]"
       )}
     >
