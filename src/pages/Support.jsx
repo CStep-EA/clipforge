@@ -19,6 +19,7 @@ import {
 import { motion } from "framer-motion";
 import SupportBot from "@/components/support/SupportBot";
 import TicketDetail from "@/components/support/TicketDetail";
+import DocSearchResults from "@/components/support/DocSearchResults";
 
 const statusColors = {
   open: "bg-[#00BFFF]/15 text-[#00BFFF] border-[#00BFFF]/30",
