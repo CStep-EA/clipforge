@@ -132,7 +132,10 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
       {/* Collapse button */}
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-[#1A1D27] border border-[#2A2D3A] flex items-center justify-center text-[#8B8D97] hover:text-[#00BFFF] transition-colors"
+        className={cn(
+          "absolute -right-3 top-20 w-6 h-6 rounded-full flex items-center justify-center transition-colors",
+          isDark ? "bg-[#1A1D27] border border-[#2A2D3A] text-[#8B8D97] hover:text-[#00BFFF]" : "bg-white border border-gray-200 text-gray-400 hover:text-[#00BFFF] shadow-sm"
+        )}
       >
         {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
       </button>
