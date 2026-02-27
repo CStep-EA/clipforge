@@ -56,7 +56,7 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
       )}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 h-16 border-b border-[#2A2D3A] overflow-hidden">
+      <div className={cn("flex items-center gap-3 px-4 h-16 overflow-hidden", isDark ? "border-b border-[#2A2D3A]" : "border-b border-gray-200")}>
         <ClipForgeLogo
           size={collapsed ? 32 : 36}
           showText={!collapsed}
