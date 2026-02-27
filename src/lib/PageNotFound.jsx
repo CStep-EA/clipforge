@@ -21,7 +21,10 @@ export default function PageNotFound({}) {
     });
     
     return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-[#0F1117]">
+        <div className="min-h-screen flex items-center justify-center p-6 bg-[#0F1117] relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 y2k-pattern opacity-60" />
+        <div className="pointer-events-none absolute top-1/3 -left-20 w-64 h-64 rounded-full bg-[#00BFFF]/8 blur-3xl animate-float-slow" />
+        <div className="pointer-events-none absolute bottom-1/3 -right-20 w-64 h-64 rounded-full bg-[#9370DB]/8 blur-3xl animate-float-slow" style={{ animationDelay: "2s" }} />
             <div className="max-w-md w-full">
                 <div className="text-center space-y-6">
                     {/* Logo */}
