@@ -3,6 +3,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import MobileNav from "@/components/layout/MobileNav";
 import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import { base44 } from "@/api/base44Client";
+import { Sun, Moon } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
