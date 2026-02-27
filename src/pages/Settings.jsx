@@ -126,15 +126,28 @@ export default function Settings() {
       </Card>
 
       {/* Referrals */}
-      <Card className="glass-card p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <Gift className="w-5 h-5 text-[#FFB6C1]" />
-          <div>
-            <h2 className="font-semibold">Referrals</h2>
-            <p className="text-[10px] text-[#8B8D97]">Invite friends and earn bonuses</p>
+      <Card className="glass-card p-6 border border-[#FFB6C1]/20">
+        <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+          <div className="flex items-center gap-3">
+            <Gift className="w-5 h-5 text-[#FFB6C1]" />
+            <div>
+              <h2 className="font-semibold">Refer a Friend</h2>
+              <p className="text-[10px] text-[#8B8D97]">Earn 1 free month or $5 credit per converted referral</p>
+            </div>
           </div>
+          <Link to={createPageUrl("Pricing") + "#referral"}>
+            <button className="text-[10px] px-3 py-1.5 rounded-full border border-[#FFB6C1]/30 text-[#FFB6C1] hover:bg-[#FFB6C1]/8 transition-all">
+              View rewards →
+            </button>
+          </Link>
         </div>
         <ReferralPanel user={user} />
+        {!isPro && (
+          <div className="mt-4 p-3 rounded-xl bg-[#9370DB]/8 border border-[#9370DB]/20 text-xs text-[#8B8D97]">
+            💡 <strong className="text-[#9370DB]">Pro tip:</strong> Upgrade to Pro to unlock the full referral dashboard, track bonuses, and share to friends.
+            {" "}<Link to={createPageUrl("Pricing")} className="text-[#9370DB] hover:underline">Upgrade →</Link>
+          </div>
+        )}
       </Card>
 
       {/* Integrations shortcut */}
