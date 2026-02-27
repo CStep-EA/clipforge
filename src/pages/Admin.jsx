@@ -23,6 +23,7 @@ export default function Admin() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("metrics");
 
   useEffect(() => {
     base44.auth.me().then(u => { setUser(u); setAuthLoading(false); }).catch(() => setAuthLoading(false));
@@ -48,6 +49,11 @@ export default function Admin() {
   const { data: users = [] } = useQuery({
     queryKey: ["users"],
     queryFn: () => base44.entities.User.list(),
+    enabled: isAdmin,
+  });
+  const { data: referrals = [] } = useQuery({
+    queryKey: ["allReferrals"],
+    queryFn: () => base44.entities.Referral.list("-created_date"),
     enabled: isAdmin,
   });
 
@@ -99,19 +105,27 @@ export default function Admin() {
       {/* Debug mode */}
       <DebugModeToggle />
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <StatsCard title="Total Users" value={users.length} icon={Users} accent="#00BFFF" />
-        <StatsCard title="Open Tickets" value={openTickets.length} icon={Ticket} accent="#F59E0B" />
-        <StatsCard title="Paid Subs" value={paidSubs.length} icon={CreditCard} accent="#10B981" />
-        <StatsCard title="Total Saves" value={allItems.length} icon={BarChart3} accent="#9370DB" />
-        <StatsCard title="Active Today" value={users.filter(u => {
-          const d = new Date(u.updated_date || u.created_date);
-          return (Date.now() - d.getTime()) < 86400000;
-        }).length} icon={Users} accent="#FFB6C1" />
+      {/* Quick stats row — clickable */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        {[
+          { title: "Total Users", value: users.length, icon: Users, accent: "#00BFFF", tab: "users" },
+          { title: "Open Tickets", value: openTickets.length, icon: Ticket, accent: "#F59E0B", tab: "tickets" },
+          { title: "Paid Subs", value: paidSubs.length, icon: CreditCard, accent: "#10B981", tab: "subscriptions" },
+          { title: "Total Saves", value: allItems.length, icon: BarChart3, accent: "#9370DB", tab: "metrics" },
+          { title: "Active Today", value: users.filter(u => (Date.now() - new Date(u.updated_date || u.created_date).getTime()) < 86400000).length, icon: Users, accent: "#FFB6C1", tab: "users" },
+        ].map(({ title, value, icon: Icon, accent, tab }) => (
+          <button key={title} onClick={() => setActiveTab(tab)}
+            className="glass-card rounded-xl p-4 text-left hover:border-[#00BFFF]/30 transition-all group">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] text-[#8B8D97] uppercase tracking-wide">{title}</span>
+              <Icon className="w-3.5 h-3.5" style={{ color: accent }} />
+            </div>
+            <div className="text-2xl font-black" style={{ color: accent }}>{value}</div>
+          </button>
+        ))}
       </div>
 
-      <Tabs defaultValue="metrics" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="bg-[#1A1D27] border border-[#2A2D3A] flex-wrap h-auto gap-1 p-1">
           <TabsTrigger value="metrics" className="data-[state=active]:bg-[#10B981]/10 data-[state=active]:text-[#10B981] gap-1.5">
             <TrendingUp className="w-3.5 h-3.5" /> Metrics
@@ -147,7 +161,7 @@ export default function Admin() {
         </TabsList>
 
         <TabsContent value="metrics" className="mt-4">
-          <AdminMetrics tickets={tickets} users={users} subs={allSubs} />
+          <AdminMetrics tickets={tickets} users={users} subs={allSubs} referrals={referrals} onNavigate={setActiveTab} />
         </TabsContent>
 
         <TabsContent value="tickets" className="mt-4">
