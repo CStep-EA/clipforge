@@ -62,6 +62,7 @@ export default function Support() {
   const [form, setForm] = useState({ subject: "", message: "", category: "general", priority: "medium" });
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("tickets");
+  const [docSearch, setDocSearch] = useState("");
 
   // Pre-fill form with category shortcut
   const openTicketForm = (category, priority = "medium") => {
