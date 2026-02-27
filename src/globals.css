@@ -178,6 +178,16 @@
   border-color: rgba(0,191,255,0.18);
 }
 
+/* Light mode glass card */
+.light .glass-card {
+  background: rgba(255,255,255,0.90);
+  border: 1px solid rgba(0,0,0,0.07);
+}
+.light .glass-card:hover {
+  border-color: rgba(0,191,255,0.3);
+  box-shadow: 0 4px 20px rgba(0,191,255,0.08);
+}
+
 .neon-border { border: 1px solid rgba(0,191,255,0.35); }
 .neon-border-purple { border: 1px solid rgba(147,112,219,0.35); }
 .neon-border-pink { border: 1px solid rgba(255,182,193,0.35); }
