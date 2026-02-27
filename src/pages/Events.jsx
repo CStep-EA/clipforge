@@ -134,9 +134,17 @@ export default function Events() {
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Events & Tickets</h1>
-        <p className="text-[#8B8D97] text-sm">Discover events with AI reviews and ticket suggestions</p>
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold">Events & Tickets</h1>
+          <p className="text-[#8B8D97] text-sm">Discover events with AI reviews and calendar reminders</p>
+        </div>
+        {events.filter(e => e.reminder_enabled && !e.ticket_purchased).length > 0 && (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#00BFFF]/10 border border-[#00BFFF]/20 text-xs text-[#00BFFF]">
+            <Bell className="w-3.5 h-3.5" />
+            {events.filter(e => e.reminder_enabled && !e.ticket_purchased).length} reminder{events.filter(e => e.reminder_enabled && !e.ticket_purchased).length > 1 ? "s" : ""} active
+          </div>
+        )}
       </div>
 
       {/* Tier gate for event search */}
