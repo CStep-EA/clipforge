@@ -126,6 +126,9 @@ export default function Admin() {
           <TabsTrigger value="feedback" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] gap-1.5">
             <Radio className="w-3.5 h-3.5" /> Feedback Intel
           </TabsTrigger>
+          <TabsTrigger value="special" className="data-[state=active]:bg-[#9370DB]/10 data-[state=active]:text-[#9370DB] gap-1.5">
+            <UserPlus className="w-3.5 h-3.5" /> Special Accounts
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="tickets" className="mt-4">
