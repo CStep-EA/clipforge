@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Zap, Bookmark, Users, ShoppingCart,
-  Sparkles, ArrowRight, X, Plug, Bell, Check
+  Sparkles, ArrowRight, X, Plug, Bell, Check, Gift
 } from "lucide-react";
 import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import { createPageUrl } from "@/utils";
