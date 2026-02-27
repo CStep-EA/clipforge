@@ -43,8 +43,9 @@ const bottomItems = [
   { name: "Support", icon: MessageCircle, page: "Support" },
 ];
 
-export default function Sidebar({ currentPage, userRole }) {
+export default function Sidebar({ currentPage, userRole, theme = "dark", onToggleTheme }) {
   const [collapsed, setCollapsed] = useState(false);
+  const isDark = theme === "dark";
 
   return (
     <aside
