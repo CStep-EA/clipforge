@@ -26,6 +26,13 @@ export function useSubscription() {
     staleTime: 30_000,
   });
 
+  const { data: specialAccounts = [] } = useQuery({
+    queryKey: ["specialAccount", user?.email],
+    queryFn: () => base44.entities.SpecialAccount.filter({ email: user.email, is_active: true }),
+    enabled: !!user?.email,
+    staleTime: 60_000,
+  });
+
   const sub = subs?.[0];
   let plan = sub?.plan || "free";
   const status = sub?.status || "active";
@@ -38,12 +45,23 @@ export function useSubscription() {
     plan = activeTrial.trial_plan; // "premium" or "family"
   }
 
+  // Check special account (dev/gift) — bypass all billing gates
+  const specialAccount = specialAccounts.find(a =>
+    a.is_active && (!a.expiration_date || new Date(a.expiration_date) > new Date())
+  );
+  const isSpecialAccount = !!specialAccount;
+  if (isSpecialAccount) {
+    plan = specialAccount.tier;
+  }
+
   return {
     plan,
-    isPro: isActive && (plan === "pro" || plan === "premium" || plan === "family"),
-    isPremium: isActive && (plan === "premium" || plan === "family"),
-    isFamily: isActive && plan === "family",
+    isPro: isSpecialAccount || (isActive && (plan === "pro" || plan === "premium" || plan === "family")),
+    isPremium: isSpecialAccount || (isActive && (plan === "premium" || plan === "family")),
+    isFamily: isSpecialAccount ? specialAccount.tier === "family" : (isActive && plan === "family"),
     isTrialing,
+    isSpecialAccount,
+    specialAccountType: specialAccount?.account_type || null,
     isLoading: userLoading || subLoading,
     user,
   };
