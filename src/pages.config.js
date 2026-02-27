@@ -64,6 +64,7 @@ import ShoppingLists from './pages/ShoppingLists';
 import Support from './pages/Support';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
+import Cookies from './pages/Cookies';
 import __Layout from './Layout.jsx';
 
 
@@ -85,6 +86,7 @@ export const PAGES = {
     "Support": Support,
     "Privacy": Privacy,
     "Terms": Terms,
+    "Cookies": Cookies,
 }
 
 export const pagesConfig = {
