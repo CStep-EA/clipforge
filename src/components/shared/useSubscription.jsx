@@ -1,6 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
+const DEBUG_KEY = "cf_debug_mode";
+const DEBUG_TIER_KEY = "cf_debug_tier";
+
+function getDebugOverride() {
+  if (typeof window === "undefined") return null;
+  if (localStorage.getItem(DEBUG_KEY) !== "true") return null;
+  return localStorage.getItem(DEBUG_TIER_KEY) || null;
+}
+
 /**
  * Hook to get the current user's subscription plan.
  * Returns { plan, isPro, isPremium, isFamily, isTrialing, isLoading }
@@ -54,14 +63,21 @@ export function useSubscription() {
     plan = specialAccount.tier;
   }
 
+  // Debug mode override
+  const debugTier = getDebugOverride();
+  if (debugTier) {
+    plan = debugTier;
+  }
+
   return {
     plan,
-    isPro: isSpecialAccount || (isActive && (plan === "pro" || plan === "premium" || plan === "family")),
-    isPremium: isSpecialAccount || (isActive && (plan === "premium" || plan === "family")),
-    isFamily: isSpecialAccount ? specialAccount.tier === "family" : (isActive && plan === "family"),
+    isPro: (isSpecialAccount || (isActive && (plan === "pro" || plan === "premium" || plan === "family"))) || (!!debugTier && debugTier !== "free"),
+    isPremium: (isSpecialAccount || (isActive && (plan === "premium" || plan === "family"))) || (!!debugTier && (debugTier === "premium" || debugTier === "family")),
+    isFamily: (isSpecialAccount ? specialAccount.tier === "family" : (isActive && plan === "family")) || debugTier === "family",
     isTrialing,
     isSpecialAccount,
     specialAccountType: specialAccount?.account_type || null,
+    isDebugMode: !!debugTier,
     isLoading: userLoading || subLoading,
     user,
   };
