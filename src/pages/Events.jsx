@@ -139,6 +139,22 @@ export default function Events() {
         <p className="text-[#8B8D97] text-sm">Discover events with AI reviews and ticket suggestions</p>
       </div>
 
+      {/* Tier gate for event search */}
+      {!isPro && (
+        <Link to={createPageUrl("Pricing")} className="block p-4 rounded-2xl border border-[#9370DB]/30 bg-gradient-to-r from-[#9370DB]/8 to-[#00BFFF]/8 hover:border-[#9370DB]/50 transition-all">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">🎟</span>
+              <div>
+                <p className="text-sm font-bold gradient-text">Pro required for event search</p>
+                <p className="text-xs text-[#8B8D97]">Upgrade to search events, get AI reviews & set calendar reminders</p>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-[#9370DB] shrink-0" />
+          </div>
+        </Link>
+      )}
+
       {/* Search Bar */}
       <Card className="glass-card p-5">
         <div className="flex flex-col sm:flex-row gap-3">
