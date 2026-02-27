@@ -229,8 +229,8 @@ const INFO_STEPS = [
   },
 ];
 
-// step indices: 0-4 = info slides, 5 = connections, 6 = monitoring
-const TOTAL_STEPS = INFO_STEPS.length + 2;
+// step indices: 0-4 = info slides, 5 = connections, 6 = monitoring, 7 = growth
+const TOTAL_STEPS = INFO_STEPS.length + 3;
 
 export default function Onboarding() {
   const [user, setUser] = useState(null);
