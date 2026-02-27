@@ -14,6 +14,7 @@ import {
   Gift
 } from "lucide-react";
 import RecipeExportButton from "@/components/dashboard/RecipeExportButton";
+import AddToCalendarButton from "@/components/events/AddToCalendarButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -129,9 +130,23 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
             </div>
           )}
 
+          {/* Event date display + calendar add */}
+          {item.category === "event" && item.event_date && (
+            <div className="flex items-center justify-between gap-2 p-2 rounded-lg bg-[#9370DB]/5 border border-[#9370DB]/20">
+              <div className="text-[10px] text-[#9370DB] flex items-center gap-1">
+                <span>📅</span>
+                {new Date(item.event_date).toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" })}
+                {item.event_venue && <span className="text-[#8B8D97] ml-1">· {item.event_venue}</span>}
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center justify-between pt-2 border-t border-[#2A2D3A]">
             <div className="flex gap-1 flex-wrap items-center">
               <RecipeExportButton item={item} />
+              {item.category === "event" && (
+                <AddToCalendarButton event={item} entity="SavedItem" size="sm" />
+              )}
               <motion.div whileHover={{ scale: 1.3 }} whileTap={{ scale: 0.85 }}>
               <Button
                 size="icon"
