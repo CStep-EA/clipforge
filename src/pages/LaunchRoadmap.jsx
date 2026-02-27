@@ -1,0 +1,176 @@
+import React from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { Badge } from "@/components/ui/badge";
+import { Rocket, Flame, Globe2, TrendingUp, ArrowRight, Check, Clock } from "lucide-react";
+
+const phases = [
+  {
+    phase: "Phase 1",
+    title: "Grassroots",
+    icon: Flame,
+    color: "#FFB6C1",
+    status: "active",
+    statusLabel: "In progress",
+    items: [
+      "Core save & organize features",
+      "AI auto-categorization",
+      "Shared boards & friends",
+      "PWA + web app launch",
+      "Privacy-first architecture",
+      "Free & Pro tiers",
+    ],
+  },
+  {
+    phase: "Phase 2",
+    title: "Viral Loops",
+    icon: Rocket,
+    color: "#00BFFF",
+    status: "upcoming",
+    statusLabel: "Starting soon",
+    items: [
+      "Referral program (earn free months)",
+      "Public shared boards (shareable URLs)",
+      "Social proof & review widgets",
+      "App Store & Google Play release",
+      "Chrome & Safari extensions",
+    ],
+  },
+  {
+    phase: "Phase 3",
+    title: "Community",
+    icon: Globe2,
+    color: "#9370DB",
+    status: "planned",
+    statusLabel: "Planned",
+    items: [
+      "Community boards (public curation)",
+      "Creator monetization tools",
+      "Affiliate link detection & tracking",
+      "Family premium growth features",
+      "Partner integrations (Ticketmaster, Spotify)",
+    ],
+  },
+  {
+    phase: "Phase 4",
+    title: "Scale",
+    icon: TrendingUp,
+    color: "#10B981",
+    status: "planned",
+    statusLabel: "Future",
+    items: [
+      "Enterprise & team workspaces",
+      "API access for developers",
+      "White-label options",
+      "International expansion",
+      "B2B & brand partnerships",
+    ],
+  },
+];
+
+const statusStyles = {
+  active: { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30" },
+  upcoming: { bg: "bg-[#00BFFF]/10", text: "text-[#00BFFF]", border: "border-[#00BFFF]/30" },
+  planned: { bg: "bg-[#2A2D3A]", text: "text-[#8B8D97]", border: "border-[#2A2D3A]" },
+};
+
+export default function LaunchRoadmap() {
+  return (
+    <div className="min-h-screen p-4 md:p-8 max-w-4xl mx-auto space-y-10 pt-10">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center space-y-3"
+      >
+        <h1 className="text-4xl font-black">
+          <span className="gradient-text">Launch Roadmap</span>
+        </h1>
+        <p className="text-[#8B8D97] max-w-lg mx-auto">
+          Our journey from garage prototype to global platform — four phases, one mission.
+        </p>
+      </motion.div>
+
+      <div className="relative">
+        {/* Vertical line */}
+        <div className="absolute left-[22px] top-8 bottom-8 w-px bg-gradient-to-b from-[#FFB6C1]/40 via-[#00BFFF]/40 to-transparent hidden md:block" />
+
+        <div className="space-y-6">
+          {phases.map((phase, i) => {
+            const Icon = phase.icon;
+            const style = statusStyles[phase.status];
+            return (
+              <motion.div
+                key={phase.phase}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.12 }}
+                className="relative md:pl-14"
+              >
+                {/* Phase dot */}
+                <div
+                  className="hidden md:flex absolute left-0 top-5 w-11 h-11 rounded-full items-center justify-center shrink-0"
+                  style={{ background: `${phase.color}15`, border: `2px solid ${phase.color}40` }}
+                >
+                  <Icon className="w-5 h-5" style={{ color: phase.color }} />
+                </div>
+
+                <div
+                  className="glass-card rounded-2xl p-6 space-y-4"
+                  style={{ borderColor: phase.status === "active" ? `${phase.color}30` : undefined }}
+                >
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-3">
+                      <div className="md:hidden p-2 rounded-xl" style={{ background: `${phase.color}15` }}>
+                        <Icon className="w-4 h-4" style={{ color: phase.color }} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-widest" style={{ color: phase.color }}>{phase.phase}</p>
+                        <h3 className="text-lg font-black">{phase.title}</h3>
+                      </div>
+                    </div>
+                    <Badge className={`${style.bg} ${style.text} border ${style.border} text-xs`}>
+                      {phase.status === "active" ? <><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block mr-1.5 animate-pulse" /></> : null}
+                      {phase.statusLabel}
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {phase.items.map((item) => (
+                      <div key={item} className="flex items-start gap-2 text-sm">
+                        {phase.status === "active" ? (
+                          <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ color: phase.color }} />
+                        ) : (
+                          <Clock className="w-4 h-4 mt-0.5 shrink-0 text-[#8B8D97]" />
+                        )}
+                        <span className={phase.status === "active" ? "text-[#E8E8ED]" : "text-[#8B8D97]"}>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="glass-card rounded-2xl p-5 text-center space-y-2 border border-[#FFB6C1]/20">
+        <p className="text-sm font-semibold text-[#FFB6C1]">Want to shape the roadmap?</p>
+        <p className="text-xs text-[#8B8D97]">Submit feature requests and vote on what ships next via our Support page.</p>
+        <Link to={createPageUrl("Support")}>
+          <span className="inline-flex items-center gap-1.5 text-xs text-[#00BFFF] hover:underline mt-1">
+            Go to Support <ArrowRight className="w-3.5 h-3.5" />
+          </span>
+        </Link>
+      </div>
+
+      <div className="flex flex-wrap justify-center gap-4 text-xs text-[#8B8D97] pb-8">
+        <Link to={createPageUrl("About")} className="hover:text-[#00BFFF] transition-colors">About</Link>
+        <Link to={createPageUrl("VisionMission")} className="hover:text-[#00BFFF] transition-colors">Vision</Link>
+        <Link to={createPageUrl("Privacy")} className="hover:text-[#00BFFF] transition-colors">Privacy</Link>
+        <Link to={createPageUrl("Terms")} className="hover:text-[#00BFFF] transition-colors">Terms</Link>
+        <span>© 2026 ClipForge</span>
+      </div>
+    </div>
+  );
+}

@@ -65,6 +65,10 @@ import Support from './pages/Support';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Cookies from './pages/Cookies';
+import About from './pages/About';
+import VisionMission from './pages/VisionMission';
+import LaunchRoadmap from './pages/LaunchRoadmap';
+import MarketingLaunch from './pages/MarketingLaunch';
 import __Layout from './Layout.jsx';
 
 
@@ -87,6 +91,10 @@ export const PAGES = {
     "Privacy": Privacy,
     "Terms": Terms,
     "Cookies": Cookies,
+    "About": About,
+    "VisionMission": VisionMission,
+    "LaunchRoadmap": LaunchRoadmap,
+    "MarketingLaunch": MarketingLaunch,
 }
 
 export const pagesConfig = {
