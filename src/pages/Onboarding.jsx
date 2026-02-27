@@ -25,6 +25,69 @@ const MONITORING_SOURCES = [
   { id: "pcmag", label: "PCMag" },
 ];
 
+function StepGrowth({ onNext }) {
+  const [choice, setChoice] = useState(null);
+  const [referralCode, setReferralCode] = useState("");
+
+  return (
+    <div className="space-y-6 w-full">
+      <motion.div
+        className="w-24 h-24 rounded-3xl mx-auto flex items-center justify-center"
+        style={{ background: "#EC489915" }}
+        initial={{ scale: 0.8 }} animate={{ scale: 1 }}
+      >
+        <Gift className="w-12 h-12 text-[#EC4899]" />
+      </motion.div>
+      <div className="text-center space-y-2">
+        <h1 className="text-3xl font-black tracking-tight">Unlock more with friends</h1>
+        <p className="text-sm font-bold uppercase tracking-widest text-[#EC4899]">Referrals · Trials · Family</p>
+        <p className="text-sm text-[#8B8D97] leading-relaxed">Invite friends, start a free trial, or set up your family plan. More ways to save, together.</p>
+      </div>
+
+      <div className="space-y-3">
+        {[
+          { id: "trial", emoji: "⚡", label: "Start a 7-day free Premium trial", sub: "No credit card required" },
+          { id: "referral", emoji: "🎁", label: "Enter a referral code", sub: "Get bonus features for signing up via invite" },
+          { id: "family", emoji: "👨‍👩‍👧", label: "Set up Family Premium", sub: "Includes parental controls & child-safe mode" },
+          { id: "skip", emoji: "→", label: "Skip for now", sub: "You can do this anytime in Settings" },
+        ].map(opt => (
+          <button
+            key={opt.id}
+            onClick={() => setChoice(opt.id)}
+            className={`w-full flex items-center gap-3 p-3.5 rounded-xl border text-left transition-all ${choice === opt.id ? "border-[#EC4899]/60 bg-[#EC4899]/10" : "border-[#2A2D3A] bg-[#1A1D27] hover:border-[#EC4899]/30"}`}
+          >
+            <span className="text-xl">{opt.emoji}</span>
+            <div className="flex-1">
+              <p className="text-sm font-semibold">{opt.label}</p>
+              <p className="text-[10px] text-[#8B8D97]">{opt.sub}</p>
+            </div>
+            {choice === opt.id && <Check className="w-4 h-4 text-[#EC4899]" />}
+          </button>
+        ))}
+      </div>
+
+      {choice === "referral" && (
+        <motion.input
+          initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}
+          className="w-full bg-[#0F1117] border border-[#2A2D3A] rounded-xl px-4 py-3 text-sm text-[#E8E8ED] placeholder-[#8B8D97] focus:outline-none focus:border-[#EC4899]/50"
+          placeholder="Enter referral code (e.g. ALICE-CF)"
+          value={referralCode}
+          onChange={e => setReferralCode(e.target.value.toUpperCase())}
+        />
+      )}
+
+      <Button
+        onClick={() => onNext({ growthChoice: choice, referralCode })}
+        disabled={!choice}
+        className="w-full py-6 text-base font-black gap-2"
+        style={{ background: choice ? "linear-gradient(135deg,#EC4899,#9370DB)" : undefined }}
+      >
+        {choice === "skip" ? "Continue" : "Let's Go!"} <ArrowRight className="w-4 h-4" />
+      </Button>
+    </div>
+  );
+}
+
 function StepConnections({ onNext }) {
   const [selected, setSelected] = useState([]);
 
