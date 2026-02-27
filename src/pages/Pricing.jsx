@@ -279,16 +279,43 @@ export default function Pricing() {
         <p>• All family data is stored securely. You can remove members and delete data at any time.</p>
       </div>
 
-      {/* Referral Banner */}
-      <div className="glass-card rounded-2xl p-4 border border-[#FFB6C1]/20 flex flex-col sm:flex-row items-center gap-4">
-        <div className="text-2xl">🎁</div>
-        <div className="flex-1 text-center sm:text-left">
-          <p className="font-semibold text-sm text-[#E8E8ED]">Have a referral code?</p>
-          <p className="text-xs text-[#8B8D97]">Enter your friend's code in Settings → Referrals for bonus features on signup.</p>
+      {/* Referral + Trial upsell row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Referral */}
+        <div className="glass-card rounded-2xl p-4 border border-[#FFB6C1]/25 flex items-start gap-3">
+          <div className="text-2xl shrink-0">🎁</div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-sm text-[#E8E8ED]">Refer friends, earn rewards</p>
+            <p className="text-xs text-[#8B8D97] mt-0.5">Get <strong className="text-[#FFB6C1]">1 free month</strong> or <strong className="text-[#FFB6C1]">$5 credit</strong> for each friend who subscribes. Discount applied automatically via Stripe.</p>
+            <Button size="sm" variant="outline" className="border-[#FFB6C1]/35 text-[#FFB6C1] text-xs mt-3 hover:bg-[#FFB6C1]/8"
+              onClick={() => window.location.href = createPageUrl("Settings") + "#referral"}>
+              View My Referral Code
+            </Button>
+          </div>
         </div>
-        <Button size="sm" variant="outline" className="border-[#FFB6C1]/30 text-[#FFB6C1] text-xs" onClick={() => window.location.href = "/Settings"}>
-          Enter Code
-        </Button>
+
+        {/* Trial info */}
+        <div className="glass-card rounded-2xl p-4 border border-[#9370DB]/25 flex items-start gap-3">
+          <div className="text-2xl shrink-0">⚡</div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-sm text-[#E8E8ED]">Not sure? Try before you buy</p>
+            <p className="text-xs text-[#8B8D97] mt-0.5">
+              <strong className="text-[#9370DB]">Premium</strong>: 7-day free trial &nbsp;·&nbsp;
+              <strong className="text-[#EC4899]">Family</strong>: 14-day free trial.<br />
+              No credit card. Auto-downgrade to Free when it ends.
+            </p>
+            <div className="flex gap-2 mt-3">
+              <Button size="sm" variant="outline" className="border-[#9370DB]/35 text-[#9370DB] text-xs hover:bg-[#9370DB]/8"
+                onClick={() => { setSelectedTrialPlan("premium"); setTrialOpen(true); }}>
+                Try Premium (7d)
+              </Button>
+              <Button size="sm" variant="outline" className="border-[#EC4899]/35 text-[#EC4899] text-xs hover:bg-[#EC4899]/8"
+                onClick={() => { setSelectedTrialPlan("family"); setTrialOpen(true); }}>
+                Try Family (14d)
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <p className="text-center text-xs text-[#8B8D97]">
