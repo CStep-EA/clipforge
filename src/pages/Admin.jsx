@@ -187,6 +187,21 @@ export default function Admin() {
         <TabsContent value="feedback" className="mt-4">
           <FeedbackIntelligence />
         </TabsContent>
+
+        <TabsContent value="special" className="mt-4">
+          <div className="space-y-4">
+            <div className="p-3 rounded-xl bg-amber-500/5 border border-amber-500/20 flex items-start gap-3">
+              <Shield className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <p className="text-xs text-amber-300">For internal development or gift use only — not for resale or public distribution. These accounts bypass Stripe billing and are tracked here.</p>
+            </div>
+            <div className="flex justify-end">
+              <Button onClick={() => setCreateDialogOpen(true)} className="bg-gradient-to-r from-[#9370DB] to-[#00BFFF] text-white gap-2 text-sm">
+                <UserPlus className="w-4 h-4" /> New Special Account
+              </Button>
+            </div>
+            <SpecialAccountsList />
+          </div>
+        </TabsContent>
       </Tabs>
     </div>
   );
