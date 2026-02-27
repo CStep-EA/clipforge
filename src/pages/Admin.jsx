@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Ticket, BarChart3, CreditCard, Sparkles, BookOpen, Loader2, Radio, UserPlus } from "lucide-react";
+import { Shield, Users, Ticket, BarChart3, CreditCard, Sparkles, BookOpen, Loader2, Radio, UserPlus, Bug } from "lucide-react";
+import DebugModeToggle from "@/components/admin/DebugModeToggle";
 import StatsCard from "@/components/shared/StatsCard";
 import AdminTickets from "@/components/admin/AdminTickets";
 import AdminUsers from "@/components/admin/AdminUsers";
@@ -93,6 +94,9 @@ export default function Admin() {
         onOpenChange={setCreateDialogOpen}
       />
 
+      {/* Debug mode */}
+      <DebugModeToggle />
+
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <StatsCard title="Total Users" value={users.length} icon={Users} accent="#00BFFF" />
@@ -128,6 +132,9 @@ export default function Admin() {
           </TabsTrigger>
           <TabsTrigger value="special" className="data-[state=active]:bg-[#9370DB]/10 data-[state=active]:text-[#9370DB] gap-1.5">
             <UserPlus className="w-3.5 h-3.5" /> Special Accounts
+          </TabsTrigger>
+          <TabsTrigger value="debug" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-400 gap-1.5">
+            <Bug className="w-3.5 h-3.5" /> Debug
           </TabsTrigger>
         </TabsList>
 
@@ -186,6 +193,22 @@ export default function Admin() {
 
         <TabsContent value="feedback" className="mt-4">
           <FeedbackIntelligence />
+        </TabsContent>
+
+        <TabsContent value="debug" className="mt-4">
+          <DebugModeToggle />
+          <div className="mt-4 p-4 rounded-xl glass-card space-y-2">
+            <p className="text-sm font-semibold text-amber-300 flex items-center gap-2"><Bug className="w-4 h-4" /> Test Features Guide</p>
+            <ul className="text-xs text-[#8B8D97] space-y-1.5 list-none">
+              <li>• <strong className="text-[#E8E8ED]">Tier Preview</strong> — Toggle Debug Mode ON, then pick a tier to see how upgrade prompts and locks appear for that plan</li>
+              <li>• <strong className="text-[#E8E8ED]">Trial test</strong> — "Create Trial" inserts a test PremiumTrial record you can verify in dashboard banners</li>
+              <li>• <strong className="text-[#E8E8ED]">Referral test</strong> — "Create Referral" creates a test referral flow entry visible in Settings → Referrals</li>
+              <li>• <strong className="text-[#E8E8ED]">Family test</strong> — "Create Family" inserts a test family member to preview parental controls</li>
+              <li>• <strong className="text-[#E8E8ED]">Special Accounts</strong> — Use the Special Accounts tab to grant real premium tiers to test emails</li>
+              <li>• <strong className="text-[#E8E8ED]">OAuth Flows</strong> — Go to Integrations page and click Connect on any platform to preview the consent dialog</li>
+              <li>• <strong className="text-[#E8E8ED]">Onboarding</strong> — Navigate to /Onboarding to preview the full signup flow including trial/referral/family steps</li>
+            </ul>
+          </div>
         </TabsContent>
 
         <TabsContent value="special" className="mt-4">
