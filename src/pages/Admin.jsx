@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shield, Users, Ticket, BarChart3, CreditCard, Sparkles, BookOpen, Loader2, Radio, UserPlus, Bug, TrendingUp, Map } from "lucide-react";
+import { toast } from "sonner";
 import DebugModeToggle from "@/components/admin/DebugModeToggle";
 import StatsCard from "@/components/shared/StatsCard";
 import AdminTickets from "@/components/admin/AdminTickets";
@@ -64,11 +65,11 @@ export default function Admin() {
   );
 
   if (!isAdmin) return (
-    <div className="p-8 text-center max-w-md mx-auto mt-20">
-      <div className="w-16 h-16 rounded-2xl bg-[#1A1D27] border border-[#2A2D3A] flex items-center justify-center mx-auto mb-4">
+    <div className="p-8 text-center max-w-md mx-auto mt-20 space-y-4">
+      <div className="w-16 h-16 rounded-2xl bg-[#1A1D27] border border-[#2A2D3A] flex items-center justify-center mx-auto">
         <Shield className="w-8 h-8 text-[#8B8D97]" />
       </div>
-      <h2 className="text-lg font-semibold mb-2">Admin Access Required</h2>
+      <h2 className="text-lg font-semibold">Admin Access Required</h2>
       <p className="text-sm text-[#8B8D97]">This area is restricted to ClipForge admins only.</p>
     </div>
   );
