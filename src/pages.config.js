@@ -62,6 +62,8 @@ import Search from './pages/Search';
 import Settings from './pages/Settings';
 import ShoppingLists from './pages/ShoppingLists';
 import Support from './pages/Support';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +83,8 @@ export const PAGES = {
     "Settings": Settings,
     "ShoppingLists": ShoppingLists,
     "Support": Support,
+    "Privacy": Privacy,
+    "Terms": Terms,
 }
 
 export const pagesConfig = {
