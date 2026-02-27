@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Zap, Bookmark, Users, ShoppingCart,
-  Sparkles, ArrowRight, X, Plug, Bell, Check, Gift
+  Sparkles, ArrowRight, X, Plug, Bell, Check, Gift, Crown, UserPlus
 } from "lucide-react";
+import { toast } from "sonner";
 import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import { createPageUrl } from "@/utils";
 import { useNavigate, Link } from "react-router-dom";
@@ -241,6 +242,54 @@ export default function Onboarding() {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
 
+  const handleGrowthAction = async ({ growthChoice, referralCode, trialPlan }) => {
+    if (growthChoice === "trial") {
+      try {
+        const trialEnd = new Date(Date.now() + 7 * 86400000);
+        await base44.entities.PremiumTrial.create({
+          user_email: user?.email,
+          trial_plan: trialPlan || "premium",
+          trial_start: new Date().toISOString(),
+          trial_end: trialEnd.toISOString(),
+          is_active: true,
+          converted: false,
+        });
+        toast.success("🎉 7-day Premium trial activated!");
+      } catch (e) {
+        toast.error("Could not start trial: " + e.message);
+      }
+    } else if (growthChoice === "referral" && referralCode) {
+      try {
+        const existing = await base44.entities.Referral.filter({ referral_code: referralCode });
+        if (existing.length > 0) {
+          await base44.entities.Referral.update(existing[0].id, {
+            referred_email: user?.email,
+            status: "signed_up",
+          });
+          toast.success("✅ Referral code applied! Bonus features unlocked.");
+        } else {
+          toast.error("Referral code not found.");
+        }
+      } catch (e) {
+        toast.error("Could not apply referral: " + e.message);
+      }
+    } else if (growthChoice === "family") {
+      try {
+        await base44.entities.FamilyMember.create({
+          family_owner_email: user?.email,
+          member_email: user?.email,
+          member_name: user?.full_name || "Owner",
+          role: "parent",
+          status: "active",
+        });
+        toast.success("👨‍👩‍👧 Family account set up! Invite members in Settings.");
+      } catch (e) {
+        toast.error("Could not set up family: " + e.message);
+      }
+    }
+    await finishOnboarding({ growthChoice, referralCode });
+  };
+
   const finishOnboarding = async (extraData = {}) => {
     if (user) {
       const existing = await base44.entities.OnboardingProgress.filter({ user_email: user.email });
@@ -276,7 +325,7 @@ export default function Onboarding() {
   };
 
   const handleGrowthDone = async (data) => {
-    await finishOnboarding(data);
+    await handleGrowthAction(data);
   };
 
   const handleSkip = async () => {
