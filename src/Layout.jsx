@@ -27,8 +27,10 @@ export default function Layout({ children, currentPageName }) {
 
   const toggleTheme = () => setTheme(t => t === "dark" ? "light" : "dark");
 
+  const isDark = theme === "dark";
+
   return (
-    <div className="min-h-screen bg-[#0F1117] text-[#E8E8ED] dark">
+    <div className={`min-h-screen ${isDark ? "bg-[#0F1117] text-[#E8E8ED]" : "bg-[#F5F5F7] text-[#1A1D27]"} ${theme}`}>
       <style>{`
         /* ── Dark mode (default) ─────────────────────────── */
         :root, .dark {
