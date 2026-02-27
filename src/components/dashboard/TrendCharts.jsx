@@ -59,6 +59,7 @@ export default function TrendCharts({ items }) {
       return entry;
     });
     items.forEach(item => {
+      if (!item.created_date) return;
       const key = format(parseISO(item.created_date), "yyyy-MM-dd");
       const slot = days.find(d => d._day === key);
       if (slot) {
