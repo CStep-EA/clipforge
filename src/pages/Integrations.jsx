@@ -208,6 +208,15 @@ export default function Integrations() {
         </TabsContent>
 
         <TabsContent value="health" className="mt-4 space-y-4">
+          {!isPremium && (
+            <div className="p-3 rounded-xl bg-[#9370DB]/5 border border-[#9370DB]/20 flex items-center gap-3 mb-2">
+              <Lock className="w-4 h-4 text-[#9370DB] flex-shrink-0" />
+              <p className="text-xs text-[#8B8D97] flex-1">Health app sync requires <strong className="text-[#E8E8ED]">Premium</strong>.</p>
+              <Link to={createPageUrl("Pricing")}>
+                <Button size="sm" className="bg-[#9370DB] text-white text-xs">Upgrade</Button>
+              </Link>
+            </div>
+          )}
           {HEALTH_APPS.map(app => (
             <Card key={app.id} className="glass-card p-5">
               <div className="flex items-center justify-between">
@@ -220,7 +229,7 @@ export default function Integrations() {
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" className="border-[#2A2D3A] text-xs" disabled={!isPremium}>
-                    {isPremium ? "Connect" : "Premium Only"}
+                    {isPremium ? "Connect" : "🔒 Premium"}
                   </Button>
                 </div>
               </div>
