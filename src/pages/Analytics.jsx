@@ -12,6 +12,7 @@ import StatsCard from "@/components/shared/StatsCard";
 import ShareModal from "@/components/friends/ShareModal";
 import { useSubscription } from "@/components/shared/useSubscription";
 import ReactMarkdown from "react-markdown";
+import TrialBanner from "@/components/subscription/TrialBanner";
 
 const COLORS = ["#00BFFF", "#9370DB", "#FFB6C1", "#F59E0B", "#10B981", "#3B82F6", "#EC4899", "#6B7280"];
 

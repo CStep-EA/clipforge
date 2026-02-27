@@ -17,6 +17,7 @@ import CategoryFilter from "@/components/shared/CategoryFilter";
 import AddItemDialog from "@/components/shared/AddItemDialog";
 import ShareModal from "@/components/friends/ShareModal";
 import { useSubscription } from "@/components/shared/useSubscription";
+import TrialBanner from "@/components/subscription/TrialBanner";
 
 export default function Saves() {
   const [addOpen, setAddOpen] = useState(false);
