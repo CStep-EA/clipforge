@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
   Bookmark, TrendingUp, ShoppingCart, Users,
-  Plus, ArrowRight, Sparkles, Zap, Calendar, UserPlus, Share2
+  Plus, ArrowRight, Sparkles, Zap, Calendar, UserPlus, Share2, MessageCircle, Ticket
 } from "lucide-react";
+import { toast } from "sonner";
 import ShareModal from "@/components/friends/ShareModal";
 import TrialBanner from "@/components/subscription/TrialBanner";
 import ChildSafeBanner from "@/components/family/ChildSafeBanner";
@@ -66,16 +67,19 @@ export default function Dashboard() {
   const handleSave = async (formData) => {
     await base44.entities.SavedItem.create(formData);
     queryClient.invalidateQueries({ queryKey: ["savedItems"] });
+    toast.success("Saved!");
   };
 
   const handleToggleFavorite = async (item) => {
     await base44.entities.SavedItem.update(item.id, { is_favorite: !item.is_favorite });
     queryClient.invalidateQueries({ queryKey: ["savedItems"] });
+    toast.success(item.is_favorite ? "Removed from favorites" : "Added to favorites ♥");
   };
 
   const handleDelete = async (item) => {
     await base44.entities.SavedItem.delete(item.id);
     queryClient.invalidateQueries({ queryKey: ["savedItems"] });
+    toast.success("Item deleted");
   };
 
   const stats = {
@@ -144,10 +148,18 @@ export default function Dashboard() {
 
       {/* Stats */}
        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard title="Total Saves" value={stats.total} icon={Bookmark} accent="#00BFFF" trend={12} className="animate-pulse-glow" />
-        <StatsCard title="Active Deals" value={stats.deals} icon={TrendingUp} accent="#9370DB" />
-        <StatsCard title="Favorites" value={stats.favorites} icon={Sparkles} accent="#FFB6C1" className="animate-pulse-glow-pink" />
-        <StatsCard title="Boards" value={stats.boards} icon={Users} accent="#10B981" />
+        <Link to={createPageUrl("Saves")}>
+          <StatsCard title="Total Saves" value={stats.total} icon={Bookmark} accent="#00BFFF" trend={12} className="animate-pulse-glow cursor-pointer hover:border-[#00BFFF]/40 transition-all" />
+        </Link>
+        <Link to={createPageUrl("Saves") + "?filter=deal"}>
+          <StatsCard title="Active Deals" value={stats.deals} icon={TrendingUp} accent="#9370DB" className="cursor-pointer hover:border-[#9370DB]/40 transition-all" />
+        </Link>
+        <Link to={createPageUrl("Saves") + "?filter=favorites"}>
+          <StatsCard title="Favorites" value={stats.favorites} icon={Sparkles} accent="#FFB6C1" className="animate-pulse-glow-pink cursor-pointer hover:border-[#FFB6C1]/40 transition-all" />
+        </Link>
+        <Link to={createPageUrl("Boards")}>
+          <StatsCard title="Boards" value={stats.boards} icon={Users} accent="#10B981" className="cursor-pointer hover:border-emerald-400/40 transition-all" />
+        </Link>
       </div>
 
       {/* Search */}
@@ -232,6 +244,11 @@ export default function Dashboard() {
             <UserPlus className="w-7 h-7 text-[#00BFFF] mb-2" />
             <h3 className="font-semibold text-sm mb-0.5">Friends</h3>
             <p className="text-xs text-[#8B8D97]">Connect & share</p>
+          </Link>
+          <Link to={createPageUrl("Support")} className="glass-card rounded-2xl p-4 hover:border-[#FFB6C1]/30 transition-all group">
+            <MessageCircle className="w-7 h-7 text-[#FFB6C1] mb-2" />
+            <h3 className="font-semibold text-sm mb-0.5">Support</h3>
+            <p className="text-xs text-[#8B8D97]">Help & tickets</p>
           </Link>
         </div>
       </div>
