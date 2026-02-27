@@ -272,6 +272,10 @@ export default function Onboarding() {
   };
 
   const handleMonitoringDone = async (data) => {
+    setStep(INFO_STEPS.length + 2); // go to growth
+  };
+
+  const handleGrowthDone = async (data) => {
     await finishOnboarding(data);
   };
 
