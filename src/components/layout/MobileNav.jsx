@@ -1,21 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import {
-  LayoutDashboard,
-  Bookmark,
-  UserPlus,
-  Search,
-  Sparkles
-} from "lucide-react";
+import { LayoutDashboard, Bookmark, UserPlus, Search, Plug } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const mobileItems = [
   { name: "Home", icon: LayoutDashboard, page: "Dashboard" },
   { name: "Saves", icon: Bookmark, page: "Saves" },
   { name: "Search", icon: Search, page: "Search" },
+  { name: "Connect", icon: Plug, page: "Integrations" },
   { name: "Friends", icon: UserPlus, page: "Friends" },
-  { name: "AI", icon: Sparkles, page: "Assistant" },
 ];
 
 export default function MobileNav({ currentPage }) {
