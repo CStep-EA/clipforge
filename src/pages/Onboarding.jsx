@@ -391,6 +391,20 @@ export default function Onboarding() {
             <p className="text-xs text-[#8B8D97] text-center mt-4">Step {step + 1} of {TOTAL_STEPS}</p>
           </motion.div>
         )}
+
+        {step === INFO_STEPS.length + 2 && (
+          <motion.div
+            key="growth"
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -40 }}
+            transition={{ duration: 0.3 }}
+            className="max-w-sm w-full"
+          >
+            <StepGrowth onNext={handleGrowthDone} />
+            <p className="text-xs text-[#8B8D97] text-center mt-4">Step {step + 1} of {TOTAL_STEPS}</p>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
