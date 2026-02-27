@@ -92,7 +92,7 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
       </nav>
 
       {/* Bottom */}
-      <div className="py-3 px-2 border-t border-[#2A2D3A] space-y-1">
+      <div className={cn("py-3 px-2 space-y-1", isDark ? "border-t border-[#2A2D3A]" : "border-t border-gray-200")}>
         {bottomItems.map((item) => {
           if (item.adminOnly && userRole !== "admin") return null;
           const isActive = currentPage === item.page;
@@ -104,7 +104,9 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200",
                 isActive
                   ? "bg-[#00BFFF]/10 text-[#00BFFF]"
-                  : "text-[#8B8D97] hover:text-[#E8E8ED] hover:bg-[#1A1D27]"
+                  : isDark
+                    ? "text-[#8B8D97] hover:text-[#E8E8ED] hover:bg-[#1A1D27]"
+                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
               )}
             >
               <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -112,6 +114,19 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
             </Link>
           );
         })}
+        {/* Theme toggle */}
+        {onToggleTheme && (
+          <button
+            onClick={onToggleTheme}
+            className={cn(
+              "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200",
+              isDark ? "text-[#8B8D97] hover:text-[#E8E8ED] hover:bg-[#1A1D27]" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+            )}
+          >
+            {isDark ? <Sun className="w-5 h-5 flex-shrink-0" /> : <Moon className="w-5 h-5 flex-shrink-0" />}
+            {!collapsed && <span className="text-sm font-medium">{isDark ? "Light mode" : "Dark mode"}</span>}
+          </button>
+        )}
       </div>
 
       {/* Collapse button */}
