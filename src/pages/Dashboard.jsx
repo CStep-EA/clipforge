@@ -43,11 +43,17 @@ export default function Dashboard() {
   const { data: items = [] } = useQuery({
     queryKey: ["savedItems"],
     queryFn: () => base44.entities.SavedItem.list("-created_date", 50),
+    placeholderData: [
+      { id: "stub1", title: "🔥 AirPods Pro 2 — 30% off", category: "deal", source: "manual", rating: 9, is_favorite: true, description: "Limited time sale at Best Buy", tags: ["tech", "audio"], image_url: "https://images.unsplash.com/photo-1588423771073-b8903fead714?w=400&q=80" },
+      { id: "stub2", title: "Best Pasta Carbonara", category: "recipe", source: "web", rating: 8, description: "Classic Roman recipe with guanciale", tags: ["italian", "dinner"], image_url: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=80" },
+      { id: "stub3", title: "Weekend Hiking Trip — Zion", category: "travel", source: "manual", rating: 7, description: "Planning a 3-day trip to Zion NP", tags: ["hiking", "nature"] },
+    ],
   });
 
   const { data: boards = [] } = useQuery({
     queryKey: ["boards"],
     queryFn: () => base44.entities.SharedBoard.list("-created_date", 5),
+    placeholderData: [{ id: "b1", name: "Family Wishlist" }, { id: "b2", name: "Date Night Ideas" }],
   });
 
   const handleSave = async (formData) => {
