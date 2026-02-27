@@ -52,9 +52,9 @@ export default function Integrations() {
       {!isPremium && (
         <div className="p-3 rounded-xl bg-[#9370DB]/5 border border-[#9370DB]/20 flex items-center gap-3">
           <AlertCircle className="w-4 h-4 text-[#9370DB] flex-shrink-0" />
-          <p className="text-xs text-[#8B8D97] flex-1">Social, recipe & shopping connections are <strong className="text-[#E8E8ED]">free</strong>. Health app sync requires Premium.</p>
-          <Button size="sm" className="bg-[#9370DB] text-white text-xs" onClick={() => window.location.href = "/Pricing"}>
-            Upgrade
+          <p className="text-xs text-[#8B8D97] flex-1">Social, recipe & shopping connections are <strong className="text-[#E8E8ED]">free</strong>. Streaming & health require <strong className="text-[#E8E8ED]">Premium</strong>.</p>
+          <Button size="sm" className="bg-[#9370DB] text-white text-xs" asChild>
+            <a href="/Pricing">Upgrade</a>
           </Button>
         </div>
       )}
