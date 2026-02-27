@@ -13,8 +13,10 @@ import FindFriendsPanel from "@/components/friends/FindFriendsPanel";
 import { useSubscription } from "@/components/shared/useSubscription";
 import {
   ShoppingBag, Utensils, ExternalLink,
-  CheckCircle2, AlertCircle, Users2, Radio
+  CheckCircle2, AlertCircle, Users2, Lock
 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 const HEALTH_APPS = [
   { id: "myfitnesspal", name: "MyFitnessPal", emoji: "💪", color: "#0066CC", description: "Track calories from saved recipes" },
