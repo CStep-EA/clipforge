@@ -70,15 +70,28 @@ export default function Admin() {
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#9370DB] to-[#00BFFF] flex items-center justify-center">
-          <Shield className="w-5 h-5 text-white" />
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#9370DB] to-[#00BFFF] flex items-center justify-center">
+            <Shield className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+            <p className="text-xs text-[#8B8D97]">ClipForge control center</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-          <p className="text-xs text-[#8B8D97]">ClipForge control center</p>
-        </div>
+        <Button
+          onClick={() => setCreateDialogOpen(true)}
+          className="bg-gradient-to-r from-[#9370DB] to-[#00BFFF] text-white font-semibold btn-glow gap-2"
+        >
+          <UserPlus className="w-4 h-4" /> Create Special Account
+        </Button>
       </div>
+
+      <CreateSpecialAccountDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
