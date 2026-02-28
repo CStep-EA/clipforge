@@ -78,6 +78,29 @@ We do NOT use:
 • Cross-site tracking pixels
 • Behavioral profiling for ad targeting`
   },
+  {
+    icon: Globe,
+    title: "Third-Party Services",
+    color: "#9370DB",
+    content: `ClipForge integrates with select third-party services to provide functionality:
+• Stripe — payment processing (their privacy policy applies to payment data)
+• OpenAI — AI-powered summaries (content is processed transiently, not stored by OpenAI for training)
+• Ticketmaster — event discovery (subject to their terms)
+• Spotify, YouTube, Twitch, Discord — optional integrations (OAuth tokens stored encrypted)
+• Spoonacular — recipe data
+
+We only share the minimum data necessary with each third party. We do not sell your data to any third party, ever.`
+  },
+  {
+    icon: UserCheck,
+    title: "No Medical / Legal / Financial Advice",
+    color: "#EF4444",
+    content: `ClipForge and its AI features do not provide medical, legal, financial, dietary, or professional advice of any kind.
+
+Content saved through ClipForge (articles, recipes, health tips, financial news) is user-curated and presented for personal reference only. Always consult a qualified professional before making health, legal, or financial decisions.
+
+AI-generated summaries are informational only and may contain errors or omissions.`
+  },
 ];
 
 export default function Privacy() {
