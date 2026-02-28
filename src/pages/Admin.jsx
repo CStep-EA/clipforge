@@ -232,6 +232,12 @@ export default function Admin() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="ratelimits" className="mt-4">
+          <div className="glass-card rounded-2xl p-5">
+            <RateLimitLog />
+          </div>
+        </TabsContent>
+
         <TabsContent value="debug" className="mt-4 space-y-4">
           <DebugModeToggle />
           <div className="p-4 rounded-xl glass-card space-y-2">
