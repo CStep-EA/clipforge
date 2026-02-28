@@ -217,10 +217,10 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED]">
-                  <DropdownMenuItem onClick={() => onEdit?.(item)} className="text-xs hover:bg-[#2A2D3A]">
+                  <DropdownMenuItem onClick={() => onEdit?.(localItem)} className="text-xs hover:bg-[#2A2D3A]">
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onDelete?.(item)} className="text-xs text-red-400 hover:bg-[#2A2D3A]">
+                  <DropdownMenuItem onClick={() => onDelete?.(localItem)} className="text-xs text-red-400 hover:bg-[#2A2D3A]">
                     Delete
                   </DropdownMenuItem>
                 </DropdownMenuContent>
