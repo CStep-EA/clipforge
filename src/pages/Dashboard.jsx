@@ -65,21 +65,33 @@ export default function Dashboard() {
   });
 
   const handleSave = async (formData) => {
-    await base44.entities.SavedItem.create(formData);
-    queryClient.invalidateQueries({ queryKey: ["savedItems"] });
-    toast.success("Saved!");
+    try {
+      await base44.entities.SavedItem.create(formData);
+      queryClient.invalidateQueries({ queryKey: ["savedItems"] });
+      toast.success("Saved!");
+    } catch (e) {
+      toast.error("Could not save item. Please try again.");
+    }
   };
 
   const handleToggleFavorite = async (item) => {
-    await base44.entities.SavedItem.update(item.id, { is_favorite: !item.is_favorite });
-    queryClient.invalidateQueries({ queryKey: ["savedItems"] });
-    toast.success(item.is_favorite ? "Removed from favorites" : "Added to favorites ♥");
+    try {
+      await base44.entities.SavedItem.update(item.id, { is_favorite: !item.is_favorite });
+      queryClient.invalidateQueries({ queryKey: ["savedItems"] });
+      toast.success(item.is_favorite ? "Removed from favorites" : "Added to favorites ♥");
+    } catch (e) {
+      toast.error("Could not update favorite.");
+    }
   };
 
   const handleDelete = async (item) => {
-    await base44.entities.SavedItem.delete(item.id);
-    queryClient.invalidateQueries({ queryKey: ["savedItems"] });
-    toast.success("Item deleted");
+    try {
+      await base44.entities.SavedItem.delete(item.id);
+      queryClient.invalidateQueries({ queryKey: ["savedItems"] });
+      toast.success("Item deleted");
+    } catch (e) {
+      toast.error("Could not delete item.");
+    }
   };
 
   const stats = {
