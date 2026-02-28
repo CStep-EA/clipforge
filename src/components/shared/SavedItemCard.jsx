@@ -46,9 +46,13 @@ const sourceIcons = {
   web: "🌐",
 };
 
-export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit, onShare, isPro = false }) {
+export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit, onShare, onItemUpdated, isPro = false }) {
   const [showResearch, setShowResearch] = useState(false);
-  const cat = categoryConfig[item.category] || categoryConfig.other;
+  const [localItem, setLocalItem] = useState(item);
+  const cat = categoryConfig[localItem.category] || categoryConfig.other;
+
+  // Sync if parent changes the item
+  React.useEffect(() => { setLocalItem(item); }, [item]);
 
   return (
     <motion.div
