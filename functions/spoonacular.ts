@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { sentryCaptureError } from './sentryCaptureError.js';
 
 Deno.serve(async (req) => {
   try {
