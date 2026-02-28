@@ -128,13 +128,18 @@ export default function Events() {
 
   const getAIReview = async (event) => {
     setSelectedEvent({ ...event, loadingReview: true });
-    const review = await base44.integrations.Core.InvokeLLM({
-      prompt: `Write a helpful 3-sentence event review for: "${event.name}" at ${event.venue} in ${event.city}. Include what to expect, who would enjoy it, and whether tickets are worth it at $${event.min_price}-$${event.max_price}.`,
-      add_context_from_internet: true,
-    });
-    const updated = await base44.entities.EventSuggestion.update(event.id, { ai_review: review });
-    setSelectedEvent({ ...event, ai_review: review, loadingReview: false });
-    queryClient.invalidateQueries({ queryKey: ["events"] });
+    try {
+      const review = await base44.integrations.Core.InvokeLLM({
+        prompt: `Write a helpful 3-sentence event review for: "${event.name}" at ${event.venue} in ${event.city}. Include what to expect, who would enjoy it, and whether tickets are worth it at $${event.min_price}-$${event.max_price}.`,
+        add_context_from_internet: true,
+      });
+      await base44.entities.EventSuggestion.update(event.id, { ai_review: review });
+      setSelectedEvent({ ...event, ai_review: review, loadingReview: false });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+    } catch (e) {
+      toast.error("Could not generate AI review.");
+      setSelectedEvent({ ...event, loadingReview: false });
+    }
   };
 
   return (
