@@ -170,7 +170,7 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Main content */}
       <main className="md:ml-[240px] pb-20 md:pb-8 pb-safe min-h-screen">
-        {children}
+        <SentryErrorBoundary>{children}</SentryErrorBoundary>
       </main>
 
       {/* Mobile nav */}
