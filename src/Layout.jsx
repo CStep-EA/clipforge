@@ -169,7 +169,7 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {/* Main content */}
-      <main className="md:ml-[240px] pb-20 md:pb-8 pb-safe min-h-screen">
+      <main className="md:ml-[240px] pb-24 md:pb-8 min-h-screen" style={{paddingBottom: 'calc(6rem + env(safe-area-inset-bottom, 0px))'}}>
         <SentryErrorBoundary>{children}</SentryErrorBoundary>
       </main>
 
