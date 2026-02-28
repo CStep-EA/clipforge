@@ -42,6 +42,7 @@ Deno.serve(async (req) => {
     return Response.json(result);
   } catch (err) {
     console.error('[analyzeItem] error:', err.message);
+    await sentryCaptureError(err, { tags: { function: 'analyzeItem' } });
     return Response.json({ error: err.message }, { status: 500 });
   }
 });

@@ -70,6 +70,7 @@ Deno.serve(async (req) => {
     return Response.json({ events });
   } catch (err) {
     console.error('ticketmaster function error:', err.message);
+    await sentryCaptureError(err, { tags: { function: 'ticketmaster' } });
     return Response.json({ error: err.message }, { status: 500 });
   }
 });

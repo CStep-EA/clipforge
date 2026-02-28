@@ -138,6 +138,7 @@ Return a detailed research report with:
     return Response.json({ research });
   } catch (error) {
     console.error('deepResearch error:', error);
+    await sentryCaptureError(error, { tags: { function: 'deepResearch' } });
     return Response.json({ error: error.message }, { status: 500 });
   }
 });

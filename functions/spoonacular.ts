@@ -85,6 +85,7 @@ Deno.serve(async (req) => {
     return Response.json({ error: 'Invalid action. Use: extract, search, or ingredients' }, { status: 400 });
   } catch (err) {
     console.error('spoonacular function error:', err.message);
+    await sentryCaptureError(err, { tags: { function: 'spoonacular' } });
     return Response.json({ error: err.message }, { status: 500 });
   }
 });
