@@ -5,6 +5,7 @@ import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import { base44 } from "@/api/base44Client";
 import { Sun, Moon } from "lucide-react";
 import SupportBot from "@/components/support/SupportBot";
+import GetAppButton from "@/components/shared/GetAppButton";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 

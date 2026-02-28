@@ -47,54 +47,54 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import About from './pages/About';
 import Admin from './pages/Admin';
 import Analytics from './pages/Analytics';
 import Assistant from './pages/Assistant';
 import Boards from './pages/Boards';
+import Cookies from './pages/Cookies';
 import Dashboard from './pages/Dashboard';
 import Events from './pages/Events';
 import Friends from './pages/Friends';
 import Integrations from './pages/Integrations';
+import LaunchRoadmap from './pages/LaunchRoadmap';
+import MarketingLaunch from './pages/MarketingLaunch';
 import Onboarding from './pages/Onboarding';
 import Pricing from './pages/Pricing';
+import Privacy from './pages/Privacy';
 import Saves from './pages/Saves';
 import Search from './pages/Search';
 import Settings from './pages/Settings';
 import ShoppingLists from './pages/ShoppingLists';
 import Support from './pages/Support';
-import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
-import Cookies from './pages/Cookies';
-import About from './pages/About';
 import VisionMission from './pages/VisionMission';
-import LaunchRoadmap from './pages/LaunchRoadmap';
-import MarketingLaunch from './pages/MarketingLaunch';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "About": About,
     "Admin": Admin,
     "Analytics": Analytics,
     "Assistant": Assistant,
     "Boards": Boards,
+    "Cookies": Cookies,
     "Dashboard": Dashboard,
     "Events": Events,
     "Friends": Friends,
     "Integrations": Integrations,
+    "LaunchRoadmap": LaunchRoadmap,
+    "MarketingLaunch": MarketingLaunch,
     "Onboarding": Onboarding,
     "Pricing": Pricing,
+    "Privacy": Privacy,
     "Saves": Saves,
     "Search": Search,
     "Settings": Settings,
     "ShoppingLists": ShoppingLists,
     "Support": Support,
-    "Privacy": Privacy,
     "Terms": Terms,
-    "Cookies": Cookies,
-    "About": About,
     "VisionMission": VisionMission,
-    "LaunchRoadmap": LaunchRoadmap,
-    "MarketingLaunch": MarketingLaunch,
 }
 
 export const pagesConfig = {
