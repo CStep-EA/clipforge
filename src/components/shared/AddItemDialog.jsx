@@ -99,9 +99,15 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
     }
   };
 
-  const handleSubmit = () => {
-    onSave(form);
-    onOpenChange(false);
+  const handleSubmit = async () => {
+    const result = await onSave(form);
+    // If it's an event, show the calendar stub instead of closing immediately
+    if (form.category === "event" && !editItem) {
+      // Build a preview object for the calendar button
+      setSavedItem({ ...form, id: result?.id || "_preview", event_date: form.event_date });
+    } else {
+      onOpenChange(false);
+    }
   };
 
   return (
