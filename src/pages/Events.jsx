@@ -117,9 +117,13 @@ export default function Events() {
   };
 
   const updateStatus = async (event, status) => {
-    await base44.entities.EventSuggestion.update(event.id, { status });
-    queryClient.invalidateQueries({ queryKey: ["events"] });
-    toast.success(status === "booked" ? "Marked as booked! 🎟" : "Status updated");
+    try {
+      await base44.entities.EventSuggestion.update(event.id, { status });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      toast.success(status === "booked" ? "Marked as booked! 🎟" : "Status updated");
+    } catch (e) {
+      toast.error("Could not update event status.");
+    }
   };
 
   const getAIReview = async (event) => {
