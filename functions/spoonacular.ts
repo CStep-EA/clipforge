@@ -7,6 +7,18 @@ Deno.serve(async (req) => {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { action, url, recipeId, query } = await req.json();
+
+    // Rate limit: 100 requests/hour per user
+    const rlRes = await base44.functions.invoke('rateLimiter', {
+      userEmail: user.email, endpoint: 'spoonacular', limit: 100, windowMinutes: 60,
+    });
+    if (!rlRes.allowed) {
+      return new Response(JSON.stringify({ error: 'Rate limit exceeded. Try again later.' }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', 'Retry-After': String(rlRes.retryAfterSeconds) },
+      });
+    }
+
     const apiKey = Deno.env.get('SPOONACULAR_API_KEY');
     if (!apiKey) return Response.json({ error: 'SPOONACULAR_API_KEY not configured' }, { status: 500 });
 
