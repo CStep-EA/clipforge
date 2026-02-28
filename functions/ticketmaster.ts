@@ -2,8 +2,22 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 Deno.serve(async (req) => {
   try {
-    const { city, genre, keyword, size } = await req.json();
+    const base44 = createClientFromRequest(req);
+    const { city, genre, keyword, size, userEmail } = await req.json();
     if (!city) return Response.json({ error: 'city is required' }, { status: 400 });
+
+    // Rate limit: 60 requests/hour per user
+    if (userEmail) {
+      const rlRes = await base44.functions.invoke('rateLimiter', {
+        userEmail, endpoint: 'ticketmaster', limit: 60, windowMinutes: 60
+      });
+      if (!rlRes.data?.allowed) {
+        return Response.json(
+          { error: `Rate limit exceeded. Try again in ${rlRes.data?.retryAfterSeconds}s.` },
+          { status: 429, headers: { 'Retry-After': String(rlRes.data?.retryAfterSeconds || 3600) } }
+        );
+      }
+    }
 
     const apiKey = Deno.env.get('TICKETMASTER_API_KEY');
     if (!apiKey) return Response.json({ error: 'TICKETMASTER_API_KEY not configured' }, { status: 500 });
