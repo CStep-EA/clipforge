@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { User, Bell, LogOut, Save, Users, UserPlus, Gift, Lock, ArrowRight, Crown, Plug, Bug } from "lucide-react";
+import { User, Bell, LogOut, Save, Users, UserPlus, Gift, Lock, ArrowRight, Crown, Plug, Trash2, Download, Shield, X } from "lucide-react";
 import TierGate from "@/components/shared/TierGate";
 import { Badge } from "@/components/ui/badge";
 import { useSubscription } from "@/components/shared/useSubscription";
@@ -25,6 +25,9 @@ export default function Settings() {
     email_digests: true,
     dark_mode: true,
   });
+  const [dataModalOpen, setDataModalOpen] = useState(null); // 'delete' | 'export' | null
+  const [dataReason, setDataReason] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -36,6 +39,27 @@ export default function Settings() {
   const savePreferences = async () => {
     await base44.auth.updateMe({ preferences });
     toast.success("Settings saved");
+  };
+
+  const submitDataRequest = async (type) => {
+    setSubmitting(true);
+    const isDelete = type === "delete";
+    await base44.entities.SupportTicket.create({
+      subject: isDelete ? "Account Deletion Request (Right to Erasure)" : "Data Export Request (Right to Portability)",
+      message: `${isDelete
+        ? "I am requesting permanent deletion of my account and all associated personal data under GDPR Article 17 / CCPA Right to Erasure."
+        : "I am requesting an export of all personal data associated with my account under GDPR Article 20 / CCPA Right to Know."
+      }\n\nUser email: ${user?.email}\nReason: ${dataReason || "Not specified"}\n\nPlease process this request within 30 days as required by applicable law.`,
+      category: "account",
+      priority: isDelete ? "high" : "medium",
+    });
+    setSubmitting(false);
+    setDataModalOpen(null);
+    setDataReason("");
+    toast.success(isDelete
+      ? "Deletion request submitted. We'll process it within 30 days."
+      : "Export request submitted. We'll email you a download link within 30 days."
+    );
   };
 
   return (
@@ -182,6 +206,38 @@ export default function Settings() {
         )}
       </Card>
 
+      {/* Privacy & Data Rights */}
+      <Card className="glass-card p-6 border border-[#EF4444]/20">
+        <div className="flex items-center gap-3 mb-4">
+          <Shield className="w-5 h-5 text-[#EF4444]" />
+          <div>
+            <h2 className="font-semibold">Privacy & Data Rights</h2>
+            <p className="text-[10px] text-[#8B8D97]">GDPR / CCPA — your data, your rights</p>
+          </div>
+        </div>
+        <p className="text-xs text-[#8B8D97] mb-4 leading-relaxed">
+          Under GDPR (Article 17) and CCPA, you have the right to request deletion or export of all personal data we hold about you. Requests are processed within 30 days.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            className="border-[#00BFFF]/30 text-[#00BFFF] hover:bg-[#00BFFF]/10 gap-1.5 text-xs"
+            onClick={() => setDataModalOpen("export")}
+          >
+            <Download className="w-3.5 h-3.5" /> Export My Data
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="border-[#EF4444]/40 text-[#EF4444] hover:bg-[#EF4444]/10 gap-1.5 text-xs"
+            onClick={() => setDataModalOpen("delete")}
+          >
+            <Trash2 className="w-3.5 h-3.5" /> Delete My Data & Account
+          </Button>
+        </div>
+      </Card>
+
       {/* Actions */}
       <div className="flex gap-3">
         <Button onClick={savePreferences} className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2">
@@ -191,6 +247,71 @@ export default function Settings() {
           <LogOut className="w-4 h-4" /> Sign Out
         </Button>
       </div>
+
+      {/* Data Request Modal */}
+      {dataModalOpen && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-[#1A1D27] border border-[#2A2D3A] rounded-2xl shadow-2xl p-6 space-y-4">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${dataModalOpen === "delete" ? "bg-[#EF4444]/15" : "bg-[#00BFFF]/15"}`}>
+                  {dataModalOpen === "delete"
+                    ? <Trash2 className="w-4 h-4 text-[#EF4444]" />
+                    : <Download className="w-4 h-4 text-[#00BFFF]" />
+                  }
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">
+                    {dataModalOpen === "delete" ? "Request Account Deletion" : "Request Data Export"}
+                  </h3>
+                  <p className="text-[10px] text-[#8B8D97]">
+                    {dataModalOpen === "delete" ? "GDPR Art. 17 · CCPA Right to Erasure" : "GDPR Art. 20 · CCPA Right to Know"}
+                  </p>
+                </div>
+              </div>
+              <button onClick={() => setDataModalOpen(null)} className="text-[#8B8D97] hover:text-[#E8E8ED]">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-[#8B8D97] leading-relaxed">
+              {dataModalOpen === "delete"
+                ? "This will submit a support ticket requesting permanent deletion of your account and all associated personal data. A team member will confirm and process your request within 30 days."
+                : "This will submit a support ticket requesting a full export of your personal data in JSON format. We'll email you a secure download link within 30 days."
+              }
+            </p>
+
+            <div>
+              <Label className="text-xs text-[#8B8D97] mb-1 block">Reason (optional)</Label>
+              <Input
+                placeholder={dataModalOpen === "delete" ? "e.g. No longer using the service" : "e.g. Backup my data"}
+                value={dataReason}
+                onChange={e => setDataReason(e.target.value)}
+                className="bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-sm"
+              />
+            </div>
+
+            {dataModalOpen === "delete" && (
+              <div className="p-3 rounded-xl bg-[#EF4444]/8 border border-[#EF4444]/20 text-xs text-[#EF4444]">
+                ⚠️ Deletion is permanent and cannot be undone. Your subscription will be cancelled and all saved content removed.
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <Button
+                className={`flex-1 gap-2 text-xs ${dataModalOpen === "delete" ? "bg-[#EF4444] hover:bg-[#EF4444]/90 text-white" : "bg-[#00BFFF] hover:bg-[#00BFFF]/90 text-black font-bold"}`}
+                onClick={() => submitDataRequest(dataModalOpen)}
+                disabled={submitting}
+              >
+                {submitting ? "Submitting…" : dataModalOpen === "delete" ? "Submit Deletion Request" : "Submit Export Request"}
+              </Button>
+              <Button variant="outline" className="border-[#2A2D3A] text-[#8B8D97]" onClick={() => setDataModalOpen(null)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

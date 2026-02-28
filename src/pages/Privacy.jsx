@@ -30,16 +30,25 @@ We do NOT sell, rent, or share your personal data with advertisers.`
   },
   {
     icon: Shield,
-    title: "GDPR & Your Rights",
+    title: "GDPR & CCPA — Your Data Rights",
     color: "#00BFFF",
-    content: `If you are in the EU/EEA, you have the following rights under GDPR:
-• Right to Access: Request a copy of your personal data
-• Right to Rectification: Correct inaccurate data
-• Right to Erasure: Request deletion of your account and data
-• Right to Portability: Export your saved items as JSON/CSV
-• Right to Object: Opt out of analytics processing
+    content: `You have the following rights regarding your personal data:
 
-To exercise any of these rights, email privacy@clipforge.app or submit a support ticket.`
+GDPR (EU/EEA residents — Regulation 2016/679):
+• Art. 15 – Right to Access: Request a copy of all personal data we hold
+• Art. 16 – Right to Rectification: Correct inaccurate or incomplete data
+• Art. 17 – Right to Erasure ("Right to be Forgotten"): Request permanent deletion of your account and all associated data
+• Art. 20 – Right to Portability: Export your saved items as JSON/CSV
+• Art. 21 – Right to Object: Opt out of analytics or profiling at any time
+
+CCPA (California residents — Cal. Civ. Code §1798.100 et seq.):
+• Right to Know: Request disclosure of personal information collected and how it is used or shared
+• Right to Delete: Request deletion of personal information we have collected
+• Right to Opt-Out: We do not sell personal data, but you may confirm this at any time
+• Right to Non-Discrimination: Exercising your rights will not affect your service access
+
+How to exercise your rights:
+You can submit a deletion or export request directly from Settings → Privacy & Data Rights, or email privacy@clipforge.app. We will acknowledge your request within 72 hours and process it within 30 days as required by applicable law.`
   },
   {
     icon: Baby,

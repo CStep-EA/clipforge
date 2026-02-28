@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, UserCheck, UserX, Loader2, Pencil, Check, X, Shield } from "lucide-react";
+import { Search, UserCheck, UserX, Loader2, Pencil, Check, X, Shield, Trash2, Download, AlertTriangle } from "lucide-react";
+import { useQuery as useTicketQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 const planColors = { free: "#8B8D97", pro: "#00BFFF", premium: "#9370DB", family: "#FFB6C1" };
