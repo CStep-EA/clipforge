@@ -113,7 +113,7 @@ export default function Events() {
 
     queryClient.invalidateQueries({ queryKey: ["events"] });
     setSearching(false);
-    if (!searching) toast.success("Events loaded!");
+    toast.success("Events loaded!");
   };
 
   const updateStatus = async (event, status) => {
