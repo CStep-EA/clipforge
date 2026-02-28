@@ -1,24 +1,19 @@
 /**
- * Lightweight Sentry error reporter for Deno backend functions.
- * Call: await sentryCaptureError(error, { tags: { function: 'myFunc' } })
+ * Sentry error capture utility — callable as a backend function.
+ * POST { errorName, errorMessage, errorStack, tags, extra }
  */
 
 const SENTRY_DSN = "https://f66f91cc6ce5c0e70b61f87c4a803d86@o4510964671905792.ingest.us.sentry.io/4510964678459392";
 
-// Parse DSN into components
-function parseDsn(dsn) {
-  const url = new URL(dsn);
-  const key = url.username;
-  const projectId = url.pathname.replace("/", "");
-  const host = url.hostname;
-  return { key, projectId, host };
-}
-
-export async function sentryCaptureError(error, context = {}) {
+async function captureToSentry({ errorName, errorMessage, errorStack, tags = {}, extra = {} }) {
   try {
-    const { key, projectId, host } = parseDsn(SENTRY_DSN);
+    const url = new URL(SENTRY_DSN);
+    const key = url.username;
+    const projectId = url.pathname.replace("/", "");
+    const host = url.hostname;
+
     const envelope = [
-      JSON.stringify({ sent_at: new Date().toISOString(), dsn: SENTRY_DSN }),
+      JSON.stringify({ sent_at: new Date().toISOString() }),
       JSON.stringify({ type: "event" }),
       JSON.stringify({
         event_id: crypto.randomUUID().replace(/-/g, ""),
@@ -29,15 +24,15 @@ export async function sentryCaptureError(error, context = {}) {
         logger: "backend",
         exception: {
           values: [{
-            type: error?.name || "Error",
-            value: error?.message || String(error),
-            stacktrace: error?.stack ? {
-              frames: error.stack.split("\n").slice(1).map(line => ({ filename: line.trim() }))
+            type: errorName || "Error",
+            value: errorMessage || "Unknown error",
+            stacktrace: errorStack ? {
+              frames: errorStack.split("\n").slice(1, 8).map(line => ({ filename: line.trim() }))
             } : undefined,
           }],
         },
-        tags: context.tags || {},
-        extra: context.extra || {},
+        tags,
+        extra,
       }),
     ].join("\n");
 
@@ -51,7 +46,12 @@ export async function sentryCaptureError(error, context = {}) {
   }
 }
 
-// Serve as a callable function too (for potential internal calls)
 Deno.serve(async (req) => {
-  return Response.json({ ok: true });
+  try {
+    const body = await req.json();
+    await captureToSentry(body);
+    return Response.json({ ok: true });
+  } catch (e) {
+    return Response.json({ ok: false });
+  }
 });
