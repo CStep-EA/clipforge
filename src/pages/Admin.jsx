@@ -157,6 +157,9 @@ export default function Admin() {
           <TabsTrigger value="devlog" className="data-[state=active]:bg-[#9370DB]/10 data-[state=active]:text-[#9370DB] gap-1.5">
             <Map className="w-3.5 h-3.5" /> Dev Log
           </TabsTrigger>
+          <TabsTrigger value="ratelimits" className="data-[state=active]:bg-red-500/10 data-[state=active]:text-red-400 gap-1.5">
+            <ShieldAlert className="w-3.5 h-3.5" /> Rate Limits
+          </TabsTrigger>
           <TabsTrigger value="debug" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-400 gap-1.5">
             <Bug className="w-3.5 h-3.5" /> Debug
           </TabsTrigger>
