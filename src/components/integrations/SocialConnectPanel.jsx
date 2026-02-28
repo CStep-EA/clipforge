@@ -12,9 +12,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CheckCircle2, Link2, RefreshCw, Loader2, AlertCircle, WifiOff, Wifi, MapPin, Calendar, Ticket, ExternalLink } from "lucide-react";
+import { CheckCircle2, Link2, RefreshCw, Loader2, AlertCircle, WifiOff, Clock, MapPin, Calendar, Ticket, ExternalLink, ToggleLeft, ToggleRight, Lock } from "lucide-react";
 import { motion } from "framer-motion";
+import { Switch } from "@/components/ui/switch";
 import ConsentModal from "./ConsentModal";
+import { useSubscription } from "@/components/shared/useSubscription";
+import { toast } from "sonner";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 const PLATFORMS = [
   {
