@@ -9,6 +9,10 @@ import CookieBanner from "@/components/shared/CookieBanner";
 import GetAppButton from "@/components/shared/GetAppButton";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { SentryErrorBoundary, initSentry } from "@/components/shared/SentryInit";
+
+// Init Sentry as early as possible
+initSentry();
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
