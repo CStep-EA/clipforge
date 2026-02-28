@@ -15,6 +15,7 @@ import CreateSpecialAccountDialog from "@/components/admin/CreateSpecialAccountD
 import SpecialAccountsList from "@/components/admin/SpecialAccountsList";
 import AdminMetrics from "@/components/admin/AdminMetrics";
 import DevLogManager from "@/components/admin/DevLogManager";
+import RateLimitLog from "@/components/admin/RateLimitLog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
