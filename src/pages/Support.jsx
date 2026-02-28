@@ -95,6 +95,19 @@ export default function Support() {
     }
     setSaving(true);
     try {
+      // Rate limit: max 10 tickets per hour per user
+      const rateLimitRes = await base44.functions.invoke("rateLimiter", {
+        userEmail: user.email,
+        endpoint: "ticket_creation",
+        limit: 10,
+        windowMinutes: 60,
+      });
+      if (!rateLimitRes.data.allowed) {
+        const retryIn = rateLimitRes.data.retryAfterSeconds;
+        toast.error(`Rate limit exceeded. Please try again in ${Math.ceil(retryIn / 60)} minute${Math.ceil(retryIn / 60) > 1 ? 's' : ''}.`);
+        setSaving(false);
+        return;
+      }
       await base44.entities.SupportTicket.create(form);
       queryClient.invalidateQueries({ queryKey: ["supportTickets"] });
       setCreateOpen(false);
