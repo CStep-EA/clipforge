@@ -235,13 +235,70 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
             />
           </div>
 
-          <Button
-            onClick={handleSubmit}
-            disabled={!form.title}
-            className="w-full bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white font-medium"
-          >
-            {editItem ? "Save Changes" : "Add to Vault"}
-          </Button>
+          {/* Event-specific fields */}
+          {form.category === "event" && (
+            <div className="space-y-3 p-3 rounded-xl bg-[#9370DB]/5 border border-[#9370DB]/20">
+              <p className="text-xs font-semibold text-[#9370DB] flex items-center gap-1.5">
+                <CalendarPlus className="w-3.5 h-3.5" /> Event Details
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-[10px] text-[#8B8D97]">Event Date</Label>
+                  <Input type="datetime-local"
+                    value={form.event_date ? form.event_date.slice(0,16) : ""}
+                    onChange={e => setForm({ ...form, event_date: e.target.value })}
+                    className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-xs" />
+                </div>
+                <div>
+                  <Label className="text-[10px] text-[#8B8D97]">Venue</Label>
+                  <Input placeholder="Venue name"
+                    value={form.event_venue || ""}
+                    onChange={e => setForm({ ...form, event_venue: e.target.value })}
+                    className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-xs" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-[10px] text-[#8B8D97]">City</Label>
+                  <Input placeholder="City"
+                    value={form.event_city || ""}
+                    onChange={e => setForm({ ...form, event_city: e.target.value })}
+                    className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-xs" />
+                </div>
+                <div>
+                  <Label className="text-[10px] text-[#8B8D97]">Ticket URL (optional)</Label>
+                  <Input placeholder="https://..."
+                    value={form.ticket_url || ""}
+                    onChange={e => setForm({ ...form, ticket_url: e.target.value })}
+                    className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-xs" />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Calendar + Reminder stub shown after saving an event */}
+          {savedItem && (
+            <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 space-y-2">
+              <p className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+                ✓ Saved! Add to your calendar & set reminders:
+              </p>
+              <AddToCalendarButton event={savedItem} entity="SavedItem" size="sm" />
+              <Button size="sm" variant="ghost" onClick={() => onOpenChange(false)}
+                className="w-full text-[10px] text-[#8B8D97] h-7">
+                Done
+              </Button>
+            </div>
+          )}
+
+          {!savedItem && (
+            <Button
+              onClick={handleSubmit}
+              disabled={!form.title}
+              className="w-full bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white font-medium"
+            >
+              {editItem ? "Save Changes" : "Add to Vault"}
+            </Button>
+          )}
         </div>
       </DialogContent>
     </Dialog>
