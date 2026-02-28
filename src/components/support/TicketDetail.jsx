@@ -94,18 +94,31 @@ export default function TicketDetail({ ticket, open, onOpenChange, isAdmin = fal
             </span>
           </div>
 
-          {/* Message */}
-          <div className="p-3 rounded-xl bg-[#0F1117] text-sm text-[#8B8D97] leading-relaxed">
-            {ticket.message}
+          {/* Original message */}
+          <div className="p-3 rounded-xl bg-[#0F1117] border border-[#2A2D3A]">
+            <p className="text-[10px] text-[#8B8D97] font-medium mb-1.5 flex items-center gap-1">
+              <User className="w-3 h-3" /> Your message
+            </p>
+            <p className="text-sm text-[#E8E8ED] leading-relaxed whitespace-pre-wrap">{ticket.message}</p>
           </div>
 
-          {/* Admin response */}
-          {ticket.response && (
-            <div className="p-3 rounded-xl bg-[#00BFFF]/5 border border-[#00BFFF]/20">
-              <p className="text-[10px] text-[#00BFFF] font-medium mb-1.5 flex items-center gap-1">
-                <MessageSquare className="w-3 h-3" /> Support Response
-              </p>
-              <p className="text-xs text-[#8B8D97]">{ticket.response}</p>
+          {/* Comment thread */}
+          {comments.length > 0 && (
+            <div className="space-y-2">
+              {comments.map((c, i) => (
+                <div key={i} className={`p-3 rounded-xl text-xs leading-relaxed ${
+                  c.role === "support"
+                    ? "bg-[#00BFFF]/5 border border-[#00BFFF]/20"
+                    : "bg-[#9370DB]/5 border border-[#9370DB]/20"
+                }`}>
+                  <p className={`text-[10px] font-semibold mb-1 flex items-center gap-1 ${c.role === "support" ? "text-[#00BFFF]" : "text-[#9370DB]"}`}>
+                    {c.role === "support" ? <Headphones className="w-3 h-3" /> : <User className="w-3 h-3" />}
+                    {c.role === "support" ? "ClipForge Support" : "You"}
+                    {c.ts && <span className="ml-auto text-[#8B8D97] font-normal">{new Date(c.ts).toLocaleString()}</span>}
+                  </p>
+                  <p className="text-[#E8E8ED] whitespace-pre-wrap">{c.text}</p>
+                </div>
+              ))}
             </div>
           )}
 
