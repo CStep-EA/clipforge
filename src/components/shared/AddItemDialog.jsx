@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,8 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, CalendarPlus, Bell } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import AddToCalendarButton from "@/components/events/AddToCalendarButton";
 
 const categories = [
   { value: "deal", label: "Deal" },
@@ -40,7 +41,7 @@ const sources = [
 ];
 
 export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) {
-  const [form, setForm] = useState(editItem || {
+  const defaultForm = {
     title: "",
     description: "",
     url: "",
@@ -48,9 +49,19 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
     source: "manual",
     tags: [],
     notes: "",
-  });
+  };
+  const [form, setForm] = useState(editItem || defaultForm);
   const [tagInput, setTagInput] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
+  const [savedItem, setSavedItem] = useState(null); // for calendar stub preview
+
+  // Reset when dialog opens/closes or editItem changes
+  useEffect(() => {
+    if (open) {
+      setForm(editItem || defaultForm);
+      setSavedItem(null);
+    }
+  }, [open, editItem]);
 
   const handleAIAnalyze = async () => {
     if (!form.url && !form.title) return;
