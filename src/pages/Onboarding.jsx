@@ -231,14 +231,22 @@ const INFO_STEPS = [
   {
     id: "events", icon: Calendar, accent: "#9370DB",
     title: "Events & calendar reminders", subtitle: "Never miss a show",
-    description: "Search events in your city, add them directly to Google, Apple, or Outlook calendars, and get reminder emails 7 days & 24 hours before — so you don't forget to buy tickets.",
+    description: "Search events in your city, add them directly to Google, Apple, or Outlook calendars, and get reminder emails 7 days & 24 hours before — so you don't forget to buy tickets. Reminders require Premium.",
     action: "Got it!",
+    proNote: "⚡ Event search requires Pro · Reminders require Premium",
   },
   {
     id: "support", icon: MessageCircle, accent: "#FFB6C1",
     title: "Support is always here", subtitle: "Tickets, AI bot & docs",
     description: "Have a question? Our AI support bot answers instantly. For billing, bugs, or complex issues — submit a ticket and our team responds within 24 hours.",
     action: "Let's set up!",
+  },
+  {
+    id: "referrals", icon: Gift, accent: "#EC4899",
+    title: "Invite friends, earn rewards", subtitle: "Referrals · Free months · Family",
+    description: "Share your unique referral link. When a friend subscribes, you both get a free month. Family Premium unlocks shared boards and parental controls.",
+    action: "Continue",
+    proNote: "🎁 Referral bonuses apply to Pro and higher",
   },
 ];
 
