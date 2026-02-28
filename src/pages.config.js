@@ -62,6 +62,7 @@ import MarketingLaunch from './pages/MarketingLaunch';
 import Onboarding from './pages/Onboarding';
 import Pricing from './pages/Pricing';
 import Privacy from './pages/Privacy';
+import Readme from './pages/Readme';
 import Saves from './pages/Saves';
 import Search from './pages/Search';
 import Settings from './pages/Settings';
@@ -69,7 +70,6 @@ import ShoppingLists from './pages/ShoppingLists';
 import Support from './pages/Support';
 import Terms from './pages/Terms';
 import VisionMission from './pages/VisionMission';
-import Readme from './pages/Readme';
 import __Layout from './Layout.jsx';
 
 
@@ -89,6 +89,7 @@ export const PAGES = {
     "Onboarding": Onboarding,
     "Pricing": Pricing,
     "Privacy": Privacy,
+    "Readme": Readme,
     "Saves": Saves,
     "Search": Search,
     "Settings": Settings,
@@ -96,7 +97,6 @@ export const PAGES = {
     "Support": Support,
     "Terms": Terms,
     "VisionMission": VisionMission,
-    "Readme": Readme,
 }
 
 export const pagesConfig = {

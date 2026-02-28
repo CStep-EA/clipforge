@@ -169,7 +169,7 @@ export default function Layout({ children, currentPageName }) {
       </main>
 
       {/* Mobile nav */}
-      <MobileNav currentPage={currentPageName} />
+      <MobileNav currentPage={currentPageName} userRole={user?.role} />
 
       {/* Floating support bot (not on Support or Admin page) */}
       {currentPageName !== "Support" && currentPageName !== "Admin" && (
