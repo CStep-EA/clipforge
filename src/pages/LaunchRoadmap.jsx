@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, Flame, Globe2, TrendingUp, ArrowRight, Check, Clock, Globe, Mail } from "lucide-react";
+import { Rocket, Flame, Globe2, TrendingUp, ArrowRight, Check, Clock, Globe, Mail, Play } from "lucide-react";
 import PublicFooter from "@/components/shared/PublicFooter";
 
 const futureIntegrations = [
@@ -22,6 +22,14 @@ const futureIntegrations = [
     subtitle: "Gmail · Outlook · Apple Mail",
     description: "Automatically save emails, receipts, newsletters, and attachments to ClipForge — keep life organized across inbox and social.",
     eta: "Q3 2026",
+  },
+  {
+    icon: Play,
+    color: "#EC4899",
+    title: "Video Stream Accounts",
+    subtitle: "Netflix · Paramount · HBO · Disney · YouTube TV",
+    description: "Connect your streaming accounts to save shows & movies, track watch-later lists, rate content, and get recommendations across all top 10 video services.",
+    eta: "Q4 2026",
   },
 ];
 
