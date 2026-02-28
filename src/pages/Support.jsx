@@ -316,32 +316,45 @@ export default function Support() {
             </Card>
           ) : (
             <div className="space-y-2">
-              {roadmap.map((item, i) => (
-                <motion.div key={item.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
-                  <Card className="glass-card p-4">
-                    <div className="flex items-start gap-3">
-                      <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
-                        item.status === "shipped" ? "bg-emerald-400" :
-                        item.status === "committed" ? "bg-[#F59E0B]" :
-                        item.status === "in_progress" ? "bg-[#00BFFF] animate-pulse" : "bg-[#8B8D97]"
-                      }`} />
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <p className="text-sm font-medium">{item.title}</p>
-                          <span className={`text-[10px] font-semibold capitalize ${roadmapStatusColors[item.status] || "text-[#8B8D97]"}`}>
-                            {item.status?.replace("_", " ")}
-                          </span>
-                          <Badge variant="outline" className="text-[10px] border-[#2A2D3A] text-[#8B8D97] capitalize">{item.category?.replace("_"," ")}</Badge>
+              {roadmap.map((item, i) => {
+                const statusDot = {
+                  shipped: "bg-emerald-400",
+                  committed: "bg-[#F59E0B]",
+                  in_progress: "bg-[#00BFFF] animate-pulse",
+                  planned: "bg-[#8B8D97]",
+                  cancelled: "bg-red-400",
+                }[item.status] || "bg-[#8B8D97]";
+                return (
+                  <motion.div key={item.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}>
+                    <Card className="glass-card p-4">
+                      <div className="flex items-start gap-3">
+                        <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${statusDot}`} />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <p className="text-sm font-medium">{item.title}</p>
+                            <span className={`text-[10px] font-semibold capitalize ${roadmapStatusColors[item.status] || "text-[#8B8D97]"}`}>
+                              {item.status?.replace("_", " ")}
+                            </span>
+                            {item.category && (
+                              <Badge variant="outline" className="text-[10px] border-[#2A2D3A] text-[#8B8D97] capitalize">{item.category.replace("_"," ")}</Badge>
+                            )}
+                            {item.priority === "critical" && (
+                              <Badge variant="outline" className="text-[10px] border-red-400/30 text-red-400">🔥 Critical</Badge>
+                            )}
+                          </div>
+                          {item.description && <p className="text-xs text-[#8B8D97] mt-0.5">{item.description}</p>}
+                          {item.eta && <p className="text-[10px] text-[#8B8D97] mt-1">ETA: {new Date(item.eta).toLocaleDateString()}</p>}
                         </div>
-                        {item.description && <p className="text-xs text-[#8B8D97] mt-0.5">{item.description}</p>}
-                        {item.eta && <p className="text-[10px] text-[#8B8D97] mt-1">ETA: {new Date(item.eta).toLocaleDateString()}</p>}
                       </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              ))}
+                    </Card>
+                  </motion.div>
+                );
+              })}
             </div>
           )}
+          <div className="p-3 rounded-xl bg-[#9370DB]/5 border border-[#9370DB]/20 text-xs text-[#8B8D97]">
+            💡 Want to shape what we build next? <button onClick={() => openTicketForm("feature_request", "low")} className="text-[#9370DB] hover:underline">Submit a feature request →</button>
+          </div>
         </TabsContent>
 
         {/* Docs Tab */}
