@@ -288,10 +288,21 @@ export default function SocialConnectPanel() {
                   </div>
 
                   {isConnected && (
-                    <p className="text-[10px] text-[#8B8D97] mb-3">
-                      {conn?.username && <><span style={{ color: platform.color }}>@{conn.username}</span> · </>}
-                      {conn?.sync_count ? `${conn.sync_count} items synced` : "Ready to sync"}
-                    </p>
+                    <div className="mb-2 space-y-1">
+                      <p className="text-[10px] text-[#8B8D97]">
+                        {conn?.username && <><span style={{ color: platform.color }}>@{conn.username}</span> · </>}
+                        {conn?.sync_count ? `${conn.sync_count} items synced` : "Ready to sync"}
+                      </p>
+                      {conn?.last_synced && (
+                        <p className="text-[9px] text-[#8B8D97] flex items-center gap-1">
+                          <Clock className="w-2.5 h-2.5" />
+                          Last sync: {new Date(conn.last_synced).toLocaleString("en", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                        </p>
+                      )}
+                      {syncResults[platform.id] && (
+                        <p className="text-[9px] text-emerald-400">✓ +{syncResults[platform.id].count} new items just now</p>
+                      )}
+                    </div>
                   )}
 
                   <div className="flex flex-wrap gap-1 mb-3">
@@ -317,19 +328,34 @@ export default function SocialConnectPanel() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-8 border-[#2A2D3A] text-[#8B8D97] hover:text-[#00BFFF] hover:border-[#00BFFF]/40"
+                        className="h-8 border-[#2A2D3A] text-[#8B8D97] hover:text-[#00BFFF] hover:border-[#00BFFF]/40 gap-1.5 text-[10px]"
                         onClick={() => handleSync(platform)}
                         disabled={syncing === platform.id}
-                        title="Sync now"
                       >
                         {syncing === platform.id ? (
                           <Loader2 className="w-3 h-3 animate-spin" />
                         ) : (
                           <RefreshCw className="w-3 h-3" />
                         )}
+                        {syncing === platform.id ? "Syncing…" : "Sync Now"}
                       </Button>
                     )}
                   </div>
+
+                  {/* Auto-sync toggle — Premium only */}
+                  {isConnected && (
+                    <div className={`mt-3 flex items-center justify-between px-2 py-1.5 rounded-lg ${isPremiumUser ? "bg-[#1A1D27]" : "bg-[#1A1D27] opacity-60"}`}>
+                      <div className="flex items-center gap-1.5">
+                        {!isPremiumUser && <Lock className="w-3 h-3 text-[#8B8D97]" />}
+                        <span className="text-[10px] text-[#8B8D97]">Auto-sync {isPremiumUser ? "(daily)" : "— Premium"}</span>
+                      </div>
+                      <Switch
+                        checked={!!autoSyncToggles[platform.id]}
+                        onCheckedChange={v => toggleAutoSync(platform.id, v)}
+                        className="scale-75"
+                      />
+                    </div>
+                  )}
                 </Card>
               </motion.div>
             );
