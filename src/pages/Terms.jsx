@@ -120,11 +120,13 @@ export default function Terms() {
       <div className="space-y-5">
         {sections.map((s, i) => {
           const Icon = s.icon;
+          const isAlpha = i === 0;
           return (
-            <div key={i} className="glass-card rounded-2xl p-5 space-y-3">
+            <div key={i} className={`glass-card rounded-2xl p-5 space-y-3 ${isAlpha ? "border border-[#F59E0B]/40 bg-[#F59E0B]/5" : ""}`}>
               <div className="flex items-center gap-2">
-                <Icon className="w-5 h-5 text-[#9370DB]" />
+                <Icon className="w-5 h-5" style={{ color: s.color || "#9370DB" }} />
                 <h2 className="font-semibold">{s.title}</h2>
+                {isAlpha && <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#F59E0B]/20 text-[#F59E0B] font-bold uppercase tracking-wide">Required</span>}
               </div>
               <p className="text-sm text-[#8B8D97] whitespace-pre-line leading-relaxed">{s.content}</p>
             </div>
