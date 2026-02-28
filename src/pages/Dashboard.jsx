@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
   Bookmark, TrendingUp, ShoppingCart, Users,
-  Plus, ArrowRight, Sparkles, Zap, Calendar, UserPlus, Share2, MessageCircle, Ticket
+  Plus, ArrowRight, Sparkles, Zap, Calendar, UserPlus, Share2, MessageCircle, Ticket, Bell
 } from "lucide-react";
 import { toast } from "sonner";
 import ShareModal from "@/components/friends/ShareModal";
