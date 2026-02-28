@@ -13,7 +13,9 @@ export default function Assistant() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [escalating, setEscalating] = useState(false);
   const scrollRef = useRef(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     loadConversations();
