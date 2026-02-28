@@ -300,7 +300,15 @@ export default function Support() {
 
         {/* Roadmap Tab */}
         <TabsContent value="roadmap" className="mt-4 space-y-3">
-          <p className="text-xs text-[#8B8D97]">Features our team is actively working on or has committed to shipping</p>
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <p className="text-sm font-semibold">Features in Development</p>
+              <p className="text-xs text-[#8B8D97]">Actively worked on or committed by our team — synced live from our Dev Log</p>
+            </div>
+            <Badge variant="outline" className="text-[10px] border-emerald-400/30 text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block mr-1.5" />Live
+            </Badge>
+          </div>
           {roadmap.length === 0 ? (
             <Card className="glass-card p-8 text-center">
               <Map className="w-8 h-8 text-[#9370DB] mx-auto mb-3" />
