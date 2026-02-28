@@ -236,15 +236,18 @@ export default function SocialConnectPanel() {
       });
     }
 
+    const newCount = result.items?.length || 0;
     if (conn) {
       await base44.entities.SocialConnection.update(conn.id, {
         last_synced: new Date().toISOString(),
-        sync_count: (conn.sync_count || 0) + (result.items?.length || 0),
+        sync_count: (conn.sync_count || 0) + newCount,
       });
     }
+    setSyncResults(prev => ({ ...prev, [platform.id]: { count: newCount, time: new Date() } }));
     queryClient.invalidateQueries({ queryKey: ["socialConnections"] });
     queryClient.invalidateQueries({ queryKey: ["savedItems"] });
     setSyncing(null);
+    toast.success(`Synced ${newCount} new item${newCount !== 1 ? "s" : ""} from ${platform.name}!`);
   };
 
   return (
