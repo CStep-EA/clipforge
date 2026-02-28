@@ -165,13 +165,7 @@ export default function LaunchRoadmap() {
         </Link>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-4 text-xs text-[#8B8D97] pb-8">
-        <Link to={createPageUrl("About")} className="hover:text-[#00BFFF] transition-colors">About</Link>
-        <Link to={createPageUrl("VisionMission")} className="hover:text-[#00BFFF] transition-colors">Vision</Link>
-        <Link to={createPageUrl("Privacy")} className="hover:text-[#00BFFF] transition-colors">Privacy</Link>
-        <Link to={createPageUrl("Terms")} className="hover:text-[#00BFFF] transition-colors">Terms</Link>
-        <span>© 2026 ClipForge</span>
-      </div>
+      <PublicFooter />
     </div>
   );
 }

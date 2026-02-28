@@ -157,14 +157,7 @@ export default function About() {
         </div>
       </div>
 
-      {/* Footer links */}
-      <div className="flex flex-wrap justify-center gap-4 text-xs text-[#8B8D97] pb-8">
-        <Link to={createPageUrl("Privacy")} className="hover:text-[#00BFFF] transition-colors">Privacy</Link>
-        <Link to={createPageUrl("Terms")} className="hover:text-[#00BFFF] transition-colors">Terms</Link>
-        <Link to={createPageUrl("Cookies")} className="hover:text-[#00BFFF] transition-colors">Cookies</Link>
-        <Link to={createPageUrl("Support")} className="hover:text-[#00BFFF] transition-colors">Support</Link>
-        <span>© 2026 ClipForge</span>
-      </div>
+      <PublicFooter />
     </div>
   );
 }
