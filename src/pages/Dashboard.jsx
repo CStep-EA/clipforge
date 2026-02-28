@@ -65,13 +65,10 @@ export default function Dashboard() {
   });
 
   const handleSave = async (formData) => {
-    try {
-      await base44.entities.SavedItem.create(formData);
-      queryClient.invalidateQueries({ queryKey: ["savedItems"] });
-      toast.success("Saved!");
-    } catch (e) {
-      toast.error("Could not save item. Please try again.");
-    }
+    const result = await base44.entities.SavedItem.create(formData);
+    queryClient.invalidateQueries({ queryKey: ["savedItems"] });
+    toast.success("Saved!");
+    return result;
   };
 
   const handleToggleFavorite = async (item) => {
