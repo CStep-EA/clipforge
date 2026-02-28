@@ -6,6 +6,17 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
+    // Rate limit: 100 requests/hour per user
+    const rlRes = await base44.functions.invoke('rateLimiter', {
+      userEmail: user.email, endpoint: 'deepResearch', limit: 100, windowMinutes: 60
+    });
+    if (!rlRes.data?.allowed) {
+      return Response.json(
+        { error: `Rate limit exceeded. Try again in ${rlRes.data?.retryAfterSeconds}s.` },
+        { status: 429, headers: { 'Retry-After': String(rlRes.data?.retryAfterSeconds || 3600) } }
+      );
+    }
+
     // Check subscription — only pro/premium may use deep research
     const subs = await base44.asServiceRole.entities.UserSubscription.filter({ user_email: user.email });
     const plan = subs?.[0]?.plan || 'free';
