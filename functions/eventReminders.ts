@@ -24,17 +24,17 @@ Deno.serve(async (req) => {
     const D = 86400000;
 
     // Fetch all EventSuggestion records with reminders enabled and not yet purchased
-    const events = await base44.asServiceRole.entities.EventSuggestion.filter({
+    const allEvents = await base44.asServiceRole.entities.EventSuggestion.filter({
       reminder_enabled: true,
-      ticket_purchased: false,
     });
+    const events = allEvents.filter(e => !e.ticket_purchased);
 
     // Fetch event-category SavedItems with reminders enabled
-    const savedEvents = await base44.asServiceRole.entities.SavedItem.filter({
+    const allSaved = await base44.asServiceRole.entities.SavedItem.filter({
       category: 'event',
       reminder_enabled: true,
-      ticket_purchased: false,
     });
+    const savedEvents = allSaved.filter(e => !e.ticket_purchased);
 
     let sent = 0;
 
