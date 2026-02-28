@@ -174,6 +174,48 @@ export default function LaunchRoadmap() {
         </div>
       </div>
 
+      {/* Future Integrations */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="space-y-4"
+      >
+        <div className="flex items-center gap-2">
+          <Globe className="w-4 h-4 text-[#00BFFF]" />
+          <h2 className="text-sm font-black uppercase tracking-widest text-[#8B8D97]">Future Integrations</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {futureIntegrations.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.55 + i * 0.1 }}
+                className="glass-card rounded-2xl p-5 space-y-3"
+                style={{ borderColor: `${item.color}25` }}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-xl shrink-0" style={{ background: `${item.color}15` }}>
+                    <Icon className="w-5 h-5" style={{ color: item.color }} />
+                  </div>
+                  <div>
+                    <h3 className="font-black text-sm">{item.title}</h3>
+                    <p className="text-[10px] font-medium" style={{ color: item.color }}>{item.subtitle}</p>
+                  </div>
+                  <Badge className="ml-auto text-[9px] bg-[#2A2D3A] text-[#8B8D97] border-[#2A2D3A] whitespace-nowrap">
+                    <Clock className="w-2.5 h-2.5 mr-1" />{item.eta}
+                  </Badge>
+                </div>
+                <p className="text-xs text-[#8B8D97] leading-relaxed">{item.description}</p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </motion.div>
+
       <div className="glass-card rounded-2xl p-5 text-center space-y-2 border border-[#FFB6C1]/20">
         <p className="text-sm font-semibold text-[#FFB6C1]">Want to shape the roadmap?</p>
         <p className="text-xs text-[#8B8D97]">Submit feature requests and vote on what ships next via our Support page.</p>
