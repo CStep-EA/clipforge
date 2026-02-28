@@ -153,6 +153,21 @@ export default function Support() {
         )}
       </div>
 
+      {/* First-visit onboarding hint */}
+      {user && tickets.length === 0 && (
+        <div className="p-4 rounded-2xl border border-[#00BFFF]/20 bg-[#00BFFF]/5 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <Info className="w-5 h-5 text-[#00BFFF] shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-[#E8E8ED]">First time here? Start with the AI Assistant</p>
+            <p className="text-xs text-[#8B8D97]">Most questions are answered instantly. For billing, bugs, or account issues — submit a ticket and our team responds within 24h.</p>
+          </div>
+          <Button size="sm" variant="outline" onClick={() => setActiveTab("bot")}
+            className="border-[#00BFFF]/30 text-[#00BFFF] gap-1.5 shrink-0 w-full sm:w-auto">
+            <Sparkles className="w-3.5 h-3.5" /> Try AI First
+          </Button>
+        </div>
+      )}
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="bg-[#1A1D27] border border-[#2A2D3A] flex-wrap h-auto gap-1 p-1">
           {user && (
