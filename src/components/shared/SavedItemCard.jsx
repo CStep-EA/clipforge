@@ -230,8 +230,8 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
 
           {showResearch && (
             <>
-              <AiSummaryButton item={item} isPro={isPro} />
-              <DeepResearchPanel item={item} isPro={isPro} />
+              <AiSummaryButton item={localItem} isPro={isPro} />
+              <DeepResearchPanel item={localItem} isPro={isPro} />
             </>
           )}
         </div>
