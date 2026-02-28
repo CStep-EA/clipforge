@@ -176,6 +176,9 @@ export default function Layout({ children, currentPageName }) {
         <SupportBot user={user} floating={true} />
       )}
 
+      {/* PWA install button */}
+      <GetAppButton />
+
       {/* Footer links */}
       <div className={`hidden md:flex fixed bottom-0 left-[240px] right-0 z-10 px-6 py-2 justify-end gap-4 text-[10px] ${isDark ? "text-[#8B8D97] border-t border-[#2A2D3A] bg-[#0F1117]/80" : "text-gray-400 border-t border-gray-200 bg-white/80"} backdrop-blur-sm`}>
         <Link to={createPageUrl("About")} className="hover:text-[#00BFFF] transition-colors">About</Link>
