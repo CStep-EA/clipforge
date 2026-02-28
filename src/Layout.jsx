@@ -10,6 +10,7 @@ import GetAppButton from "@/components/shared/GetAppButton";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { SentryErrorBoundary, initSentry } from "@/components/shared/SentryInit";
+import BetaWaiverModal from "@/components/shared/BetaWaiverModal";
 
 // Init Sentry as early as possible
 initSentry();
