@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { ArrowLeft, FileText, CreditCard, AlertTriangle, Scale } from "lucide-react";
+import { ArrowLeft, FileText, CreditCard, AlertTriangle, Scale, Baby } from "lucide-react";
 
 const sections = [
   {
