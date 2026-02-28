@@ -3,8 +3,27 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, Flame, Globe2, TrendingUp, ArrowRight, Check, Clock } from "lucide-react";
+import { Rocket, Flame, Globe2, TrendingUp, ArrowRight, Check, Clock, Globe, Mail } from "lucide-react";
 import PublicFooter from "@/components/shared/PublicFooter";
+
+const futureIntegrations = [
+  {
+    icon: Globe,
+    color: "#00BFFF",
+    title: "Browser Extensions",
+    subtitle: "Chrome · Edge · Firefox · Safari",
+    description: "Clip content from anywhere on the web with one click — add to saves, boards, or family shares instantly.",
+    eta: "Q2 2026",
+  },
+  {
+    icon: Mail,
+    color: "#9370DB",
+    title: "Mailbox Extensions",
+    subtitle: "Gmail · Outlook · Apple Mail",
+    description: "Automatically save emails, receipts, newsletters, and attachments to ClipForge — keep life organized across inbox and social.",
+    eta: "Q3 2026",
+  },
+];
 
 const phases = [
   {
