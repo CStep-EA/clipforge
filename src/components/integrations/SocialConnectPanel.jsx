@@ -368,6 +368,40 @@ export default function SocialConnectPanel() {
             Social connections require official API access tokens from each platform's developer portal. AI-powered categorization automatically organizes your saves.
           </p>
         </div>
+
+        {/* Coming Soon platforms */}
+        <div className="mt-4">
+          <p className="text-xs font-semibold text-[#8B8D97] uppercase tracking-widest mb-3">Coming Soon</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {COMING_SOON_PLATFORMS.map(p => (
+              <Card key={p.id} className="glass-card p-4 opacity-70">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{p.emoji}</span>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="font-semibold text-sm">{p.name}</h3>
+                        <Badge variant="outline" className="text-[9px] border-[#F59E0B]/30 text-[#F59E0B]">Coming Soon</Badge>
+                      </div>
+                      <p className="text-[10px] text-[#8B8D97]">{p.description}</p>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-[10px] text-[#8B8D97] mb-3 italic">{p.reason}</p>
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {p.categoryFocus.map(c => (
+                    <span key={c} className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#2A2D3A] text-[#8B8D97] capitalize">{c.replace("_", " ")}</span>
+                  ))}
+                </div>
+                <Link to={createPageUrl("Support") + "?tab=roadmap"}>
+                  <Button size="sm" variant="outline" className="w-full border-[#2A2D3A] text-[#8B8D97] text-xs gap-1.5">
+                    View Roadmap →
+                  </Button>
+                </Link>
+              </Card>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* ── Ticketmaster Event Discovery ─────────────── */}
