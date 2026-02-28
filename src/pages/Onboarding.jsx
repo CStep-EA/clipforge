@@ -417,6 +417,9 @@ export default function Onboarding() {
               <h1 className="text-3xl font-black tracking-tight leading-tight">{currentInfoStep.title}</h1>
               <p className="text-sm font-bold uppercase tracking-widest" style={{ color: currentInfoStep.accent }}>{currentInfoStep.subtitle}</p>
               <p className="text-sm text-[#8B8D97] leading-relaxed">{currentInfoStep.description}</p>
+              {currentInfoStep.proNote && (
+                <p className="text-[11px] px-3 py-1.5 rounded-lg bg-[#9370DB]/10 border border-[#9370DB]/20 text-[#9370DB] font-medium">{currentInfoStep.proNote}</p>
+              )}
             </div>
 
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
