@@ -59,11 +59,18 @@ export default function MobileNav({ currentPage, userRole }) {
           "fixed bottom-[64px] left-0 right-0 z-50 md:hidden transition-all duration-300",
           open ? "translate-y-0 opacity-100 pointer-events-auto" : "translate-y-4 opacity-0 pointer-events-none"
         )}
+        role="dialog"
+        aria-hidden={!open}
+        aria-label="Navigation menu"
       >
         <div className="mx-3 mb-2 bg-[#1A1D27]/98 backdrop-blur-xl border border-[#2A2D3A] rounded-2xl p-4 shadow-2xl">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-[#8B8D97] uppercase tracking-widest">All Pages</span>
-            <button onClick={() => setOpen(false)} className="p-1 rounded-lg text-[#8B8D97] hover:text-[#E8E8ED]">
+            <button 
+              onClick={() => setOpen(false)} 
+              className="p-1 rounded-lg text-[#8B8D97] hover:text-[#E8E8ED] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]"
+              aria-label="Close navigation menu"
+            >
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -92,7 +99,11 @@ export default function MobileNav({ currentPage, userRole }) {
       </div>
 
       {/* Bottom tab bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#0F1117]/97 backdrop-blur-xl border-t border-[#2A2D3A] px-2 pb-[env(safe-area-inset-bottom,8px)]">
+      <nav 
+        className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#0F1117]/97 backdrop-blur-xl border-t border-[#2A2D3A] px-2 pb-[env(safe-area-inset-bottom,8px)]"
+        role="navigation"
+        aria-label="Mobile navigation"
+      >
         <div className="flex items-center justify-around py-1.5">
           {primaryItems.map((item) => {
             const isActive = currentPage === item.page;
@@ -116,9 +127,11 @@ export default function MobileNav({ currentPage, userRole }) {
           <button
             onClick={() => setOpen(v => !v)}
             className={cn(
-              "flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-all min-w-[52px]",
+              "flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-all min-w-[52px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]",
               open || isMoreActive ? "text-[#00BFFF]" : "text-[#8B8D97]"
             )}
+            aria-label="Toggle navigation menu"
+            aria-expanded={open}
           >
             <MoreHorizontal className={cn("w-5 h-5", (open || isMoreActive) && "drop-shadow-[0_0_6px_rgba(0,191,255,0.5)]")} />
             <span className="text-[10px] font-medium">More</span>

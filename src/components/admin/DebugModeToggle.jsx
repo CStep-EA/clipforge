@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Bug, ChevronDown, ChevronUp, Zap, Gift, Users, CreditCard, Plug, RefreshCw } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
+import AccessibilityAudit from "@/components/admin/AccessibilityAudit";
 
 const DEBUG_KEY = "cf_debug_mode";
 const DEBUG_TIER_KEY = "cf_debug_tier";
@@ -127,6 +128,10 @@ export default function DebugModeToggle() {
 
         {expanded && (
           <div className="mt-4 space-y-4 border-t border-amber-500/20 pt-4">
+            {/* Accessibility Audit */}
+            <AccessibilityAudit />
+
+            {/* Original debug content */}
             {/* Tier preview */}
             <div>
               <p className="text-xs text-amber-300/70 font-semibold mb-2">Preview UI as tier:</p>

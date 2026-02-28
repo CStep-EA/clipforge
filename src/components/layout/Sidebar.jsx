@@ -59,6 +59,8 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
         isDark ? "bg-[#0F1117] border-r border-[#2A2D3A]" : "bg-white border-r border-gray-200 shadow-sm",
         collapsed ? "w-[68px]" : "w-[240px]"
       )}
+      role="navigation"
+      aria-label="Main navigation"
     >
       {/* Logo */}
       <div className={cn("flex items-center gap-3 px-4 h-16 overflow-hidden", isDark ? "border-b border-[#2A2D3A]" : "border-b border-gray-200")}>
@@ -70,7 +72,7 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
+      <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto" aria-label="Primary navigation">
         {navItems.map((item) => {
           const isActive = currentPage === item.page;
           return (
@@ -78,13 +80,15 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
               key={item.page}
               to={createPageUrl(item.page)}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group",
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]",
                 isActive
                   ? "bg-[#00BFFF]/10 text-[#00BFFF]"
                   : isDark
                     ? "text-[#8B8D97] hover:text-[#E8E8ED] hover:bg-[#1A1D27]"
                     : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
               )}
+              aria-label={item.name}
+              aria-current={isActive ? "page" : undefined}
             >
               <item.icon className={cn("w-5 h-5 flex-shrink-0", isActive && "drop-shadow-[0_0_6px_rgba(0,191,255,0.5)]", item.highlight && !isActive && "text-[#9370DB]")} />
               {!collapsed && <span className="text-sm font-medium">{item.name}</span>}
@@ -127,9 +131,10 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
           <button
             onClick={onToggleTheme}
             className={cn(
-              "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200",
+              "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]",
               isDark ? "text-[#8B8D97] hover:text-[#E8E8ED] hover:bg-[#1A1D27]" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
             )}
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
           >
             {isDark ? <Sun className="w-5 h-5 flex-shrink-0" /> : <Moon className="w-5 h-5 flex-shrink-0" />}
             {!collapsed && <span className="text-sm font-medium">{isDark ? "Light mode" : "Dark mode"}</span>}
@@ -141,9 +146,11 @@ export default function Sidebar({ currentPage, userRole, theme = "dark", onToggl
       <button
         onClick={() => setCollapsed(!collapsed)}
         className={cn(
-          "absolute -right-3 top-20 w-6 h-6 rounded-full flex items-center justify-center transition-colors",
+          "absolute -right-3 top-20 w-6 h-6 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]",
           isDark ? "bg-[#1A1D27] border border-[#2A2D3A] text-[#8B8D97] hover:text-[#00BFFF]" : "bg-white border border-gray-200 text-gray-400 hover:text-[#00BFFF] shadow-sm"
         )}
+        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        aria-expanded={!collapsed}
       >
         {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
       </button>
