@@ -238,7 +238,8 @@ export default function Admin() {
               <li>• <strong className="text-[#E8E8ED]">Referral banner</strong> — On Dashboard (free user), referral + trial banners appear. Copy referral link. Open in incognito, sign up, enter code in Onboarding → Growth step.</li>
               <li>• <strong className="text-[#E8E8ED]">Calendar setup</strong> — Events page: Add to Calendar → Google / Apple / Outlook. ICS file downloads for Apple.</li>
               <li>• <strong className="text-[#E8E8ED]">Tier Preview</strong> — Toggle Debug Mode ON, pick a tier to see upgrade prompts and feature locks.</li>
-              <li>• <strong className="text-[#E8E8ED]">Onboarding</strong> — Navigate to /Onboarding for full flow: welcome → events → support → connections → monitoring → growth (trial/referral/family).</li>
+              <li>• <strong className="text-[#E8E8ED]">Onboarding</strong> — Navigate to /Onboarding for full flow: welcome → events → support → referrals → connections → monitoring → growth (trial/referral/family).</li>
+              <li>• <strong className="text-[#E8E8ED]">README / Docs</strong> — Navigate to /Readme for full feature list, tech stack, pricing, and end-to-end test flows.</li>
             </ul>
           </div>
           {/* Quick ticket search for admin */}
