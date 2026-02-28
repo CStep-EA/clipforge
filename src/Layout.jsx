@@ -192,6 +192,7 @@ export default function Layout({ children, currentPageName }) {
           <Link to={createPageUrl("VisionMission")} className="hover:text-[#00BFFF] transition-colors">Vision</Link>
           <Link to={createPageUrl("LaunchRoadmap")} className="hover:text-[#00BFFF] transition-colors">Roadmap</Link>
           <Link to={createPageUrl("Pricing")} className="hover:text-[#9370DB] transition-colors font-medium">Pricing</Link>
+          <Link to={createPageUrl("Readme")} className="hover:text-[#FFB6C1] transition-colors">README</Link>
           <span>© 2026 ClipForge</span>
         </div>
       </div>
