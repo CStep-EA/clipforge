@@ -112,7 +112,7 @@ export default function Terms() {
           </div>
           <div>
             <h1 className="text-2xl font-bold">Terms of Service</h1>
-            <p className="text-xs text-[#8B8D97]">Effective: February 2026</p>
+            <p className="text-xs text-[#8B8D97]">Effective: February 2026 · Includes Alpha/Beta Tester Agreement</p>
           </div>
         </div>
       </div>
