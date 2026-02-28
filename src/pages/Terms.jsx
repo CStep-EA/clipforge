@@ -38,14 +38,26 @@ We reserve the right to suspend accounts that violate these terms.`
   },
   {
     icon: AlertTriangle,
-    title: "AI-Generated Content Disclaimer",
+    title: "AI-Generated Content & No Professional Advice",
     content: `ClipForge uses AI to generate summaries, reviews, and recommendations. This content is:
 • Provided "as-is" for informational purposes only
-• Not professional legal, medical, financial, or investment advice
+• NOT professional legal, medical, financial, dietary, or investment advice
 • Subject to AI limitations and may contain inaccuracies
 • Not a substitute for professional consultation
 
-Always verify important information from authoritative sources.`
+ClipForge expressly disclaims any liability for decisions made based on AI-generated content. Always consult a qualified professional for medical, legal, or financial matters.`
+  },
+  {
+    icon: Baby,
+    title: "Children's Privacy (COPPA)",
+    content: `ClipForge is not directed at children under the age of 13.
+
+• We do not knowingly collect personal information from children under 13 without verifiable parental consent
+• Family plan child accounts require a parent or guardian to create and manage the account
+• Parents may review, update, or request deletion of a child's data at any time via the Family Management panel or by contacting privacy@clipforge.app
+• If we discover we have inadvertently collected data from a child under 13, we will delete it promptly
+
+For questions about children's privacy, email privacy@clipforge.app`
   },
   {
     icon: Scale,
