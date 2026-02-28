@@ -121,9 +121,21 @@ export default function Assistant() {
             <h2 className="font-semibold text-sm">ClipForge AI</h2>
             <p className="text-[10px] text-[#8B8D97]">Your smart vault assistant</p>
           </div>
-          <Button onClick={createConv} className="md:hidden ml-auto" size="sm" variant="outline">
-            <Plus className="w-3 h-3" />
-          </Button>
+          <div className="ml-auto flex items-center gap-2">
+            <Button
+              onClick={handleEscalate}
+              disabled={escalating}
+              size="sm"
+              variant="outline"
+              className="border-[#FFB6C1]/30 text-[#FFB6C1] hover:bg-[#FFB6C1]/10 gap-1.5 text-xs h-8"
+            >
+              {escalating ? <Loader2 className="w-3 h-3 animate-spin" /> : <HandHeart className="w-3 h-3" />}
+              <span className="hidden sm:inline">Escalate to Human</span>
+            </Button>
+            <Button onClick={createConv} className="md:hidden" size="sm" variant="outline">
+              <Plus className="w-3 h-3" />
+            </Button>
+          </div>
         </div>
 
         {/* Messages */}
