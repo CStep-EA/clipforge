@@ -9,7 +9,7 @@ export function initSentry() {
   if (initialized) return;
   initialized = true;
 
-  const dsn = import.meta.env.VITE_SENTRY_DSN || Deno.env.get?.("SENTRY_DSN");
+  const dsn = import.meta.env.VITE_SENTRY_DSN;
 
   Sentry.init({
     dsn,
