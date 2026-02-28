@@ -5,6 +5,22 @@ import { ArrowLeft, FileText, CreditCard, AlertTriangle, Scale, Baby } from "luc
 
 const sections = [
   {
+    icon: AlertTriangle,
+    title: "Alpha / Beta Software — Tester Agreement",
+    color: "#F59E0B",
+    content: `ClipForge is currently in alpha/beta ("early access"). By using ClipForge during this period you explicitly acknowledge and agree:
+
+• THIS IS PRE-RELEASE SOFTWARE provided "as-is", with no warranty of any kind, express or implied.
+• Features may be incomplete, change without notice, or be removed entirely.
+• Data loss is possible. You should not rely on ClipForge as your sole copy of important content.
+• Uptime and reliability are NOT guaranteed during alpha/beta.
+• You will NOT hold ClipForge, its founders, employees, contractors, or affiliates liable for any loss, damage, or harm arising from your use of this software during the early-access period.
+• Your feedback may be used to improve the product without compensation.
+• Early-access pricing is subject to change when ClipForge reaches general availability.
+
+BY CONTINUING TO USE CLIPFORGE YOU CONFIRM YOU HAVE READ, UNDERSTOOD, AND AGREED TO THIS TESTER AGREEMENT.`
+  },
+  {
     icon: FileText,
     title: "Acceptance of Terms",
     content: `By accessing or using ClipForge, you agree to be bound by these Terms of Service. If you do not agree, do not use the service.
