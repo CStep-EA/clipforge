@@ -57,13 +57,15 @@ export default function Saves() {
     });
 
   const handleSave = async (formData) => {
+    let result;
     if (editItem) {
-      await base44.entities.SavedItem.update(editItem.id, formData);
+      result = await base44.entities.SavedItem.update(editItem.id, formData);
     } else {
-      await base44.entities.SavedItem.create(formData);
+      result = await base44.entities.SavedItem.create(formData);
     }
     setEditItem(null);
     queryClient.invalidateQueries({ queryKey: ["savedItems"] });
+    return result;
   };
 
   const handleToggleFavorite = async (item) => {
