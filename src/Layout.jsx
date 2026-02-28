@@ -177,6 +177,9 @@ export default function Layout({ children, currentPageName }) {
         <SupportBot user={user} floating={true} />
       )}
 
+      {/* Cookie consent banner */}
+      <CookieBanner />
+
       {/* PWA install button */}
       <GetAppButton />
 
