@@ -86,10 +86,16 @@ For questions about children's privacy, email privacy@clipforge.app`
   },
   {
     icon: Scale,
-    title: "Governing Law",
-    content: `These terms are governed by the laws of the State of Delaware, USA. Any disputes shall be resolved through binding arbitration under JAMS rules, except where prohibited by law.
+    title: "Governing Law & Arbitration",
+    content: `These terms are governed by the laws of the State of Delaware, USA.
 
-If you are an EU resident, you retain all rights granted under applicable EU consumer protection laws regardless of these terms.`
+ARBITRATION CLAUSE: Any dispute, claim, or controversy arising out of or relating to these Terms or the use of ClipForge shall be resolved by binding individual arbitration administered by JAMS under its Streamlined Arbitration Rules, except:
+• Either party may seek injunctive relief in court for IP infringement or misappropriation.
+• You may opt out of arbitration within 30 days of first account creation by emailing legal@clipforge.app.
+
+CLASS ACTION WAIVER: You agree to resolve disputes individually. You waive any right to bring or participate in a class action or consolidated proceeding.
+
+If you are an EU resident, you retain all rights granted under applicable EU consumer protection laws regardless of these terms. Nothing in this agreement limits statutory rights that cannot be waived under applicable law.`
   },
 ];
 
