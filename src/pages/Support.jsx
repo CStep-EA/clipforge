@@ -85,7 +85,7 @@ export default function Support() {
 
   const { data: roadmap = [] } = useQuery({
     queryKey: ["publicRoadmap"],
-    queryFn: () => base44.entities.DevLog.filter({ is_public: true }),
+    queryFn: () => base44.entities.DevLog.filter({ is_public: true }, "-updated_date", 30),
   });
 
   const handleCreate = async () => {
