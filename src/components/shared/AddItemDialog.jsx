@@ -66,27 +66,21 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
   const handleAIAnalyze = async () => {
     if (!form.url && !form.title) return;
     setAiLoading(true);
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Analyze this content and provide categorization:\nTitle: ${form.title}\nURL: ${form.url}\nDescription: ${form.description}\n\nProvide a category, summary, tags, and relevance rating.`,
-      response_json_schema: {
-        type: "object",
-        properties: {
-          category: { type: "string", enum: ["deal", "recipe", "event", "product", "article", "travel", "gift_idea", "other"] },
-          ai_summary: { type: "string" },
-          tags: { type: "array", items: { type: "string" } },
-          rating: { type: "number" },
-          suggested_title: { type: "string" },
-        },
-      },
-      add_context_from_internet: !!form.url,
+    const res = await base44.functions.invoke('analyzeItem', {
+      title: form.title, url: form.url, description: form.description,
     });
+    if (res.error) {
+      alert(res.error);
+      setAiLoading(false);
+      return;
+    }
     setForm(prev => ({
       ...prev,
-      category: result.category || prev.category,
-      ai_summary: result.ai_summary,
-      tags: result.tags || prev.tags,
-      rating: result.rating,
-      title: prev.title || result.suggested_title || prev.title,
+      category: res.category || prev.category,
+      ai_summary: res.ai_summary,
+      tags: res.tags || prev.tags,
+      rating: res.rating,
+      title: prev.title || res.suggested_title || prev.title,
     }));
     setAiLoading(false);
   };
