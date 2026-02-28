@@ -94,6 +94,27 @@ const PLATFORMS = [
   },
 ];
 
+const COMING_SOON_PLATFORMS = [
+  {
+    id: "linkedin",
+    name: "LinkedIn",
+    emoji: "💼",
+    color: "#0A66C2",
+    description: "Import saved posts & articles",
+    reason: "LinkedIn API has strict rate limits. We're working on a compliant integration.",
+    categoryFocus: ["article", "other"],
+  },
+  {
+    id: "truth_social",
+    name: "Truth Social",
+    emoji: "🦅",
+    color: "#FF6A2C",
+    description: "Sync saved posts & bookmarks",
+    reason: "Official API access pending. Planned for Q3 2026.",
+    categoryFocus: ["article", "event", "other"],
+  },
+];
+
 export default function SocialConnectPanel() {
   const [connectDialog, setConnectDialog] = useState(null);
   const [consentPlatform, setConsentPlatform] = useState(null);
