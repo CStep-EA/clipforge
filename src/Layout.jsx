@@ -164,7 +164,7 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {/* Main content */}
-      <main className="md:ml-[240px] pb-20 md:pb-0 pb-safe min-h-screen">
+      <main className="md:ml-[240px] pb-20 md:pb-8 pb-safe min-h-screen">
         {children}
       </main>
 
