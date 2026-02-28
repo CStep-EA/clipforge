@@ -228,19 +228,32 @@ export default function Admin() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="debug" className="mt-4">
+        <TabsContent value="debug" className="mt-4 space-y-4">
           <DebugModeToggle />
-          <div className="mt-4 p-4 rounded-xl glass-card space-y-2">
-            <p className="text-sm font-semibold text-amber-300 flex items-center gap-2"><Bug className="w-4 h-4" /> Test Features Guide</p>
-            <ul className="text-xs text-[#8B8D97] space-y-1.5 list-none">
-              <li>• <strong className="text-[#E8E8ED]">Tier Preview</strong> — Toggle Debug Mode ON, then pick a tier to see how upgrade prompts and locks appear for that plan</li>
-              <li>• <strong className="text-[#E8E8ED]">Trial test</strong> — "Create Trial" inserts a test PremiumTrial record you can verify in dashboard banners</li>
-              <li>• <strong className="text-[#E8E8ED]">Referral test</strong> — "Create Referral" creates a test referral flow entry visible in Settings → Referrals</li>
-              <li>• <strong className="text-[#E8E8ED]">Family test</strong> — "Create Family" inserts a test family member to preview parental controls</li>
-              <li>• <strong className="text-[#E8E8ED]">Special Accounts</strong> — Use the Special Accounts tab to grant real premium tiers to test emails</li>
-              <li>• <strong className="text-[#E8E8ED]">OAuth Flows</strong> — Go to Integrations page and click Connect on any platform to preview the consent dialog</li>
-              <li>• <strong className="text-[#E8E8ED]">Onboarding</strong> — Navigate to /Onboarding to preview the full signup flow including trial/referral/family steps</li>
+          <div className="p-4 rounded-xl glass-card space-y-2">
+            <p className="text-sm font-semibold text-amber-300 flex items-center gap-2"><Bug className="w-4 h-4" /> End-to-End Test Guide</p>
+            <ul className="text-xs text-[#8B8D97] space-y-2 list-none">
+              <li>• <strong className="text-[#E8E8ED]">Ticket flow</strong> — Go to Support → "Report Bug" → fill subject + message → Submit. Verify ticket appears in Admin → Support Tickets.</li>
+              <li>• <strong className="text-[#E8E8ED]">Event reminder</strong> — Go to Events, search a city (Pro required), click calendar icon on an event, enable reminder bell, set email. Check Admin → Metrics for reminder count.</li>
+              <li>• <strong className="text-[#E8E8ED]">Referral banner</strong> — On Dashboard (free user), referral + trial banners appear. Copy referral link. Open in incognito, sign up, enter code in Onboarding → Growth step.</li>
+              <li>• <strong className="text-[#E8E8ED]">Calendar setup</strong> — Events page: Add to Calendar → Google / Apple / Outlook. ICS file downloads for Apple.</li>
+              <li>• <strong className="text-[#E8E8ED]">Tier Preview</strong> — Toggle Debug Mode ON, pick a tier to see upgrade prompts and feature locks.</li>
+              <li>• <strong className="text-[#E8E8ED]">Onboarding</strong> — Navigate to /Onboarding for full flow: welcome → events → support → connections → monitoring → growth (trial/referral/family).</li>
             </ul>
+          </div>
+          {/* Quick ticket search for admin */}
+          <div className="p-4 rounded-xl glass-card space-y-3">
+            <p className="text-sm font-semibold text-[#00BFFF] flex items-center gap-2"><Ticket className="w-4 h-4" /> Open Tickets ({openTickets.length})</p>
+            {openTickets.slice(0, 5).map(t => (
+              <div key={t.id} className="flex items-start justify-between gap-2 p-2 rounded-lg bg-[#0F1117] border border-[#2A2D3A]">
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium truncate">{t.subject}</p>
+                  <p className="text-[10px] text-[#8B8D97]">{t.category} · {new Date(t.created_date).toLocaleDateString()}</p>
+                </div>
+                <Badge variant="outline" className="text-[9px] shrink-0 border-[#F59E0B]/30 text-[#F59E0B]">{t.status}</Badge>
+              </div>
+            ))}
+            {openTickets.length === 0 && <p className="text-xs text-[#8B8D97]">No open tickets — all clear! ✓</p>}
           </div>
         </TabsContent>
 
