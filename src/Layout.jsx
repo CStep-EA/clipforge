@@ -39,6 +39,7 @@ export default function Layout({ children, currentPageName }) {
   const isDark = theme === "dark";
 
   return (
+    <SentryErrorBoundary>
     <div className={`min-h-screen ${isDark ? "bg-[#0F1117] text-[#E8E8ED]" : "bg-[#F5F5F7] text-[#1A1D27]"} ${theme}`}>
       <style>{`
         /* ── Dark mode (default) ─────────────────────────── */
