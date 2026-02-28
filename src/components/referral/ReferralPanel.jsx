@@ -69,10 +69,8 @@ export default function ReferralPanel({ user }) {
     if (!redeemCode.trim()) return;
     setRedeeming(true);
     try {
-      const result = await base44.functions.invoke("referralTracking", {
-        action: "trackReferralSignup",
+      const result = await base44.functions.invoke("referralRedeemRateLimited", {
         referralCode: redeemCode.trim().toUpperCase(),
-        referredEmail: user.email,
       });
       if (result.data?.success) {
         toast.success("Referral code applied! Your friend will earn a bonus when you subscribe.");
@@ -81,8 +79,13 @@ export default function ReferralPanel({ user }) {
       } else {
         toast.error(result.data?.error || "Invalid referral code");
       }
-    } catch {
-      toast.error("Could not apply code");
+    } catch (err) {
+      // Check for rate limit errors
+      if (err.response?.status === 429) {
+        toast.error("Slow down – you've reached the daily redemption limit.");
+      } else {
+        toast.error("Could not apply code");
+      }
     } finally {
       setRedeeming(false);
     }

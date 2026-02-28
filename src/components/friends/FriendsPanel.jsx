@@ -48,16 +48,23 @@ export default function FriendsPanel({ user, plan = "free" }) {
     const existing = sent.find(f => f.recipient_email === email);
     if (existing) { toast.error("Already connected or invited"); return; }
 
-    await base44.entities.FriendConnection.create({
-      requester_email: user.email,
-      recipient_email: email,
-      recipient_name: name || email.split("@")[0],
-      status: "pending",
-      source: "manual",
-    });
-    qc.invalidateQueries({ queryKey: ["friends_sent"] });
-    toast.success(`Invite sent to ${email}!`);
-    setEmail(""); setName(""); setInviteOpen(false);
+    try {
+      const result = await base44.functions.invoke("friendInviteRateLimited", {
+        recipient_email: email,
+        recipient_name: name || email.split("@")[0],
+      });
+      
+      if (result.status === 429) {
+        toast.error("Slow down – you've reached the daily invite limit.");
+        return;
+      }
+
+      qc.invalidateQueries({ queryKey: ["friends_sent"] });
+      toast.success(`Invite sent to ${email}!`);
+      setEmail(""); setName(""); setInviteOpen(false);
+    } catch (e) {
+      toast.error("Failed to send invite. Please try again.");
+    }
   };
 
   const respond = async (conn, status) => {
