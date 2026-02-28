@@ -185,6 +185,9 @@ export default function Layout({ children, currentPageName }) {
       {/* Cookie consent banner */}
       <CookieBanner />
 
+      {/* Beta/Alpha tester waiver */}
+      <BetaWaiverModal />
+
       {/* PWA install button */}
       <GetAppButton />
 
