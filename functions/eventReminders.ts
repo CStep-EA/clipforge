@@ -10,15 +10,13 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
 
     // Allow scheduled (no-auth) calls OR admin user calls
-    let isScheduled = false;
     try {
       const user = await base44.auth.me();
-      if (!user) isScheduled = true;
-      else if (user.role !== 'admin') {
+      if (user && user.role !== 'admin') {
         return Response.json({ error: 'Admin only' }, { status: 403 });
       }
     } catch {
-      isScheduled = true; // scheduled automation — no user token
+      // Scheduled automation — no user token, allow through
     }
 
     const now = new Date();
