@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Ticket, BarChart3, CreditCard, Sparkles, BookOpen, Loader2, Radio, UserPlus, Bug, TrendingUp, Map, ShieldAlert } from "lucide-react";
+import { Shield, Users, Ticket, BarChart3, CreditCard, Sparkles, BookOpen, Loader2, Radio, UserPlus, Bug, TrendingUp, Map, ShieldAlert, Leaf, Hammer, Heart, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import DebugModeToggle from "@/components/admin/DebugModeToggle";
 import StatsCard from "@/components/shared/StatsCard";
@@ -226,7 +226,83 @@ export default function Admin() {
           <FeedbackIntelligence />
         </TabsContent>
 
-        <TabsContent value="devlog" className="mt-4">
+        <TabsContent value="devlog" className="mt-4 space-y-4">
+          {/* Platform Integrations */}
+          <Card className="glass-card p-5 border-[#10B981]/20 bg-[#10B981]/5">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <Leaf className="w-4 h-4 text-[#10B981]" />
+                  <h3 className="text-sm font-bold text-[#10B981]">Platform Integrations (Coming Soon)</h3>
+                </div>
+              </div>
+
+              {/* Gardening */}
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-[#E8E8ED]">🌱 Gardening Inspiration Platforms</p>
+                <div className="space-y-2">
+                  {[
+                    { title: "Houzz", note: "OAuth + save categorization for garden designs, plant photos, project plans" },
+                    { title: "iScape", note: "OAuth + landscape design tool integration for saving layouts & plant palettes" },
+                  ].map((p) => (
+                    <div key={p.title} className="p-3 rounded-lg bg-[#1A1D27] border border-[#2A2D3A] space-y-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-xs font-medium text-[#E8E8ED]">{p.title}</p>
+                        <Badge className="text-[8px] bg-[#10B981]/20 text-[#10B981] border-[#10B981]/30">Q2/Q3 2026</Badge>
+                      </div>
+                      <p className="text-[10px] text-[#8B8D97]">{p.note}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Home Improvement */}
+              <div className="space-y-2 pt-2 border-t border-[#2A2D3A]">
+                <p className="text-xs font-semibold text-[#E8E8ED]">🔨 Home Improvement Platforms</p>
+                <div className="space-y-2">
+                  {[
+                    { title: "Houzz", note: "OAuth + save categorization for renovation ideas, before/after photos, materials" },
+                    { title: "Planner 5D", note: "OAuth + 3D design tool integration for room layouts, furniture, remodeling plans" },
+                  ].map((p) => (
+                    <div key={p.title} className="p-3 rounded-lg bg-[#1A1D27] border border-[#2A2D3A] space-y-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-xs font-medium text-[#E8E8ED]">{p.title}</p>
+                        <Badge className="text-[8px] bg-[#F59E0B]/20 text-[#F59E0B] border-[#F59E0B]/30">Q2/Q3 2026</Badge>
+                      </div>
+                      <p className="text-[10px] text-[#8B8D97]">{p.note}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Wellness & Beauty */}
+              <div className="space-y-2 pt-2 border-t border-[#2A2D3A]">
+                <p className="text-xs font-semibold text-[#E8E8ED]">💎 Wellness & Beauty Platforms</p>
+                <div className="space-y-2">
+                  {[
+                    { title: "RealSelf", note: "OAuth + save categorization for cosmetic procedures, before/afters, reviews, treatments" },
+                    { title: "YouCam Makeup", note: "OAuth + virtual try-on integration for makeup looks, skincare, hairstyles, products" },
+                  ].map((p) => (
+                    <div key={p.title} className="p-3 rounded-lg bg-[#1A1D27] border border-[#2A2D3A] space-y-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-xs font-medium text-[#E8E8ED]">{p.title}</p>
+                        <Badge className="text-[8px] bg-[#EC4899]/20 text-[#EC4899] border-[#EC4899]/30">Q2/Q3 2026</Badge>
+                      </div>
+                      <p className="text-[10px] text-[#8B8D97]">{p.note}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-3 rounded-lg bg-[#0F1117] border border-[#2A2D3A]">
+                <p className="text-[10px] text-[#8B8D97]">
+                  <strong className="text-[#E8E8ED]">Next Steps:</strong> Research OAuth scopes, design save categorization UI, prototype with each platform, test ethical import flows.
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          {/* Dev Log Manager */}
           <Card className="glass-card p-5">
             <DevLogManager />
           </Card>
