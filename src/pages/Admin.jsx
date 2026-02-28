@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Ticket, BarChart3, CreditCard, Sparkles, BookOpen, Loader2, Radio, UserPlus, Bug, TrendingUp, Map } from "lucide-react";
+import { Shield, Users, Ticket, BarChart3, CreditCard, Sparkles, BookOpen, Loader2, Radio, UserPlus, Bug, TrendingUp, Map, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import DebugModeToggle from "@/components/admin/DebugModeToggle";
 import StatsCard from "@/components/shared/StatsCard";
