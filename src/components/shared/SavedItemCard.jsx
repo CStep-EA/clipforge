@@ -65,15 +65,15 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
     >
       <Card className={cn(
         "glass-card overflow-hidden group hover:border-[#00BFFF]/40 hover:shadow-[0_0_28px_rgba(0,191,255,0.18),0_0_8px_rgba(147,112,219,0.1)] transition-all duration-300 relative",
-        `category-${item.category}`
+        `category-${localItem.category}`
       )}>
         {/* shimmer overlay on hover */}
         <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shimmer-bg z-0" />
-        {item.image_url && (
+        {localItem.image_url && (
           <div className="relative h-40 overflow-hidden">
             <img
-              src={item.image_url}
-              alt={item.title}
+              src={localItem.image_url}
+              alt={localItem.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-transparent" />
@@ -82,44 +82,44 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                 {cat.label}
               </Badge>
             </div>
-            {item.source && (
-              <span className="absolute top-2 left-2 text-lg">{sourceIcons[item.source]}</span>
+            {localItem.source && (
+              <span className="absolute top-2 left-2 text-lg">{sourceIcons[localItem.source]}</span>
             )}
           </div>
         )}
 
         <div className="p-4 space-y-3">
-          {!item.image_url && (
+          {!localItem.image_url && (
             <div className="flex items-center justify-between">
               <Badge variant="outline" className={cn("text-[10px]", cat.color)}>
-                {item.source && <span className="mr-1">{sourceIcons[item.source]}</span>}
+                {localItem.source && <span className="mr-1">{sourceIcons[localItem.source]}</span>}
                 {cat.label}
               </Badge>
-              {item.rating && (
+              {localItem.rating && (
                 <div className="flex items-center gap-1 text-xs text-amber-400">
                   <Star className="w-3 h-3 fill-current" />
-                  {item.rating}/10
+                  {localItem.rating}/10
                 </div>
               )}
             </div>
           )}
 
           <h3 className="font-black text-[#E8E8ED] text-sm leading-tight line-clamp-2 group-hover:text-[#00BFFF] transition-colors">
-            {item.is_favorite && <span className="mr-1 text-[#FFB6C1] animate-pulse-glow-pink inline-block">♥</span>}
-            {item.title}
+            {localItem.is_favorite && <span className="mr-1 text-[#FFB6C1] animate-pulse-glow-pink inline-block">♥</span>}
+            {localItem.title}
           </h3>
 
-          {item.ai_summary && (
-            <p className="text-xs text-[#8B8D97] line-clamp-2">{item.ai_summary}</p>
+          {localItem.ai_summary && (
+            <p className="text-xs text-[#8B8D97] line-clamp-2">{localItem.ai_summary}</p>
           )}
 
-          {item.price != null && (
-            <span className="inline-block text-sm font-bold text-[#00BFFF]">${item.price.toFixed(2)}</span>
+          {localItem.price != null && (
+            <span className="inline-block text-sm font-bold text-[#00BFFF]">${localItem.price.toFixed(2)}</span>
           )}
 
-          {item.tags?.length > 0 && (
+          {localItem.tags?.length > 0 && (
             <div className="flex flex-wrap gap-1">
-              {item.tags.slice(0, 3).map((tag, i) => (
+              {localItem.tags.slice(0, 3).map((tag, i) => (
                 <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-[#2A2D3A] text-[#8B8D97]">
                   #{tag}
                 </span>
@@ -127,7 +127,7 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
             </div>
           )}
 
-          {item.reminder_date && (
+          {localItem.reminder_date && (
             <div className="flex items-center gap-1 text-[10px] text-[#9370DB]">
               <Clock className="w-3 h-3" />
               Reminder set
@@ -135,30 +135,46 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
           )}
 
           {/* Event date display + calendar add */}
-          {item.category === "event" && item.event_date && (
+          {localItem.category === "event" && (localItem.event_date || localItem.reminder_enabled) && (
             <div className="flex items-center justify-between gap-2 p-2 rounded-lg bg-[#9370DB]/5 border border-[#9370DB]/20">
               <div className="text-[10px] text-[#9370DB] flex items-center gap-1">
                 <span>📅</span>
-                {new Date(item.event_date).toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" })}
-                {item.event_venue && <span className="text-[#8B8D97] ml-1">· {item.event_venue}</span>}
+                {localItem.event_date
+                  ? new Date(localItem.event_date).toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" })
+                  : "Event"}
+                {localItem.event_venue && <span className="text-[#8B8D97] ml-1">· {localItem.event_venue}</span>}
               </div>
+              {localItem.reminder_enabled && (
+                <span className="text-[9px] text-[#00BFFF] flex items-center gap-0.5">🔔 On</span>
+              )}
+              {localItem.ticket_purchased && (
+                <span className="text-[9px] text-emerald-400">🎟 Purchased</span>
+              )}
             </div>
           )}
 
           <div className="flex items-center justify-between pt-2 border-t border-[#2A2D3A]">
             <div className="flex gap-1 flex-wrap items-center">
-              <RecipeExportButton item={item} />
-              {item.category === "event" && (
-                <AddToCalendarButton event={item} entity="SavedItem" size="sm" />
+              <RecipeExportButton item={localItem} />
+              {localItem.category === "event" && (
+                <AddToCalendarButton
+                  event={localItem}
+                  entity="SavedItem"
+                  size="sm"
+                  onEventUpdated={(updated) => {
+                    setLocalItem(updated);
+                    onItemUpdated?.(updated);
+                  }}
+                />
               )}
               <motion.div whileHover={{ scale: 1.3 }} whileTap={{ scale: 0.85 }}>
               <Button
                 size="icon"
                 variant="ghost"
                 className="h-7 w-7 text-[#8B8D97] hover:text-[#FFB6C1] hover:bg-[#FFB6C1]/10"
-                onClick={() => onToggleFavorite?.(item)}
+                onClick={() => onToggleFavorite?.(localItem)}
               >
-                <Heart className={cn("w-3.5 h-3.5", item.is_favorite && "fill-[#FFB6C1] text-[#FFB6C1] animate-pulse-glow-pink")} />
+                <Heart className={cn("w-3.5 h-3.5", localItem.is_favorite && "fill-[#FFB6C1] text-[#FFB6C1] animate-pulse-glow-pink")} />
               </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.25, rotate: -8 }} whileTap={{ scale: 0.9 }}>
@@ -166,18 +182,18 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                 size="icon"
                 variant="ghost"
                 className="h-7 w-7 text-[#8B8D97] hover:text-[#9370DB] hover:bg-[#9370DB]/10"
-                onClick={() => onShare?.(item)}
+                onClick={() => onShare?.(localItem)}
               >
                 <Share2 className="w-3.5 h-3.5" />
               </Button>
               </motion.div>
-              {item.category === "gift_idea" && (
+              {localItem.category === "gift_idea" && (
                 <span title="Gift Idea" className="text-[#EC4899] px-1">
                   <Gift className="w-3.5 h-3.5" />
                 </span>
               )}
-              {item.url && (
-                <a href={item.url} target="_blank" rel="noopener noreferrer">
+              {localItem.url && (
+                <a href={localItem.url} target="_blank" rel="noopener noreferrer">
                   <Button size="icon" variant="ghost" className="h-7 w-7 text-[#8B8D97] hover:text-[#00BFFF]">
                     <ExternalLink className="w-3.5 h-3.5" />
                   </Button>
