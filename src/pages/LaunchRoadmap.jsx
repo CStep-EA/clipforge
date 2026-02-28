@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, Flame, Globe2, TrendingUp, ArrowRight, Check, Clock, Globe, Mail, Play } from "lucide-react";
+import { Rocket, Flame, Globe2, TrendingUp, ArrowRight, Check, Clock, Globe, Mail, Play, Leaf, Hammer, Heart } from "lucide-react";
 import PublicFooter from "@/components/shared/PublicFooter";
 
 const futureIntegrations = [
@@ -30,6 +30,54 @@ const futureIntegrations = [
     subtitle: "Netflix · Paramount · HBO · Disney · YouTube TV",
     description: "Connect your streaming accounts to save shows & movies, track watch-later lists, rate content, and get recommendations across all top 10 video services.",
     eta: "Q4 2026",
+  },
+];
+
+const platformIntegrations = [
+  {
+    category: "Gardening Inspiration",
+    color: "#10B981",
+    icon: Leaf,
+    platforms: [
+      {
+        title: "Houzz",
+        description: "Save garden design ideas, plant photos, project plans, and professional landscaping tips.",
+      },
+      {
+        title: "iScape",
+        description: "Save garden layouts, plant palettes, outdoor projects, and landscape visualizations.",
+      },
+    ],
+  },
+  {
+    category: "Home Improvement",
+    color: "#F59E0B",
+    icon: Hammer,
+    platforms: [
+      {
+        title: "Houzz",
+        description: "Save renovation ideas, before/after photos, material selections, and contractor inspiration.",
+      },
+      {
+        title: "Planner 5D",
+        description: "Save 3D room layouts, furniture ideas, design concepts, and remodeling plans.",
+      },
+    ],
+  },
+  {
+    category: "Wellness & Beauty",
+    color: "#EC4899",
+    icon: Heart,
+    platforms: [
+      {
+        title: "RealSelf",
+        description: "Save cosmetic procedure inspiration, before/after photos, reviews, and treatment ideas.",
+      },
+      {
+        title: "YouCam Makeup",
+        description: "Save makeup looks, skincare routines, hairstyles, and beauty product ideas.",
+      },
+    ],
   },
 ];
 
@@ -218,6 +266,60 @@ export default function LaunchRoadmap() {
                   </Badge>
                 </div>
                 <p className="text-xs text-[#8B8D97] leading-relaxed">{item.description}</p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </motion.div>
+
+      {/* Platform Categories */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7 }}
+        className="space-y-4"
+      >
+        <div className="flex items-center gap-2">
+          <Leaf className="w-4 h-4 text-[#10B981]" />
+          <h2 className="text-sm font-black uppercase tracking-widest text-[#8B8D97]">Coming Soon — Platform Integrations</h2>
+        </div>
+        <div className="space-y-6">
+          {platformIntegrations.map((category, catIdx) => {
+            const CategoryIcon = category.icon;
+            return (
+              <motion.div
+                key={category.category}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.75 + catIdx * 0.12 }}
+                className="space-y-3"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg" style={{ background: `${category.color}15` }}>
+                    <CategoryIcon className="w-4 h-4" style={{ color: category.color }} />
+                  </div>
+                  <h3 className="text-sm font-bold" style={{ color: category.color }}>{category.category}</h3>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {category.platforms.map((platform, idx) => (
+                    <motion.div
+                      key={platform.title}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.77 + catIdx * 0.12 + idx * 0.06 }}
+                      className="glass-card rounded-xl p-4 space-y-2"
+                      style={{ borderColor: `${category.color}20` }}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <h4 className="font-semibold text-sm text-[#E8E8ED]">{platform.title}</h4>
+                        <Badge className="text-[8px] bg-[#2A2D3A] text-[#8B8D97] border-[#2A2D3A] whitespace-nowrap">
+                          <Clock className="w-2 h-2 mr-0.5" /> Q2/Q3
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-[#8B8D97] leading-relaxed">Users will be able to ethically import and organize saves from {platform.title} — ideas, photos, products, and tips — directly into personal/family boards.</p>
+                    </motion.div>
+                  ))}
+                </div>
               </motion.div>
             );
           })}
