@@ -213,13 +213,18 @@ export default function Events() {
       {/* Saved Event Items */}
       {savedEvents.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold mb-3 text-[#8B8D97]">From Your Saves</h3>
-          <div className="flex gap-3 overflow-x-auto pb-2">
+          <h3 className="text-sm font-semibold mb-3 text-[#8B8D97]">📌 From Your Saves</h3>
+          <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
             {savedEvents.slice(0, 5).map(ev => (
-              <Card key={ev.id} className="glass-card p-3 min-w-[200px] flex-shrink-0 cursor-pointer hover:border-[#9370DB]/40 transition-all"
-                    onClick={() => setCity(ev.title.split(" ").slice(0, 2).join(" "))}>
-                <p className="text-xs font-medium truncate">{ev.title}</p>
-                <p className="text-[10px] text-[#8B8D97] mt-1">Click to find nearby events</p>
+              <Card key={ev.id} className="glass-card p-3 min-w-[180px] max-w-[200px] flex-shrink-0 cursor-pointer hover:border-[#9370DB]/40 transition-all">
+                <p className="text-xs font-medium truncate mb-1">{ev.title}</p>
+                {ev.event_date && (
+                  <p className="text-[10px] text-[#9370DB] mb-1">📅 {new Date(ev.event_date).toLocaleDateString("en", { month: "short", day: "numeric" })}</p>
+                )}
+                <div onClick={e => e.stopPropagation()}>
+                  <AddToCalendarButton event={ev} entity="SavedItem" size="icon"
+                    onEventUpdated={() => {}} />
+                </div>
               </Card>
             ))}
           </div>
