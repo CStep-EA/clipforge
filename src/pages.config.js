@@ -69,6 +69,7 @@ import ShoppingLists from './pages/ShoppingLists';
 import Support from './pages/Support';
 import Terms from './pages/Terms';
 import VisionMission from './pages/VisionMission';
+import Readme from './pages/Readme';
 import __Layout from './Layout.jsx';
 
 
@@ -95,6 +96,7 @@ export const PAGES = {
     "Support": Support,
     "Terms": Terms,
     "VisionMission": VisionMission,
+    "Readme": Readme,
 }
 
 export const pagesConfig = {
