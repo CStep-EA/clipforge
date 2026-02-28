@@ -89,13 +89,22 @@ export default function Support() {
   });
 
   const handleCreate = async () => {
+    if (!form.subject.trim() || !form.message.trim()) {
+      toast.error("Please fill in subject and message.");
+      return;
+    }
     setSaving(true);
-    await base44.entities.SupportTicket.create(form);
-    queryClient.invalidateQueries({ queryKey: ["supportTickets"] });
-    setCreateOpen(false);
-    setSaving(false);
-    setForm({ subject: "", message: "", category: "general", priority: "medium" });
-    toast.success("Ticket submitted! We'll respond within 24 hours.");
+    try {
+      await base44.entities.SupportTicket.create(form);
+      queryClient.invalidateQueries({ queryKey: ["supportTickets"] });
+      setCreateOpen(false);
+      setForm({ subject: "", message: "", category: "general", priority: "medium" });
+      toast.success("Ticket submitted! We'll respond within 24 hours.");
+    } catch (e) {
+      toast.error("Failed to submit ticket. Please try again.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const filteredTickets = tickets
