@@ -147,6 +147,40 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
+      {/* Onboarding checklist for new users */}
+      {user && items.length < 3 && (
+        <div className="glass-card rounded-2xl p-4 border border-[#00BFFF]/20">
+          <p className="text-xs font-bold text-[#00BFFF] uppercase tracking-widest mb-3 flex items-center gap-1.5">
+            <Zap className="w-3.5 h-3.5" /> Getting started checklist
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            {[
+              { done: items.length > 0, label: "Save your first item", link: null, action: () => setAddOpen(true) },
+              { done: false, label: "Set up event reminders", link: "Events" },
+              { done: false, label: "Try the AI assistant", link: "Support" },
+            ].map((step, i) => (
+              step.link ? (
+                <Link key={i} to={createPageUrl(step.link)}
+                  className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs transition-all ${step.done ? "border-emerald-400/20 text-emerald-400" : "border-[#2A2D3A] text-[#8B8D97] hover:border-[#00BFFF]/30 hover:text-[#E8E8ED]"}`}>
+                  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] shrink-0 ${step.done ? "bg-emerald-400/20 text-emerald-400" : "bg-[#2A2D3A] text-[#8B8D97]"}`}>
+                    {step.done ? "✓" : i + 1}
+                  </span>
+                  {step.label}
+                </Link>
+              ) : (
+                <button key={i} onClick={step.action}
+                  className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs transition-all text-left ${step.done ? "border-emerald-400/20 text-emerald-400" : "border-[#2A2D3A] text-[#8B8D97] hover:border-[#00BFFF]/30 hover:text-[#E8E8ED]"}`}>
+                  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] shrink-0 ${step.done ? "bg-emerald-400/20 text-emerald-400" : "bg-[#2A2D3A] text-[#8B8D97]"}`}>
+                    {step.done ? "✓" : i + 1}
+                  </span>
+                  {step.label}
+                </button>
+              )
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Trial & Referral Banners */}
       {!isPro && <TrialAndReferralBanner user={user} />}
       {isDebugMode && (
