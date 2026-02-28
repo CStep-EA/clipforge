@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, Sparkles, Plus, Loader2, HandHeart } from "lucide-react";
 import { toast } from "sonner";
-import { base44 } from "@/api/base44Client";
 import MessageBubble from "@/components/chat/MessageBubble";
 
 export default function Assistant() {
