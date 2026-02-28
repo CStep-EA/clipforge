@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Clock, CheckCircle2, XCircle, MessageSquare, Send } from "lucide-react";
+import { Clock, CheckCircle2, XCircle, MessageSquare, Send, User, Headphones } from "lucide-react";
+import { toast } from "sonner";
 
 const statusColors = {
   open: "bg-[#00BFFF]/15 text-[#00BFFF] border-[#00BFFF]/30",
@@ -22,6 +23,21 @@ const priorityColors = {
   urgent: "text-red-400",
 };
 
+// Parse comment thread stored in response field as JSON array, or treat as legacy string
+function parseComments(raw) {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed;
+  } catch {}
+  // Legacy: single string response
+  return [{ role: "support", text: raw, ts: null }];
+}
+
+function serializeComments(comments) {
+  return JSON.stringify(comments);
+}
+
 export default function TicketDetail({ ticket, open, onOpenChange, isAdmin = false }) {
   const [reply, setReply] = useState("");
   const [saving, setSaving] = useState(false);
@@ -29,17 +45,26 @@ export default function TicketDetail({ ticket, open, onOpenChange, isAdmin = fal
 
   if (!ticket) return null;
 
+  const comments = parseComments(ticket.response);
+
   const handleReply = async () => {
     if (!reply.trim()) return;
     setSaving(true);
+    const newComment = {
+      role: isAdmin ? "support" : "user",
+      text: reply,
+      ts: new Date().toISOString(),
+    };
+    const updated = [...comments, newComment];
     await base44.entities.SupportTicket.update(ticket.id, {
-      response: reply,
+      response: serializeComments(updated),
       status: isAdmin ? "in_progress" : ticket.status,
     });
     queryClient.invalidateQueries({ queryKey: ["supportTickets"] });
     queryClient.invalidateQueries({ queryKey: ["allTickets"] });
     setReply("");
     setSaving(false);
+    toast.success(isAdmin ? "Response sent" : "Follow-up added");
   };
 
   const handleStatusChange = async (status) => {
