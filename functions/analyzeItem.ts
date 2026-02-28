@@ -3,7 +3,21 @@
  * Limit: 100 requests/hour per user.
  */
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
-import { sentryCaptureError } from './sentryCaptureError.js';
+
+const SENTRY_DSN = "https://f66f91cc6ce5c0e70b61f87c4a803d86@o4510964671905792.ingest.us.sentry.io/4510964678459392";
+async function sentryCaptureError(error, context = {}) {
+  try {
+    const url = new URL(SENTRY_DSN);
+    const key = url.username;
+    const projectId = url.pathname.replace("/", "");
+    const envelope = [
+      JSON.stringify({ sent_at: new Date().toISOString() }),
+      JSON.stringify({ type: "event" }),
+      JSON.stringify({ event_id: crypto.randomUUID().replace(/-/g,""), timestamp: new Date().toISOString(), platform: "javascript", level: "error", environment: "production", exception: { values: [{ type: error?.name||"Error", value: error?.message||String(error) }] }, tags: context.tags||{} }),
+    ].join("\n");
+    await fetch(`https://${url.hostname}/api/${projectId}/envelope/?sentry_key=${key}&sentry_version=7`, { method: "POST", headers: { "Content-Type": "application/x-sentry-envelope" }, body: envelope });
+  } catch (e) { console.error("Sentry capture failed:", e.message); }
+}
 
 Deno.serve(async (req) => {
   try {
