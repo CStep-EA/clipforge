@@ -121,10 +121,27 @@ export default function SocialConnectPanel() {
   const [token, setToken] = useState("");
   const [username, setUsername] = useState("");
   const [syncing, setSyncing] = useState(null);
+  const [syncResults, setSyncResults] = useState({}); // platformId -> { count, time }
+  const [autoSyncToggles, setAutoSyncToggles] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("cf_autosync") || "{}"); } catch { return {}; }
+  });
   const [tmLoading, setTmLoading] = useState(false);
   const [tmEvents, setTmEvents] = useState([]);
   const [tmCity, setTmCity] = useState("Denver");
   const queryClient = useQueryClient();
+  const { isPremium: isPremiumPlan, isFamily } = useSubscription();
+  const isPremiumUser = isPremiumPlan || isFamily;
+
+  const toggleAutoSync = (platformId, value) => {
+    if (!isPremiumUser) {
+      toast.error("Auto-sync requires Premium or Family plan.");
+      return;
+    }
+    const updated = { ...autoSyncToggles, [platformId]: value };
+    setAutoSyncToggles(updated);
+    localStorage.setItem("cf_autosync", JSON.stringify(updated));
+    toast.success(value ? "Auto-sync enabled (daily)" : "Auto-sync disabled");
+  };
 
   const { data: connections = [] } = useQuery({
     queryKey: ["socialConnections"],
