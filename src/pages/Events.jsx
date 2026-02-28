@@ -108,11 +108,12 @@ export default function Events() {
       }
     } catch (err) {
       console.error("Event search error:", err);
+      toast.error("Could not load events. Please try again.");
     }
 
     queryClient.invalidateQueries({ queryKey: ["events"] });
     setSearching(false);
-    toast.success("Events loaded!");
+    if (!searching) toast.success("Events loaded!");
   };
 
   const updateStatus = async (event, status) => {
