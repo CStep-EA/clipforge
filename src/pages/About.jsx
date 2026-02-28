@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import {
-  Smartphone, Globe, Download, Star, Shield, Zap, Users, Heart,
-  ArrowRight, ExternalLink, Apple, Play
+  Globe, Download, Shield, Zap, Users, Heart,
+  ArrowRight, Apple, Play
 } from "lucide-react";
+import PublicFooter from "@/components/shared/PublicFooter";
 
 function usePWAInstall() {
   const [prompt, setPrompt] = useState(null);

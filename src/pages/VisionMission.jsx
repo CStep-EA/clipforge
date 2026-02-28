@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Eye, Target, ArrowRight } from "lucide-react";
+import PublicFooter from "@/components/shared/PublicFooter";
 
 const pillars = [
   { emoji: "🧠", label: "AI-native", desc: "Everything is smart by default" },

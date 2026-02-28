@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Badge } from "@/components/ui/badge";
 import { Rocket, Flame, Globe2, TrendingUp, ArrowRight, Check, Clock } from "lucide-react";
+import PublicFooter from "@/components/shared/PublicFooter";
 
 const phases = [
   {
