@@ -7,8 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, UserCheck, UserX, Loader2, Pencil, Check, X, Shield, Trash2, Download, AlertTriangle } from "lucide-react";
-import { useQuery as useTicketQuery } from "@tanstack/react-query";
+import { Search, UserCheck, UserX, Loader2, Pencil, Check, X, Trash2, Download, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 const planColors = { free: "#8B8D97", pro: "#00BFFF", premium: "#9370DB", family: "#FFB6C1" };
@@ -29,6 +28,16 @@ export default function AdminUsers({ allSubs = [] }) {
     queryKey: ["specialAccounts"],
     queryFn: () => base44.entities.SpecialAccount.list(),
   });
+
+  const { data: allTickets = [] } = useQuery({
+    queryKey: ["dataRequestTickets"],
+    queryFn: () => base44.entities.SupportTicket.filter({ category: "account", status: "open" }),
+  });
+
+  // Filter to just deletion/export requests
+  const dataRequests = allTickets.filter(t =>
+    t.subject?.includes("Deletion Request") || t.subject?.includes("Data Export Request")
+  );
 
   const getSubForUser = (email) => allSubs.find(s => s.user_email === email);
   const getSpecialAccount = (email) => specialAccounts.find(s => s.email === email);
@@ -67,10 +76,78 @@ export default function AdminUsers({ allSubs = [] }) {
     }
   };
 
+  const handleResolveDataRequest = async (ticket, action) => {
+    const response = action === "approved"
+      ? `Request approved by admin. ${ticket.subject.includes("Deletion") ? "Account and data deletion has been initiated." : "Data export has been prepared and sent to the user's email."}`
+      : "Request reviewed but could not be processed at this time. Please contact privacy@clipforge.app.";
+    await base44.entities.SupportTicket.update(ticket.id, {
+      status: "resolved",
+      response,
+      priority: ticket.priority,
+    });
+    queryClient.invalidateQueries({ queryKey: ["dataRequestTickets"] });
+    toast.success(action === "approved" ? "Request approved & marked resolved" : "Request declined & closed");
+  };
+
   if (isLoading) return <div className="flex items-center justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-[#00BFFF]" /></div>;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+
+      {/* Data Deletion/Export Requests */}
+      {dataRequests.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-[#EF4444]" />
+            <h3 className="font-semibold text-sm text-[#EF4444]">Pending Data Requests ({dataRequests.length})</h3>
+            <Badge className="text-[9px] bg-[#EF4444]/15 text-[#EF4444] border border-[#EF4444]/30">Action Required</Badge>
+          </div>
+          <div className="space-y-2">
+            {dataRequests.map(ticket => {
+              const isDeletion = ticket.subject?.includes("Deletion");
+              return (
+                <div key={ticket.id} className={`glass-card rounded-xl p-4 border ${isDeletion ? "border-[#EF4444]/30" : "border-[#00BFFF]/30"}`}>
+                  <div className="flex items-start justify-between gap-3 flex-wrap">
+                    <div className="flex items-start gap-2 min-w-0">
+                      {isDeletion
+                        ? <Trash2 className="w-4 h-4 text-[#EF4444] mt-0.5 flex-shrink-0" />
+                        : <Download className="w-4 h-4 text-[#00BFFF] mt-0.5 flex-shrink-0" />
+                      }
+                      <div className="min-w-0">
+                        <p className="font-medium text-sm">{ticket.subject}</p>
+                        <p className="text-xs text-[#8B8D97] mt-0.5 line-clamp-2">{ticket.message}</p>
+                        <p className="text-[10px] text-[#8B8D97] mt-1">
+                          Submitted: {new Date(ticket.created_date).toLocaleDateString()} · by {ticket.created_by}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <Button
+                        size="sm"
+                        className="text-[10px] h-7 bg-[#EF4444]/15 border border-[#EF4444]/30 text-[#EF4444] hover:bg-[#EF4444]/25 gap-1"
+                        variant="outline"
+                        onClick={() => handleResolveDataRequest(ticket, "declined")}
+                      >
+                        <X className="w-3 h-3" /> Decline
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="text-[10px] h-7 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/25 gap-1"
+                        variant="outline"
+                        onClick={() => handleResolveDataRequest(ticket, "approved")}
+                      >
+                        <CheckCircle2 className="w-3 h-3" /> Approve
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* User search & table */}
       <div className="relative max-w-sm">
         <Search className="absolute left-3 top-2.5 w-4 h-4 text-[#8B8D97]" />
         <Input
@@ -98,8 +175,9 @@ export default function AdminUsers({ allSubs = [] }) {
               const isActive = sub?.status === "active" || !sub;
               const special = getSpecialAccount(u.email);
               const isEditing = editingTierId === u.id;
+              const hasPendingDataRequest = dataRequests.some(t => t.created_by === u.email);
               return (
-                <TableRow key={u.id} className="border-[#2A2D3A] hover:bg-[#1A1D27]">
+                <TableRow key={u.id} className={`border-[#2A2D3A] hover:bg-[#1A1D27] ${hasPendingDataRequest ? "bg-[#EF4444]/5" : ""}`}>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <div>
@@ -108,6 +186,11 @@ export default function AdminUsers({ allSubs = [] }) {
                           {special && (
                             <Badge variant="outline" className="text-[8px] border-amber-500/30 text-amber-400 px-1 py-0">
                               {special.account_type === "development" ? "🛠️ Dev" : "🎁 Gift"}
+                            </Badge>
+                          )}
+                          {hasPendingDataRequest && (
+                            <Badge variant="outline" className="text-[8px] border-red-500/30 text-red-400 px-1 py-0">
+                              ⚠️ Data Request
                             </Badge>
                           )}
                         </div>
