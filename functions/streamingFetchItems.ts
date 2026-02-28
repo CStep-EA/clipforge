@@ -9,6 +9,17 @@ Deno.serve(async (req) => {
       return Response.json({ error: "Missing parameters" }, { status: 400 });
     }
 
+    // Rate limit: 20 sync requests/hour per user (sync is expensive)
+    const rlRes = await base44.functions.invoke('rateLimiter', {
+      userEmail, endpoint: 'streamingFetchItems', limit: 20, windowMinutes: 60
+    });
+    if (!rlRes.data?.allowed) {
+      return Response.json(
+        { error: `Rate limit exceeded. Try again in ${rlRes.data?.retryAfterSeconds}s.` },
+        { status: 429, headers: { 'Retry-After': String(rlRes.data?.retryAfterSeconds || 3600) } }
+      );
+    }
+
     const connections = await base44.asServiceRole.entities.StreamingConnection.filter({
       platform,
       user_email: userEmail,
