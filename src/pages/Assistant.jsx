@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, Sparkles, Plus, Loader2, HandHeart } from "lucide-react";
 import { toast } from "sonner";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import MessageBubble from "@/components/chat/MessageBubble";
 
 export default function Assistant() {
