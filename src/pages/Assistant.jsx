@@ -56,6 +56,22 @@ export default function Assistant() {
     return () => unsub();
   }, [activeConv?.id]);
 
+  const handleEscalate = async () => {
+    setEscalating(true);
+    const convoContext = messages
+      .map(m => `${m.role === "user" ? "User" : "Bot"}: ${typeof m.content === "string" ? m.content : "[tool response]"}`)
+      .join("\n");
+    await base44.entities.SupportTicket.create({
+      subject: "Escalated from AI Assistant",
+      message: `[Human Handoff Requested from Assistant page]\n\n${convoContext || "No messages yet."}`,
+      category: "general",
+      priority: "high",
+    });
+    queryClient.invalidateQueries({ queryKey: ["supportTickets"] });
+    toast.success("Escalated — a ticket has been created for the support team.");
+    setEscalating(false);
+  };
+
   const sendMessage = async () => {
     if (!input.trim() || sending) return;
     if (!activeConv) {
