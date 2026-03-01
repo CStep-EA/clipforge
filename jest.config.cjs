@@ -1,20 +1,34 @@
+// jest.config.cjs
 module.exports = {
-  preset: 'ts-jest/presets/js-with-ts',
-  testEnvironment: 'jsdom',
+  // Use jsdom so React components can render (document, window, etc.)
+  testEnvironment: 'jest-environment-jsdom',
+
+  // Run setupTests.ts after jsdom is ready
   setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
+
   moduleNameMapper: {
+    // CSS imports → identity-obj-proxy (returns class names as-is)
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-    '^@/(.*)$': '<rootDir>/src/$1', // alias for @/ imports
+
+    // @ alias → src/
+    '^@/(.*)$': '<rootDir>/src/$1',
+
+    // framer-motion → stub (avoids ESM-only package issues)
+    '^framer-motion$': '<rootDir>/src/__mocks__/framer-motion.js',
   },
+
+  // babel-jest handles ALL file types: JS, JSX, TS, TSX
+  // .babelrc provides: preset-env (CJS output), preset-react (JSX),
+  // preset-typescript (strips types), babel-plugin-transform-import-meta
   transform: {
-    '^.+\\.(ts|tsx)$': ['ts-jest', {
-      tsconfig: '<rootDir>/tsconfig.test.json'  // ← Points to our new file
-    }],
-    '^.+\\.(js|jsx)$': 'babel-jest',
+    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
   },
+
+  // Transform ESM packages that ship without CommonJS builds
   transformIgnorePatterns: [
-    '/node_modules/(?!(@testing-library)/)',
+    '/node_modules/(?!(@base44/sdk|@base44)/)',
   ],
+
   testMatch: [
     '**/__tests__/**/*.[jt]s?(x)',
     '**/?(*.)+(spec|test).[jt]s?(x)',
