@@ -35,6 +35,8 @@ export default function ClipForgeLogo({ size = 36, variant = "default", showText
   return (
     <div className={`flex items-center gap-2 select-none ${className}`} style={{ lineHeight: 1 }}>
       <motion.svg
+        role="img"
+        aria-label="ClipForge Logo"
         width={size}
         height={size}
         viewBox="0 0 96 96"
