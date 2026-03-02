@@ -51,10 +51,8 @@ import About from './pages/About';
 import Admin from './pages/Admin';
 import Analytics from './pages/Analytics';
 import Assistant from './pages/Assistant';
-import Boards from './pages/Boards';
 import Cookies from './pages/Cookies';
 import Dashboard from './pages/Dashboard';
-import Events from './pages/Events';
 import Friends from './pages/Friends';
 import Integrations from './pages/Integrations';
 import LaunchRoadmap from './pages/LaunchRoadmap';
@@ -66,11 +64,13 @@ import Readme from './pages/Readme';
 import Saves from './pages/Saves';
 import Search from './pages/Search';
 import Settings from './pages/Settings';
+import Terms from './pages/Terms';
+import TestChecklist from './pages/TestChecklist';
+import VisionMission from './pages/VisionMission';
+import Boards from './pages/Boards';
+import Events from './pages/Events';
 import ShoppingLists from './pages/ShoppingLists';
 import Support from './pages/Support';
-import Terms from './pages/Terms';
-import VisionMission from './pages/VisionMission';
-import TestChecklist from './pages/TestChecklist';
 import __Layout from './Layout.jsx';
 
 
@@ -79,10 +79,8 @@ export const PAGES = {
     "Admin": Admin,
     "Analytics": Analytics,
     "Assistant": Assistant,
-    "Boards": Boards,
     "Cookies": Cookies,
     "Dashboard": Dashboard,
-    "Events": Events,
     "Friends": Friends,
     "Integrations": Integrations,
     "LaunchRoadmap": LaunchRoadmap,
@@ -94,11 +92,13 @@ export const PAGES = {
     "Saves": Saves,
     "Search": Search,
     "Settings": Settings,
+    "Terms": Terms,
+    "TestChecklist": TestChecklist,
+    "VisionMission": VisionMission,
+    "Boards": Boards,
+    "Events": Events,
     "ShoppingLists": ShoppingLists,
     "Support": Support,
-    "Terms": Terms,
-    "VisionMission": VisionMission,
-    "TestChecklist": TestChecklist,
 }
 
 export const pagesConfig = {

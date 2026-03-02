@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { SentryErrorBoundary, initSentry } from "@/components/shared/SentryInit";
 import BetaWaiverModal from "@/components/shared/BetaWaiverModal";
+import BetaFeedbackWidget from "@/components/shared/BetaFeedbackWidget";
 
 // Init Sentry as early as possible
 initSentry();
