@@ -1,22 +1,33 @@
+/**
+ * MobileNav.jsx — ClipForge grandma-proof bottom navigation
+ *
+ * Changes from original:
+ * - 3 primary tabs (Home, Saves, More) — not 4/5
+ * - Tab height raised to 64 px, icons w-6 h-6, labels text-xs (12 px)
+ * - min-tap-target enforced via min-h-[56px] min-w-[72px]
+ * - "More" drawer labels bumped to text-xs
+ * - Removed "Connect" from primary (moved to More)
+ * - Focus-visible ring for keyboard/switch-access
+ * - aria-current="page" on active tab
+ */
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
-  LayoutDashboard, Bookmark, Search, Plug, MoreHorizontal,
-  Users, ShoppingCart, BarChart3, Sparkles, Calendar,
+  LayoutDashboard, Bookmark, MoreHorizontal,
+  Plug, Users, ShoppingCart, BarChart3, Sparkles, Calendar,
   UserPlus, Settings, MessageCircle, Info, Zap, X,
-  TrendingUp, Shield
+  TrendingUp, Shield, HelpCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const primaryItems = [
-  { name: "Home",    icon: LayoutDashboard, page: "Dashboard" },
-  { name: "Saves",   icon: Bookmark,        page: "Saves" },
-  { name: "Search",  icon: Search,          page: "Search" },
-  { name: "Connect", icon: Plug,            page: "Integrations" },
+  { name: "Home",  icon: LayoutDashboard, page: "Dashboard" },
+  { name: "Saves", icon: Bookmark,        page: "Saves" },
 ];
 
 const moreItems = [
+  { name: "Connect",      icon: Plug,         page: "Integrations" },
   { name: "Friends",      icon: UserPlus,     page: "Friends" },
   { name: "Boards",       icon: Users,        page: "Boards" },
   { name: "Events",       icon: Calendar,     page: "Events" },
@@ -26,55 +37,66 @@ const moreItems = [
   { name: "Upgrade",      icon: Zap,          page: "Pricing" },
   { name: "Settings",     icon: Settings,     page: "Settings" },
   { name: "Support",      icon: MessageCircle,page: "Support" },
+  { name: "FAQ",          icon: HelpCircle,   page: "FAQ" },
   { name: "About",        icon: Info,         page: "About" },
 ];
 
 const adminMoreItems = [
-  { name: "Admin",     icon: Shield,     page: "Admin",         adminOnly: true },
+  { name: "Admin",     icon: Shield,     page: "Admin",          adminOnly: true },
   { name: "Marketing", icon: TrendingUp, page: "MarketingLaunch", adminOnly: true },
 ];
 
 export default function MobileNav({ currentPage, userRole }) {
   const [open, setOpen] = useState(false);
 
-  const isMoreActive = [...moreItems, ...adminMoreItems].some(i => i.page === currentPage);
+  const isMoreActive = [...moreItems, ...adminMoreItems].some(
+    (i) => i.page === currentPage
+  );
 
-  const allMoreItems = userRole === "admin"
-    ? [...moreItems, ...adminMoreItems]
-    : moreItems;
+  const allMoreItems =
+    userRole === "admin" ? [...moreItems, ...adminMoreItems] : moreItems;
 
   return (
     <>
-      {/* Drawer overlay */}
+      {/* ── Drawer backdrop ──────────────────────────────────── */}
       {open && (
         <div
           className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
           onClick={() => setOpen(false)}
+          aria-hidden="true"
         />
       )}
 
-      {/* More drawer */}
+      {/* ── More drawer ──────────────────────────────────────── */}
       <div
         className={cn(
           "fixed bottom-[64px] left-0 right-0 z-50 md:hidden transition-all duration-300",
-          open ? "translate-y-0 opacity-100 pointer-events-auto" : "translate-y-4 opacity-0 pointer-events-none"
+          open
+            ? "translate-y-0 opacity-100 pointer-events-auto"
+            : "translate-y-4 opacity-0 pointer-events-none"
         )}
         role="dialog"
+        aria-modal="true"
         aria-hidden={!open}
-        aria-label="Navigation menu"
+        aria-label="All pages"
       >
         <div className="mx-3 mb-2 bg-[#1A1D27]/98 backdrop-blur-xl border border-[#2A2D3A] rounded-2xl p-4 shadow-2xl">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-[#8B8D97] uppercase tracking-widest">All Pages</span>
-            <button 
-              onClick={() => setOpen(false)} 
-              className="p-1 rounded-lg text-[#8B8D97] hover:text-[#E8E8ED] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]"
+          {/* Drawer header */}
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm font-bold text-[#8B8D97] uppercase tracking-widest">
+              All Pages
+            </span>
+            <button
+              onClick={() => setOpen(false)}
+              className="p-2 rounded-xl text-[#8B8D97] hover:text-[#E8E8ED] min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]"
               aria-label="Close navigation menu"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
           </div>
-          <div className="grid grid-cols-4 gap-2">
+
+          {/* Grid of nav items — 3 columns for wider tap targets */}
+          <div className="grid grid-cols-3 gap-2">
             {allMoreItems.map((item) => {
               const isActive = currentPage === item.page;
               return (
@@ -82,15 +104,24 @@ export default function MobileNav({ currentPage, userRole }) {
                   key={item.page}
                   to={createPageUrl(item.page)}
                   onClick={() => setOpen(false)}
+                  aria-current={isActive ? "page" : undefined}
                   className={cn(
-                    "flex flex-col items-center gap-1.5 p-2.5 rounded-xl transition-all",
+                    "flex flex-col items-center gap-2 p-3 rounded-2xl transition-all",
+                    "min-h-[72px] justify-center",
                     isActive
                       ? "bg-[#00BFFF]/10 text-[#00BFFF]"
                       : "text-[#8B8D97] hover:text-[#E8E8ED] hover:bg-[#2A2D3A]"
                   )}
                 >
-                  <item.icon className={cn("w-5 h-5", isActive && "drop-shadow-[0_0_6px_rgba(0,191,255,0.5)]")} />
-                  <span className="text-[9px] font-medium text-center leading-tight">{item.name}</span>
+                  <item.icon
+                    className={cn(
+                      "w-6 h-6",
+                      isActive && "drop-shadow-[0_0_6px_rgba(0,191,255,0.5)]"
+                    )}
+                  />
+                  <span className="text-xs font-medium text-center leading-tight">
+                    {item.name}
+                  </span>
                 </Link>
               );
             })}
@@ -98,44 +129,67 @@ export default function MobileNav({ currentPage, userRole }) {
         </div>
       </div>
 
-      {/* Bottom tab bar */}
-      <nav 
+      {/* ── Bottom tab bar ────────────────────────────────────── */}
+      <nav
         className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#0F1117]/97 backdrop-blur-xl border-t border-[#2A2D3A] px-2 pb-[env(safe-area-inset-bottom,8px)]"
         role="navigation"
         aria-label="Mobile navigation"
       >
-        <div className="flex items-center justify-around py-1.5">
+        {/* 64px total height — 56px tap target for primary items */}
+        <div className="flex items-center justify-around h-16">
           {primaryItems.map((item) => {
             const isActive = currentPage === item.page;
             return (
               <Link
                 key={item.page}
                 to={createPageUrl(item.page)}
+                aria-current={isActive ? "page" : undefined}
+                aria-label={item.name}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-all min-w-[52px]",
+                  "flex flex-col items-center gap-1 py-1.5 rounded-2xl transition-all",
+                  "min-w-[72px] min-h-[56px] justify-center",
+                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]",
                   isActive ? "text-[#00BFFF]" : "text-[#8B8D97]"
                 )}
               >
-                <item.icon className={cn("w-5 h-5", isActive && "drop-shadow-[0_0_6px_rgba(0,191,255,0.5)]")} />
-                <span className="text-[10px] font-medium">{item.name}</span>
-                {isActive && <div className="w-4 h-0.5 rounded-full bg-[#00BFFF]" />}
+                <item.icon
+                  className={cn(
+                    "w-6 h-6",
+                    isActive && "drop-shadow-[0_0_6px_rgba(0,191,255,0.5)]"
+                  )}
+                />
+                <span className="text-xs font-semibold">{item.name}</span>
+                {isActive && (
+                  <div className="w-5 h-0.5 rounded-full bg-[#00BFFF]" />
+                )}
               </Link>
             );
           })}
 
-          {/* More button */}
+          {/* ── More button ───────────────────────────────────── */}
           <button
-            onClick={() => setOpen(v => !v)}
-            className={cn(
-              "flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-all min-w-[52px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]",
-              open || isMoreActive ? "text-[#00BFFF]" : "text-[#8B8D97]"
-            )}
+            onClick={() => setOpen((v) => !v)}
             aria-label="Toggle navigation menu"
             aria-expanded={open}
+            aria-haspopup="dialog"
+            className={cn(
+              "flex flex-col items-center gap-1 py-1.5 rounded-2xl transition-all",
+              "min-w-[72px] min-h-[56px] justify-center",
+              "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]",
+              open || isMoreActive ? "text-[#00BFFF]" : "text-[#8B8D97]"
+            )}
           >
-            <MoreHorizontal className={cn("w-5 h-5", (open || isMoreActive) && "drop-shadow-[0_0_6px_rgba(0,191,255,0.5)]")} />
-            <span className="text-[10px] font-medium">More</span>
-            {isMoreActive && !open && <div className="w-4 h-0.5 rounded-full bg-[#00BFFF]" />}
+            <MoreHorizontal
+              className={cn(
+                "w-6 h-6",
+                (open || isMoreActive) &&
+                  "drop-shadow-[0_0_6px_rgba(0,191,255,0.5)]"
+              )}
+            />
+            <span className="text-xs font-semibold">More</span>
+            {isMoreActive && !open && (
+              <div className="w-5 h-0.5 rounded-full bg-[#00BFFF]" />
+            )}
           </button>
         </div>
       </nav>

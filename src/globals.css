@@ -13,10 +13,45 @@
   --cf-text-muted: #8B8D97;
 }
 
+/* ── Senior-friendly global tap-target + font floor ──────────────── */
+:root {
+  --min-tap-target: 48px;
+}
+
 @layer base {
   * {
     scrollbar-width: thin;
     scrollbar-color: var(--cf-dark-border) transparent;
+  }
+
+  /* Body: 15px base — legible without squinting */
+  html { font-size: 15px; }
+
+  /* Enforce minimum tap-target on all interactive elements */
+  button, a, [role="button"], [role="link"], input[type="checkbox"], input[type="radio"] {
+    min-height: var(--min-tap-target);
+    min-width:  var(--min-tap-target);
+  }
+
+  /* Inputs: 16px prevents iOS auto-zoom */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+
+  /* High-contrast focus ring for keyboard / switch access */
+  :focus-visible {
+    outline: 3px solid var(--cf-neon);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Reduced motion — honour user preference */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -77,6 +112,13 @@
 }
 
 /* ── Utility classes ───────────────────────────── */
+/* ── FAB button pulse ──────────────────────────────── */
+@keyframes btn-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,191,255,0.45), 0 6px 28px rgba(0,191,255,0.3); }
+  50%       { box-shadow: 0 0 0 10px rgba(0,191,255,0), 0 6px 28px rgba(0,191,255,0.5); }
+}
+.animate-btn-pulse { animation: btn-pulse 2s ease-in-out infinite; }
+
 .animate-pulse-glow       { animation: pulse-glow 2s ease-in-out infinite; }
 .animate-pulse-glow-pink  { animation: pulse-glow-pink 2.5s ease-in-out infinite; }
 .animate-float            { animation: float 3s ease-in-out infinite; }

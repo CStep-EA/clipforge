@@ -171,7 +171,7 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-7 w-7 text-[#8B8D97] hover:text-[#FFB6C1] hover:bg-[#FFB6C1]/10"
+                className="h-10 w-10 text-[#8B8D97] hover:text-[#FFB6C1] hover:bg-[#FFB6C1]/10"
                 onClick={() => onToggleFavorite?.(localItem)}
               >
                 <Heart className={cn("w-3.5 h-3.5", localItem.is_favorite && "fill-[#FFB6C1] text-[#FFB6C1] animate-pulse-glow-pink")} />
@@ -181,7 +181,7 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-7 w-7 text-[#8B8D97] hover:text-[#9370DB] hover:bg-[#9370DB]/10"
+                className="h-10 w-10 text-[#8B8D97] hover:text-[#9370DB] hover:bg-[#9370DB]/10"
                 onClick={() => onShare?.(localItem)}
               >
                 <Share2 className="w-3.5 h-3.5" />
@@ -194,7 +194,7 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
               )}
               {localItem.url && (
                 <a href={localItem.url} target="_blank" rel="noopener noreferrer">
-                  <Button size="icon" variant="ghost" className="h-7 w-7 text-[#8B8D97] hover:text-[#00BFFF]">
+                  <Button size="icon" variant="ghost" className="h-10 w-10 text-[#8B8D97] hover:text-[#00BFFF]">
                     <ExternalLink className="w-3.5 h-3.5" />
                   </Button>
                 </a>
@@ -212,7 +212,7 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button size="icon" variant="ghost" className="h-7 w-7 text-[#8B8D97]">
+                  <Button size="icon" variant="ghost" className="h-10 w-10 text-[#8B8D97]">
                     <MoreHorizontal className="w-3.5 h-3.5" />
                   </Button>
                 </DropdownMenuTrigger>

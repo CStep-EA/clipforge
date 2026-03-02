@@ -4,15 +4,13 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent, DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CheckCircle2, Link2, RefreshCw, Loader2, AlertCircle, WifiOff, Clock, MapPin, Calendar, Ticket, ExternalLink, ToggleLeft, ToggleRight, Lock } from "lucide-react";
+import { CheckCircle2, Link2, RefreshCw, Loader2, AlertCircle, WifiOff, Clock, MapPin, Calendar, Ticket, ExternalLink, Lock, Shield } from "lucide-react";
 import { motion } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
 import ConsentModal from "./ConsentModal";
@@ -118,8 +116,7 @@ const COMING_SOON_PLATFORMS = [
 export default function SocialConnectPanel() {
   const [connectDialog, setConnectDialog] = useState(null);
   const [consentPlatform, setConsentPlatform] = useState(null);
-  const [token, setToken] = useState("");
-  const [username, setUsername] = useState("");
+  const [oauthLoading, setOauthLoading] = useState(null); // platform id being connected
   const [syncing, setSyncing] = useState(null);
   const [syncResults, setSyncResults] = useState({}); // platformId -> { count, time }
   const [autoSyncToggles, setAutoSyncToggles] = useState(() => {
@@ -176,26 +173,38 @@ export default function SocialConnectPanel() {
     queryClient.invalidateQueries({ queryKey: ["savedItems"] });
   };
 
-  const handleConnect = async () => {
-    const existing = getConnection(connectDialog.id);
-    if (existing) {
-      await base44.entities.SocialConnection.update(existing.id, {
-        connected: true,
-        access_token: token,
-        username,
-      });
-    } else {
-      await base44.entities.SocialConnection.create({
-        platform: connectDialog.id,
-        connected: true,
-        access_token: token,
-        username,
-      });
-    }
-    queryClient.invalidateQueries({ queryKey: ["socialConnections"] });
+  /**
+   * handleOAuthConnect — zero-config OAuth flow.
+   * base44.auth.redirectToLogin delegates to the platform's OAuth without
+   * exposing any API keys to the user.  After the redirect returns, Base44
+   * saves the access token server-side and we record the connection locally.
+   */
+  const handleOAuthConnect = async (platform) => {
+    setOauthLoading(platform.id);
     setConnectDialog(null);
-    setToken("");
-    setUsername("");
+    try {
+      // Trigger Base44 OAuth – user sees the platform's official login screen
+      await base44.auth.redirectToLogin({ provider: platform.id });
+
+      // After redirect back, record the connection (no token in client)
+      const existing = getConnection(platform.id);
+      if (existing) {
+        await base44.entities.SocialConnection.update(existing.id, {
+          connected: true,
+        });
+      } else {
+        await base44.entities.SocialConnection.create({
+          platform: platform.id,
+          connected: true,
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ["socialConnections"] });
+      toast.success(`${platform.name} connected successfully!`);
+    } catch {
+      toast.error(`Couldn't connect ${platform.name}. Please try again.`);
+    } finally {
+      setOauthLoading(null);
+    }
   };
 
   const handleSync = async (platform) => {
@@ -320,6 +329,7 @@ export default function SocialConnectPanel() {
                         : { background: `linear-gradient(135deg, ${platform.color}, ${platform.color}cc)`, color: "white", boxShadow: `0 0 18px ${platform.color}55` }
                       }
                       onClick={() => isConnected ? setConnectDialog(platform) : setConsentPlatform(platform)}
+                      disabled={oauthLoading === platform.id}
                     >
                       <Link2 className="w-3 h-3" />
                       {isConnected ? "Reconnect" : `Connect ${platform.name}`}
@@ -362,10 +372,10 @@ export default function SocialConnectPanel() {
           })}
         </div>
 
-        <div className="mt-3 p-3 rounded-xl bg-[#F59E0B]/5 border border-[#F59E0B]/20 flex gap-2">
-          <AlertCircle className="w-4 h-4 text-[#F59E0B] mt-0.5 flex-shrink-0" />
+        <div className="mt-3 p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 flex gap-2">
+          <Shield className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
           <p className="text-xs text-[#8B8D97]">
-            Social connections require official API access tokens from each platform's developer portal. AI-powered categorization automatically organizes your saves.
+            One tap to connect — no API keys, no developer setup. ClipForge uses secure OAuth so your passwords stay private. AI automatically organises your saves by category.
           </p>
         </div>
 
@@ -471,53 +481,48 @@ export default function SocialConnectPanel() {
         </Card>
       </div>
 
-      {/* Consent Modal — shown before token dialog for new connections */}
+      {/* Consent Modal — shown before OAuth for new connections */}
       <ConsentModal
         open={!!consentPlatform}
         platform={consentPlatform}
         onClose={() => setConsentPlatform(null)}
-        onAccept={() => { setConnectDialog(consentPlatform); setConsentPlatform(null); }}
+        onAccept={() => { handleOAuthConnect(consentPlatform); setConsentPlatform(null); }}
       />
 
-      {/* Connect Dialog */}
-      <Dialog open={!!connectDialog} onOpenChange={() => { setConnectDialog(null); setToken(""); setUsername(""); }}>
+      {/* Reconnect confirmation dialog (already-connected platforms) */}
+      <Dialog open={!!connectDialog} onOpenChange={() => setConnectDialog(null)}>
         <DialogContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED]">
           <DialogHeader>
             <DialogTitle>
-              Connect {connectDialog?.emoji} {connectDialog?.name}
+              Reconnect {connectDialog?.emoji} {connectDialog?.name}
             </DialogTitle>
-                    <DialogDescription className="sr-only">Review and confirm platform connection settings.</DialogDescription>
-</DialogHeader>
+            <DialogDescription className="text-[#8B8D97] text-sm">
+              This will take you to {connectDialog?.name}'s official sign-in page.
+              No API keys needed — ClipForge handles everything securely.
+            </DialogDescription>
+          </DialogHeader>
           <div className="space-y-4 pt-2">
-            <div className="p-3 rounded-xl bg-[#0F1117] border border-[#2A2D3A]">
-              <p className="text-xs text-[#8B8D97]">{connectDialog?.note}</p>
-            </div>
-            <div>
-              <Label className="text-xs text-[#8B8D97]">Username / Handle</Label>
-              <Input
-                placeholder="@yourusername"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED]"
-              />
-            </div>
-            <div>
-              <Label className="text-xs text-[#8B8D97]">API Access Token</Label>
-              <Input
-                type="password"
-                placeholder="Paste your API token..."
-                value={token}
-                onChange={(e) => setToken(e.target.value)}
-                className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED]"
-              />
+            {/* Security assurance */}
+            <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 flex gap-2">
+              <Shield className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+              <p className="text-xs text-[#8B8D97]">
+                Your {connectDialog?.name} password is never shared with ClipForge.
+                We use official OAuth — the same method trusted by millions of apps.
+              </p>
             </div>
             <Button
-              onClick={handleConnect}
-              disabled={!token || !username}
-              className="w-full text-white"
+              onClick={() => { handleOAuthConnect(connectDialog); }}
+              className="w-full h-12 text-white text-base font-semibold"
               style={connectDialog ? { background: connectDialog.color } : {}}
             >
-              Connect {connectDialog?.name}
+              Continue to {connectDialog?.name} →
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => setConnectDialog(null)}
+              className="w-full text-[#8B8D97]"
+            >
+              Cancel
             </Button>
           </div>
         </DialogContent>

@@ -19,6 +19,24 @@ initSentry();
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
+  const [fabOpen, setFabOpen] = useState(false);
+  const navigate = useNavigate();
+
+  // ── Handle share_target intent (?share=1) ────────────────────────────────
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("share") === "1") {
+      navigate(createPageUrl("ShareTarget") + window.location.search);
+    }
+    if (params.get("action") === "add-save") {
+      setFabOpen(true);
+    }
+  }, []);
+
+  const handleFabSave = async (form) => {
+    await base44.entities.SavedItem.create(form);
+    setFabOpen(false);
+  };
   const [theme, setTheme] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("cf-theme") || "dark";
@@ -175,6 +193,17 @@ export default function Layout({ children, currentPageName }) {
       <main className="md:ml-[240px] pb-24 md:pb-8 min-h-screen" style={{paddingBottom: 'calc(6rem + env(safe-area-inset-bottom, 0px))'}}>
         <SentryErrorBoundary>{children}</SentryErrorBoundary>
       </main>
+
+      {/* Global FAB quick-save (mobile only) */}
+      <SaveFAB
+        onSaveLink={() => setFabOpen(true)}
+        onSaveNote={() => setFabOpen(true)}
+      />
+      <AddItemDialog
+        open={fabOpen}
+        onOpenChange={setFabOpen}
+        onSave={handleFabSave}
+      />
 
       {/* Mobile nav */}
       <MobileNav currentPage={currentPageName} userRole={user?.role} />

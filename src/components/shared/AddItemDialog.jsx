@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Sparkles, Loader2, CalendarPlus, Bell } from "lucide-react";
+import { Sparkles, Loader2, CalendarPlus, ChevronDown, ChevronUp } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import AddToCalendarButton from "@/components/events/AddToCalendarButton";
 
@@ -55,6 +55,7 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
   const [tagInput, setTagInput] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [savedItem, setSavedItem] = useState(null); // for calendar stub preview
+  const [showAdvanced, setShowAdvanced] = useState(!!editItem); // start collapsed for new saves
 
   // Reset when dialog opens/closes or editItem changes
   useEffect(() => {
@@ -118,35 +119,66 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
+          {/* ── Primary fields — always visible ───────────────── */}
           <div>
-            <Label className="text-xs text-[#8B8D97]">URL (paste a link for AI analysis)</Label>
+            <Label className="text-xs text-[#8B8D97]">Link or URL</Label>
             <div className="flex gap-2 mt-1">
               <Input
-                placeholder="https://..."
+                placeholder="Paste a link, or just add a title below"
                 value={form.url}
                 onChange={(e) => setForm({ ...form, url: e.target.value })}
-                className="bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] placeholder:text-[#8B8D97]/50"
+                // font-size 16px prevents iOS auto-zoom
+                style={{ fontSize: "16px" }}
+                className="bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] placeholder:text-[#8B8D97]/50 h-12 text-base"
+                aria-label="URL or link to save"
               />
               <Button
                 onClick={handleAIAnalyze}
                 disabled={aiLoading}
-                className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white shrink-0"
+                title="Let AI fill in the details"
+                aria-label="Analyse with AI"
+                className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white shrink-0 h-12 w-12"
               >
-                {aiLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                {aiLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
               </Button>
             </div>
           </div>
 
           <div>
-            <Label className="text-xs text-[#8B8D97]">Title</Label>
+            <Label className="text-xs text-[#8B8D97]">Title <span className="text-[#8B8D97]/50">(required)</span></Label>
             <Input
-              placeholder="What did you save?"
+              placeholder="What is this? (e.g. Best chocolate cake recipe)"
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
-              className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED]"
+              style={{ fontSize: "16px" }}
+              className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] h-12 text-base"
+              aria-label="Title"
             />
           </div>
 
+          {/* AI Summary (auto-filled) */}
+          {form.ai_summary && (
+            <div className="p-3 rounded-xl bg-[#00BFFF]/5 border border-[#00BFFF]/20">
+              <p className="text-xs text-[#00BFFF] font-medium mb-1 flex items-center gap-1">
+                <Sparkles className="w-3 h-3" /> AI Summary
+              </p>
+              <p className="text-xs text-[#8B8D97]">{form.ai_summary}</p>
+            </div>
+          )}
+
+          {/* ── More options (progressive disclosure) ─────────── */}
+          <button
+            type="button"
+            onClick={() => setShowAdvanced(v => !v)}
+            className="flex items-center gap-1.5 text-xs text-[#8B8D97] hover:text-[#E8E8ED] transition-colors py-1"
+            aria-expanded={showAdvanced}
+          >
+            {showAdvanced ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            {showAdvanced ? "Fewer options" : "More options (category, tags, notes)"}
+          </button>
+
+          {showAdvanced && (
+            <div className="space-y-4 border-t border-[#2A2D3A] pt-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label className="text-xs text-[#8B8D97]">Category</Label>
@@ -190,15 +222,6 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
             />
           </div>
 
-          {form.ai_summary && (
-            <div className="p-3 rounded-xl bg-[#00BFFF]/5 border border-[#00BFFF]/20">
-              <p className="text-xs text-[#00BFFF] font-medium mb-1 flex items-center gap-1">
-                <Sparkles className="w-3 h-3" /> AI Summary
-              </p>
-              <p className="text-xs text-[#8B8D97]">{form.ai_summary}</p>
-            </div>
-          )}
-
           <div>
             <Label className="text-xs text-[#8B8D97]">Tags</Label>
             <Input
@@ -232,6 +255,9 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
               className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] h-16"
             />
           </div>
+          {/* end advanced */}
+            </div>
+          )}
 
           {/* Event-specific fields */}
           {form.category === "event" && (

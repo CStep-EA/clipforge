@@ -73,6 +73,8 @@ import ShoppingLists from './pages/ShoppingLists';
 import Support from './pages/Support';
 import BetaCoverage from './pages/BetaCoverage';
 import FAQ from './pages/FAQ';
+import SignIn from './pages/SignIn';
+import ShareTarget from './pages/ShareTarget';
 import __Layout from './Layout.jsx';
 
 
@@ -103,6 +105,8 @@ export const PAGES = {
     "Support": Support,
     "BetaCoverage": BetaCoverage,
     "FAQ": FAQ,
+    "SignIn": SignIn,
+    "ShareTarget": ShareTarget,
 }
 
 export const pagesConfig = {
