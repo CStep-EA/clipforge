@@ -192,6 +192,9 @@ export default function Layout({ children, currentPageName }) {
       {/* PWA install button */}
       <GetAppButton />
 
+      {/* Beta feedback widget — visible to admin/beta users only */}
+      <BetaFeedbackWidget user={user} />
+
       {/* Footer links */}
       <div className={`hidden md:flex fixed bottom-0 left-[240px] right-0 z-50 px-6 py-2 justify-between items-center gap-4 text-[10px] pointer-events-auto ${isDark ? "text-[#8B8D97] border-t border-[#2A2D3A] bg-[#0F1117]/80" : "text-gray-400 border-t border-gray-200 bg-white/80"} backdrop-blur-sm`}>
         <div className="flex items-center gap-3 flex-wrap">
