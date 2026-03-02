@@ -171,7 +171,7 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
             type="button"
             onClick={() => setShowAdvanced(v => !v)}
             className="flex items-center gap-1.5 text-xs text-[#8B8D97] hover:text-[#E8E8ED] transition-colors py-1"
-            aria-expanded={showAdvanced}
+            aria-expanded={String(showAdvanced)}
           >
             {showAdvanced ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
             {showAdvanced ? "Fewer options" : "More options (category, tags, notes)"}

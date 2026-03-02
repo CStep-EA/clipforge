@@ -167,7 +167,7 @@ export default function ShareTarget() {
           {!analysing && (
             <div className="flex items-center gap-2">
               <span className="text-lg">{CATEGORY_EMOJI[category] || "📌"}</span>
-              <span className="text-sm text-[#E8E8ED] capitalize">{category.replace("_", " ")}</span>
+              <span className="text-sm text-[#E8E8ED] capitalize" data-testid="category-badge">{category.replace("_", " ")}</span>
               <span className="text-xs text-[#8B8D97]">(auto-detected)</span>
             </div>
           )}

@@ -36,6 +36,9 @@ const entities = {
   ShoppingList:      makeEntityMock(),
   SharedBoard:       makeEntityMock(),
   EventSuggestion:   makeEntityMock(),
+  SocialConnection:  makeEntityMock(),
+  FriendConnection:  makeEntityMock(),
+  StreamingConnection: makeEntityMock(),
 };
 
 // Proxy handles any entity not explicitly listed above
@@ -49,9 +52,12 @@ const entityProxy = new Proxy(entities, {
 const base44 = {
   entities: entityProxy,
   auth: {
-    me:     jest.fn().mockResolvedValue({ id: 'test-user', email: 'test@clipforge.com', full_name: 'Test User' }),
-    login:  jest.fn().mockResolvedValue({}),
-    logout: jest.fn().mockResolvedValue({}),
+    me:               jest.fn().mockResolvedValue({ id: 'test-user', email: 'test@clipforge.com', full_name: 'Test User' }),
+    login:            jest.fn().mockResolvedValue({}),
+    logout:           jest.fn().mockResolvedValue({}),
+    redirectToLogin:  jest.fn().mockResolvedValue({}),
+    sendMagicLink:    jest.fn().mockResolvedValue({}),
+    updateMe:         jest.fn().mockResolvedValue({}),
   },
   functions: {
     invoke: jest.fn().mockResolvedValue({ data: { extendedIngredients: [] } }),

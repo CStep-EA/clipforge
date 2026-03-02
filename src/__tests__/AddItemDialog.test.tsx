@@ -61,15 +61,16 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={jest.fn()} />,
       { wrapper: makeWrapper() }
     );
-    await waitFor(() => expect(screen.getByPlaceholderText(/https:\/\//i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByPlaceholderText(/Paste a link/i)).toBeInTheDocument());
   });
 
-  it('renders title input with placeholder "What did you save?"', async () => {
+  it('renders title input with placeholder', async () => {
     render(
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={jest.fn()} />,
       { wrapper: makeWrapper() }
     );
-    await waitFor(() => expect(screen.getByPlaceholderText(/What did you save\?/i)).toBeInTheDocument());
+    // Updated placeholder after grandma-proof redesign
+    await waitFor(() => expect(screen.getByPlaceholderText(/What is this/i)).toBeInTheDocument());
   });
 
   it('pre-fills title when editItem is provided', async () => {
@@ -86,7 +87,7 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={jest.fn()} />,
       { wrapper: makeWrapper() }
     );
-    const titleInput = await screen.findByPlaceholderText(/What did you save\?/i);
+    const titleInput = await screen.findByPlaceholderText(/What is this/i);
     fireEvent.change(titleInput, { target: { value: 'My Save' } });
     expect(titleInput).toHaveValue('My Save');
   });
@@ -114,7 +115,7 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={onSave} />,
       { wrapper: makeWrapper() }
     );
-    fireEvent.change(await screen.findByPlaceholderText(/What did you save\?/i), { target: { value: 'Test Save' } });
+    fireEvent.change(await screen.findByPlaceholderText(/What is this/i), { target: { value: 'Test Save' } });
     fireEvent.click(screen.getByRole('button', { name: /Add to Vault/i }));
     await waitFor(() =>
       expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ title: 'Test Save' }))
@@ -126,6 +127,9 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={jest.fn()} />,
       { wrapper: makeWrapper() }
     );
+    // Description is behind "More options" in the grandma-proof redesign
+    const moreBtn = await screen.findByRole('button', { name: /more options/i });
+    fireEvent.click(moreBtn);
     await waitFor(() => expect(screen.getByPlaceholderText(/Add details/i)).toBeInTheDocument());
   });
 
@@ -134,6 +138,9 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={jest.fn()} />,
       { wrapper: makeWrapper() }
     );
+    // Notes is behind "More options" in the grandma-proof redesign
+    const moreBtn = await screen.findByRole('button', { name: /more options/i });
+    fireEvent.click(moreBtn);
     await waitFor(() => expect(screen.getByPlaceholderText(/Personal notes/i)).toBeInTheDocument());
   });
 
@@ -142,6 +149,9 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={jest.fn()} />,
       { wrapper: makeWrapper() }
     );
+    // Tags are behind "More options" in the grandma-proof redesign
+    const moreBtn = await screen.findByRole('button', { name: /more options/i });
+    fireEvent.click(moreBtn);
     const tagInput = await screen.findByPlaceholderText(/Type a tag/i);
     fireEvent.change(tagInput, { target: { value: 'sale' } });
     fireEvent.keyDown(tagInput, { key: 'Enter' });
@@ -153,6 +163,9 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={jest.fn()} />,
       { wrapper: makeWrapper() }
     );
+    // Tags are behind "More options" in the grandma-proof redesign
+    const moreBtn = await screen.findByRole('button', { name: /more options/i });
+    fireEvent.click(moreBtn);
     const tagInput = await screen.findByPlaceholderText(/Type a tag/i);
     fireEvent.change(tagInput, { target: { value: 'mytag' } });
     fireEvent.keyDown(tagInput, { key: 'Enter' });
@@ -178,7 +191,7 @@ describe('AddItemDialog', () => {
       { wrapper: makeWrapper() }
     );
     // The sparkle button sits next to the URL input; there should be a button in that row
-    const urlInput = await screen.findByPlaceholderText(/https:\/\//i);
+    const urlInput = await screen.findByPlaceholderText(/Paste a link/i);
     const row = urlInput.closest('div');
     expect(row?.querySelector('button')).toBeInTheDocument();
   });
@@ -192,7 +205,7 @@ describe('AddItemDialog', () => {
       { wrapper: makeWrapper() }
     );
 
-    const urlInput = await screen.findByPlaceholderText(/https:\/\//i);
+    const urlInput = await screen.findByPlaceholderText(/Paste a link/i);
     fireEvent.change(urlInput, { target: { value: 'https://example.com/item' } });
 
     const urlRow = urlInput.closest('div');
@@ -213,7 +226,7 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={jest.fn()} />,
       { wrapper: makeWrapper() }
     );
-    const urlInput = await screen.findByPlaceholderText(/https:\/\//i);
+    const urlInput = await screen.findByPlaceholderText(/Paste a link/i);
     fireEvent.change(urlInput, { target: { value: 'https://bad.com' } });
     const urlRow = urlInput.closest('div');
     const analyzeBtn = urlRow?.querySelector('button') as HTMLButtonElement;
@@ -243,8 +256,8 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={onSave} />,
       { wrapper: makeWrapper() }
     );
-    // Fill in a title so the submit button is enabled
-    const titleInput = await screen.findByPlaceholderText(/What did you save\?/i);
+    // Fill in a title so the submit button is enabled (updated placeholder)
+    const titleInput = await screen.findByPlaceholderText(/What is this/i);
     fireEvent.change(titleInput, { target: { value: 'Dairy Expo 2025' } });
 
     // We need to switch the category selector to "event" via the component's Select
@@ -269,7 +282,7 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={jest.fn()} />,
       { wrapper: makeWrapper() }
     );
-    const urlInput = await screen.findByPlaceholderText(/https:\/\//i);
+    const urlInput = await screen.findByPlaceholderText(/Paste a link/i);
     fireEvent.change(urlInput, { target: { value: 'https://dairyexpo.com' } });
     // Find the sparkle/AI analyze button next to the URL input
     const allBtns = screen.getAllByRole('button');
@@ -282,7 +295,7 @@ describe('AddItemDialog', () => {
       await waitFor(() => expect(base44.functions.invoke).toHaveBeenCalled(), { timeout: 2000 });
     }
     // Dialog should still be rendered (no crash)
-    expect(screen.getByPlaceholderText(/What did you save/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/What is this?/i)).toBeInTheDocument();
   });
 
   // ── Source selector changes (lines 149/164) ────────────────────────────────
@@ -292,6 +305,9 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={jest.fn()} />,
       { wrapper: makeWrapper() }
     );
+    // Notes are behind "More options" in the grandma-proof redesign
+    const moreBtn = await screen.findByRole('button', { name: /more options/i });
+    fireEvent.click(moreBtn);
     const notesInput = await screen.findByPlaceholderText(/Personal notes/i);
     fireEvent.change(notesInput, { target: { value: 'Great deal for zinc supplements' } });
     expect((notesInput as HTMLTextAreaElement).value).toBe('Great deal for zinc supplements');
@@ -357,7 +373,7 @@ describe('AddItemDialog', () => {
     );
     // The event form has two https:// inputs: URL field (1st) and ticket URL (2nd)
     // Since editItem has no url, both are empty — get all and use the last one
-    const httpsInputs = await screen.findAllByPlaceholderText(/https:\/\//i);
+    const httpsInputs = await screen.findAllByPlaceholderText(/Paste a link/i);
     const ticketInput = httpsInputs[httpsInputs.length - 1] as HTMLInputElement;
     fireEvent.change(ticketInput, { target: { value: 'https://tickets.com' } });
     expect(ticketInput.value).toBe('https://tickets.com');
@@ -370,6 +386,9 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={jest.fn()} onSave={jest.fn()} />,
       { wrapper: makeWrapper() }
     );
+    // Description is behind "More options" in the grandma-proof redesign
+    const moreBtn = await screen.findByRole('button', { name: /more options/i });
+    fireEvent.click(moreBtn);
     const descInput = await screen.findByPlaceholderText(/Add details/i);
     fireEvent.change(descInput, { target: { value: 'Great dairy supplement deal' } });
     expect((descInput as HTMLTextAreaElement).value).toBe('Great dairy supplement deal');
@@ -419,7 +438,7 @@ describe('AddItemDialog', () => {
       <AddItemDialog open={true} onOpenChange={onOpenChange} onSave={onSave} />,
       { wrapper: makeWrapper() }
     );
-    const titleInput = await screen.findByPlaceholderText(/What did you save/i);
+    const titleInput = await screen.findByPlaceholderText(/What is this?/i);
     fireEvent.change(titleInput, { target: { value: 'Quick Save Item' } });
     // Submit to trigger onSave
     const addBtn = screen.getByRole('button', { name: /Add to Vault/i });

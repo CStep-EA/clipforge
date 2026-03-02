@@ -101,7 +101,7 @@ export default function SaveFAB({ onSaveLink, onSaveNote }) {
       <motion.button
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close quick save menu" : "Open quick save menu"}
-        aria-expanded={open}
+        aria-expanded={String(open)}
         whileTap={{ scale: 0.93 }}
         className={cn(
           "w-16 h-16 rounded-full shadow-2xl",

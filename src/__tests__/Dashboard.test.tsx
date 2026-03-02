@@ -276,7 +276,7 @@ describe('Dashboard page', () => {
     fireEvent.click(screen.getByText(/Quick Save/i));
     await waitFor(() => screen.getByText(/Add New Save/i));
     // Fill title
-    const titleInput = screen.getByPlaceholderText(/What did you save/i);
+    const titleInput = screen.getByPlaceholderText(/What is this/i);
     fireEvent.change(titleInput, { target: { value: 'New Dairy Deal' } });
     // Submit
     const addBtn = screen.getByRole('button', { name: /Add to Vault/i });
