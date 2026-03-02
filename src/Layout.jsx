@@ -7,7 +7,7 @@ import { Sun, Moon } from "lucide-react";
 import SupportBot from "@/components/support/SupportBot";
 import CookieBanner from "@/components/shared/CookieBanner";
 import GetAppButton from "@/components/shared/GetAppButton";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { SentryErrorBoundary, initSentry } from "@/components/shared/SentryInit";
 import BetaWaiverModal from "@/components/shared/BetaWaiverModal";
