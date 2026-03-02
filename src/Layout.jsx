@@ -13,6 +13,8 @@ import { SentryErrorBoundary, initSentry } from "@/components/shared/SentryInit"
 import BetaWaiverModal from "@/components/shared/BetaWaiverModal";
 import BetaFeedbackWidget from "@/components/shared/BetaFeedbackWidget";
 import BetaSystemTour from "@/components/onboarding/BetaSystemTour";
+import SaveFAB from "@/components/shared/SaveFAB";
+import AddItemDialog from "@/components/shared/AddItemDialog";
 
 // Init Sentry as early as possible
 initSentry();
