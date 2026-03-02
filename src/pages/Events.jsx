@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import {
   Dialog,
-  DialogContent,
+  DialogContent, DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -298,7 +298,8 @@ export default function Events() {
         <DialogContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED] max-w-lg">
           <DialogHeader>
             <DialogTitle className="text-base">{selectedEvent?.name}</DialogTitle>
-          </DialogHeader>
+                    <DialogDescription className="sr-only">View event details, reminders, and related actions.</DialogDescription>
+</DialogHeader>
           {selectedEvent && (
             <div className="space-y-4">
               {selectedEvent.image_url && (

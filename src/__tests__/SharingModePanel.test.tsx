@@ -1,6 +1,6 @@
 // src/__tests__/SharingModePanel.test.tsx — 27 uncovered → target 75%+
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
@@ -200,5 +200,78 @@ describe('SharingModePanel', () => {
     await waitFor(() => screen.getByText(/Ag Network/i));
     // The Gift badge is always rendered next to every board row
     expect(screen.getByText(/Gift/i)).toBeInTheDocument();
+  });
+});
+
+describe('SharingModePanel — handleCreate async path (lines 32, 45)', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it('calls SharedBoard.create and shows "Board Created!" after selecting a mode and clicking Create Board', async () => {
+    base44.entities.SharedBoard.list.mockResolvedValue([]);
+    base44.entities.SharedBoard.create.mockResolvedValue({ id: 'new-b1' });
+
+    render(<SharingModePanel />, { wrapper: makeWrapper() });
+
+    // Open the dialog
+    await waitFor(() => screen.getByText(/Create/i));
+    const createButtons = screen.getAllByRole('button').filter(b => /Create/i.test(b.textContent || ''));
+    if (createButtons.length > 0) {
+      fireEvent.click(createButtons[0]);
+    }
+
+    await waitFor(() => screen.getByText(/Create Sharing Board/i));
+
+    // Select a mode (click any mode button — "Couples", "Roommates", "Friends", "Family")
+    const modeButtons = screen.getAllByRole('button').filter(b =>
+      /Couples|Roommates|Friends|Family/i.test(b.textContent || '')
+    );
+    if (modeButtons.length > 0) {
+      fireEvent.click(modeButtons[0]);
+    }
+
+    // Click "Create Board" to trigger handleCreate
+    await waitFor(() => screen.getByRole('button', { name: /Create Board/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Create Board/i }));
+
+    await waitFor(() =>
+      expect(base44.entities.SharedBoard.create).toHaveBeenCalled()
+    );
+    await waitFor(() =>
+      expect(screen.getByText(/Board Created!/i)).toBeInTheDocument()
+    );
+  });
+
+  it('dialog auto-closes after "Board Created!" (setTimeout callback at line 45)', async () => {
+    jest.useFakeTimers();
+    base44.entities.SharedBoard.list.mockResolvedValue([]);
+    base44.entities.SharedBoard.create.mockResolvedValue({ id: 'b2' });
+
+    render(<SharingModePanel />, { wrapper: makeWrapper() });
+
+    // Open dialog
+    await waitFor(() => screen.getByText(/Create/i));
+    const createButtons = screen.getAllByRole('button').filter(b => /Create/i.test(b.textContent || ''));
+    if (createButtons.length > 0) fireEvent.click(createButtons[0]);
+
+    await waitFor(() => screen.getByText(/Create Sharing Board/i));
+
+    // Select mode + create
+    const modeButtons = screen.getAllByRole('button').filter(b =>
+      /Couples|Roommates|Friends|Family/i.test(b.textContent || '')
+    );
+    if (modeButtons.length > 0) fireEvent.click(modeButtons[0]);
+
+    await waitFor(() => screen.getByRole('button', { name: /Create Board/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Create Board/i }));
+
+    // Wait for "Board Created!" to appear
+    await waitFor(() => expect(screen.getByText(/Board Created!/i)).toBeInTheDocument());
+
+    // Fast-forward the 1500ms setTimeout that resets state and closes dialog
+    await act(async () => {
+      jest.advanceTimersByTime(2000);
+    });
+
+    jest.useRealTimers();
   });
 });

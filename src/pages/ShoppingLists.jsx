@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
-  DialogContent,
+  DialogContent, DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -201,7 +201,8 @@ export default function ShoppingLists() {
         <DialogContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED]">
           <DialogHeader>
             <DialogTitle className="gradient-text">Create Shopping List</DialogTitle>
-          </DialogHeader>
+                    <DialogDescription className="sr-only">Enter a name for your new shopping list.</DialogDescription>
+</DialogHeader>
           <div className="space-y-4 pt-2">
             {recipes.length > 0 && (
               <div>

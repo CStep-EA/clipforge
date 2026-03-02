@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Users, Heart, Home, UserPlus, Bell, Gift, Plus, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -117,6 +117,9 @@ export default function SharingModePanel() {
         <DialogContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED] max-w-sm">
           <DialogHeader>
             <DialogTitle>Create Sharing Board</DialogTitle>
+            <DialogDescription className="sr-only">
+              Select a sharing mode, optionally invite someone by email, and create your shared board.
+            </DialogDescription>
           </DialogHeader>
           {created ? (
             <div className="flex flex-col items-center gap-2 py-6">

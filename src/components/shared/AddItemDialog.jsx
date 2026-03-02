@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -111,6 +112,9 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
           <DialogTitle className="gradient-text text-lg">
             {editItem ? "Edit Save" : "Add New Save"}
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            {editItem ? "Edit your saved item details below." : "Paste a URL or fill in the details to save a new item to your vault."}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 pt-2">

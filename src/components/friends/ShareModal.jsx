@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import {
   Share2, Users, Globe, Lock, UserCheck, Crown, Zap, Copy, CheckCircle2
@@ -152,6 +152,9 @@ export default function ShareModal({ open, onOpenChange, item, type = "save", pl
           <DialogTitle className="flex items-center gap-2">
             <Share2 className="w-4 h-4 text-[#00BFFF]" /> Share {type === "save" ? "Save" : type === "analytics" ? "Analytics" : "Item"}
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            Choose how to share this item — publicly, with friends, or copy a direct link.
+          </DialogDescription>
         </DialogHeader>
 
         {/* Item preview */}

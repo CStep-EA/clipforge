@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, Info } from "lucide-react";
@@ -28,7 +28,8 @@ export default function ConsentModal({ open, onClose, onAccept, platform }) {
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
             Data Access Consent
           </DialogTitle>
-        </DialogHeader>
+                  <DialogDescription className="sr-only">Review platform permissions before connecting.</DialogDescription>
+</DialogHeader>
 
         <div className="space-y-4 py-2">
           <p className="text-sm text-[#8B8D97]">

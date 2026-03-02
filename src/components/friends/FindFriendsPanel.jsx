@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import {
   UserPlus, UserCheck, ExternalLink, Search, Loader2, CheckCircle2, Lock
@@ -232,6 +232,9 @@ export default function FindFriendsPanel({ user, plan = "free" }) {
               <span className="text-2xl">{consentPlatform?.emoji}</span>
               Connect {consentPlatform?.name}
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Review the data permissions before connecting this platform.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="p-3 rounded-xl bg-[#0F1117] border border-[#2A2D3A] space-y-2">

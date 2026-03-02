@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Dialog,
-  DialogContent,
+  DialogContent, DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -486,7 +486,8 @@ export default function SocialConnectPanel() {
             <DialogTitle>
               Connect {connectDialog?.emoji} {connectDialog?.name}
             </DialogTitle>
-          </DialogHeader>
+                    <DialogDescription className="sr-only">Review and confirm platform connection settings.</DialogDescription>
+</DialogHeader>
           <div className="space-y-4 pt-2">
             <div className="p-3 rounded-xl bg-[#0F1117] border border-[#2A2D3A]">
               <p className="text-xs text-[#8B8D97]">{connectDialog?.note}</p>

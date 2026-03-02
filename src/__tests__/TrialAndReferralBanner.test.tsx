@@ -1,6 +1,6 @@
 // src/__tests__/TrialAndReferralBanner.test.tsx — 13 uncovered → target 80%+
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -127,10 +127,12 @@ describe('TrialAndReferralBanner', () => {
     fireEvent.click(screen.getByText(/Copy Link/i));
     // After click, shows "Copied!"
     await waitFor(() => screen.getByText(/Copied!/i));
-    // Fast-forward past the 2500ms timeout — triggers the setTimeout callback
-    jest.runAllTimers();
+    // Fast-forward past the 2500ms timeout inside act() to flush state updates cleanly
+    await act(async () => {
+      jest.runAllTimers();
+    });
     jest.useRealTimers();
-    // "Copy Link" text returns
+    // "Copy Link" text returns after timeout
     await waitFor(() => expect(screen.getByText(/Copy Link/i)).toBeInTheDocument());
   });
 });

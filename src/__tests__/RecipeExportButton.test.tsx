@@ -1,6 +1,6 @@
 // src/__tests__/RecipeExportButton.test.tsx — 15 uncovered → target 80%+
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -68,8 +68,10 @@ describe('RecipeExportButton', () => {
     render(<RecipeExportButton item={recipeItem} />, { wrapper: makeWrapper() });
     fireEvent.click(screen.getByRole('button', { name: /→ List/i }));
     await waitFor(() => expect(screen.getByText(/Extracting/i)).toBeInTheDocument());
-    // Clean up: resolve the pending promise
-    resolveInvoke!({ data: { extendedIngredients: [] } });
+    // Resolve inside act() so React processes the resulting state updates cleanly
+    await act(async () => {
+      resolveInvoke!({ data: { extendedIngredients: [] } });
+    });
   });
 
   it('creates a ShoppingList after successful invoke', async () => {

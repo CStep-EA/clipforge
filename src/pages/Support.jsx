@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -468,6 +468,9 @@ export default function Support() {
         <DialogContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED]">
           <DialogHeader>
             <DialogTitle className="gradient-text">New Support Ticket</DialogTitle>
+            <DialogDescription className="sr-only">
+              Fill in subject and message to submit your request.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div>

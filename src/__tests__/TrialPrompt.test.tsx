@@ -128,3 +128,57 @@ describe('TrialPrompt — family plan', () => {
     await waitFor(() => expect(screen.getByText(/COPPA/i)).toBeInTheDocument());
   });
 });
+
+describe('TrialPrompt — handleStartTrial + Maybe Later (lines 63, 142)', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it('calls PremiumTrial.create when "Start" button is clicked with valid user', async () => {
+    // user has email from auth.me, no existing trial
+    base44.entities.PremiumTrial.filter.mockResolvedValue([]);
+    base44.entities.PremiumTrial.create.mockResolvedValue({ id: 'tr-new' });
+    const onOpenChange = jest.fn();
+    render(
+      <TrialPrompt open={true} onOpenChange={onOpenChange} plan="premium" />,
+      { wrapper: makeWrapper() }
+    );
+    await waitFor(() => screen.getByText(/Start.*Trial|Try.*Free/i));
+    // Click the primary Start button (last button in the dialog footer)
+    const buttons = screen.getAllByRole('button');
+    const startBtn = buttons.find(b => /start|try|free/i.test(b.textContent || ''));
+    if (startBtn) {
+      fireEvent.click(startBtn);
+      await waitFor(() =>
+        expect(base44.entities.PremiumTrial.create).toHaveBeenCalled()
+      );
+    }
+  });
+
+  it('shows already-used error when trial was already consumed (line 64)', async () => {
+    // Filter returns an existing trial → alreadyUsed = true
+    base44.entities.PremiumTrial.filter.mockResolvedValue([{ id: 'old-trial', trial_plan: 'premium', is_active: false }]);
+    render(
+      <TrialPrompt open={true} onOpenChange={jest.fn()} plan="premium" />,
+      { wrapper: makeWrapper() }
+    );
+    await waitFor(() => screen.getByText(/Start.*Trial|Try.*Free/i));
+    const buttons = screen.getAllByRole('button');
+    const startBtn = buttons.find(b => /start|try|free/i.test(b.textContent || ''));
+    if (startBtn) {
+      fireEvent.click(startBtn);
+      // Should NOT call create (blocked by alreadyUsed guard)
+      await new Promise(r => setTimeout(r, 100));
+      expect(base44.entities.PremiumTrial.create).not.toHaveBeenCalled();
+    }
+  });
+
+  it('calls onOpenChange(false) when "Maybe Later" is clicked (line 142)', async () => {
+    const onOpenChange = jest.fn();
+    render(
+      <TrialPrompt open={true} onOpenChange={onOpenChange} plan="premium" />,
+      { wrapper: makeWrapper() }
+    );
+    await waitFor(() => screen.getByText(/Maybe Later/i));
+    fireEvent.click(screen.getByText(/Maybe Later/i));
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+});

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -71,6 +71,9 @@ export default function ShareWithFriendsModal({ open, onClose, item, plan = "fre
             <DialogTitle className="gradient-text flex items-center gap-2">
               <Share2 className="w-4 h-4" /> Share {item?.title ? `"${item.title}"` : "this"}
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Select an audience and sharing options for this item.
+            </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 pt-2">
@@ -152,6 +155,9 @@ export default function ShareWithFriendsModal({ open, onClose, item, plan = "fre
             <DialogTitle className="text-amber-400 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" /> Ads will appear in shared view
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Free plan shared links include ads. Upgrade to Pro for ad-free sharing.
+            </DialogDescription>
           </DialogHeader>
           <p className="text-sm text-[#C0C2CC]">
             Free tier shared links include ads for the recipient. <Link to={createPageUrl("Pricing")} className="text-[#00BFFF] underline">Upgrade to Pro</Link> for ad-free sharing.

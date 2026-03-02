@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import {
   Users, UserPlus, Shield, Baby, AlertTriangle, Check, X, Trash2
@@ -160,6 +160,9 @@ export default function FamilyManagement({ user }) {
             <DialogTitle className="gradient-text flex items-center gap-2">
               <UserPlus className="w-4 h-4" /> Invite Family Member
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Enter your family member's email and role to send an invitation.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div>
@@ -229,6 +232,9 @@ export default function FamilyManagement({ user }) {
             <DialogTitle className="flex items-center gap-2 text-orange-400">
               <AlertTriangle className="w-5 h-5" /> Parental Consent Required
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              COPPA compliance: parental consent is required before creating an account for a child under 13.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 pt-1 text-sm text-[#C0C2CC] leading-relaxed">
             <p>You're inviting a child under 13. Under <strong className="text-orange-400">COPPA</strong> (Children's Online Privacy Protection Act), we require your explicit parental consent before creating an account for this child.</p>

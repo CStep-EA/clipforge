@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Plus, Trash2, Globe, Lock } from "lucide-react";
 
@@ -107,7 +107,8 @@ export default function DevLogManager() {
         <DialogContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED]">
           <DialogHeader>
             <DialogTitle className="gradient-text">Add Dev Log Item</DialogTitle>
-          </DialogHeader>
+                    <DialogDescription className="sr-only">Fill in the details for the new dev log entry.</DialogDescription>
+</DialogHeader>
           <div className="space-y-3">
             <div>
               <Label className="text-xs text-[#8B8D97]">Title</Label>

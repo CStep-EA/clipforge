@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { UserPlus, UserCheck, UserX, Mail, Clock, Users, Link2 } from "lucide-react";
 import { toast } from "sonner";
@@ -189,6 +189,9 @@ export default function FriendsPanel({ user, plan = "free" }) {
             <DialogTitle className="gradient-text flex items-center gap-2">
               <Link2 className="w-4 h-4" /> Invite a Friend
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Enter your friend's email address to send them an invitation.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 pt-2">
             <div>

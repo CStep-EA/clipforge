@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQueryClient } from "@tanstack/react-query";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -78,6 +78,9 @@ export default function TicketDetail({ ticket, open, onOpenChange, isAdmin = fal
       <DialogContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED] max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-base leading-snug pr-4">{ticket.subject}</DialogTitle>
+          <DialogDescription className="sr-only">
+            View ticket details, replies, and update options.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
