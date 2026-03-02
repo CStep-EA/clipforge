@@ -7,12 +7,14 @@ import { Sun, Moon } from "lucide-react";
 import SupportBot from "@/components/support/SupportBot";
 import CookieBanner from "@/components/shared/CookieBanner";
 import GetAppButton from "@/components/shared/GetAppButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { SentryErrorBoundary, initSentry } from "@/components/shared/SentryInit";
 import BetaWaiverModal from "@/components/shared/BetaWaiverModal";
 import BetaFeedbackWidget from "@/components/shared/BetaFeedbackWidget";
 import BetaSystemTour from "@/components/onboarding/BetaSystemTour";
+import OfflineBanner from "@/components/shared/OfflineBanner";
+import CommandPalette from "@/components/shared/CommandPalette";
 import SaveFAB from "@/components/shared/SaveFAB";
 import AddItemDialog from "@/components/shared/AddItemDialog";
 
@@ -228,6 +230,12 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Beta system tour — auto-shows on first login, or ?tour=true */}
       <BetaSystemTour userEmail={user?.email} />
+
+      {/* Offline / reconnected banner — fixed top, z-100 */}
+      <OfflineBanner />
+
+      {/* Global Cmd+K command palette */}
+      <CommandPalette />
 
       {/* Footer links */}
       <div className={`hidden md:flex fixed bottom-0 left-[240px] right-0 z-50 px-6 py-2 justify-between items-center gap-4 text-[10px] pointer-events-auto ${isDark ? "text-[#8B8D97] border-t border-[#2A2D3A] bg-[#0F1117]/80" : "text-gray-400 border-t border-gray-200 bg-white/80"} backdrop-blur-sm`}>

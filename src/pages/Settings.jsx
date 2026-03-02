@@ -66,6 +66,43 @@ export default function Settings() {
     );
   };
 
+  // ── Instant client-side JSON/CSV export (no waiting for server) ─────────
+  const exportSavesNow = async (format = "json") => {
+    try {
+      const items = await base44.entities.SavedItem.list("-created_date");
+      if (!items?.length) { toast.error("No saves to export."); return; }
+
+      let content, mimeType, extension;
+
+      if (format === "csv") {
+        const headers = ["id","title","url","category","source","tags","description","ai_summary","is_favorite","rating","created_date"];
+        const rows = items.map(i => headers.map(h => {
+          const v = h === "tags" ? (i.tags || []).join("|") : (i[h] ?? "");
+          return `"${String(v).replace(/"/g, '""')}"`;
+        }).join(","));
+        content = [headers.join(","), ...rows].join("\n");
+        mimeType = "text/csv";
+        extension = "csv";
+      } else {
+        content = JSON.stringify({ exported_at: new Date().toISOString(), user: user?.email, count: items.length, saves: items }, null, 2);
+        mimeType = "application/json";
+        extension = "json";
+      }
+
+      const blob = new Blob([content], { type: mimeType });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement("a");
+      a.href     = url;
+      a.download = `clipforge-saves-${new Date().toISOString().slice(0,10)}.${extension}`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+      toast.success(`Exported ${items.length} saves as ${extension.toUpperCase()}`);
+    } catch {
+      toast.error("Export failed. Please try again.");
+    }
+  };
+
   return (
     <div className="p-4 md:p-8 max-w-3xl mx-auto space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-2">

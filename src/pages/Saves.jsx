@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, SlidersHorizontal, LayoutGrid, List, Share2 } from "lucide-react";
+import { Plus, Search, SlidersHorizontal, LayoutGrid, List, Share2, Trash2, CheckSquare, Square, X } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import SavedItemCard from "@/components/shared/SavedItemCard";
 import CategoryFilter from "@/components/shared/CategoryFilter";
@@ -20,6 +20,7 @@ import { useSubscription } from "@/components/shared/useSubscription";
 import TrialBanner from "@/components/subscription/TrialBanner";
 import OnboardingVideoPlayer from "@/components/onboarding/OnboardingVideoPlayer";
 import { useOnboarding, ONBOARDING_VIDEOS } from "@/hooks/useOnboarding";
+import { toast } from "sonner";
 
 export default function Saves() {
   const [addOpen, setAddOpen] = useState(false);
@@ -31,6 +32,10 @@ export default function Saves() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [sortBy, setSortBy] = useState("-created_date");
   const [viewMode, setViewMode] = useState("grid");
+  // ── Bulk select state ───────────────────────────────────────────────────
+  const [bulkMode, setBulkMode]       = useState(false);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -103,6 +108,35 @@ export default function Saves() {
     setShareOpen(true);
   };
 
+  // ── Bulk-select handlers ────────────────────────────────────────────────
+  const toggleSelectItem = useCallback((id) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }, []);
+
+  const selectAll = () => setSelectedIds(new Set(filtered.map(i => i.id)));
+  const clearSelection = () => { setSelectedIds(new Set()); setBulkMode(false); };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    const confirmed = window.confirm(`Delete ${selectedIds.size} item${selectedIds.size > 1 ? "s" : ""}? This cannot be undone.`);
+    if (!confirmed) return;
+    setBulkDeleting(true);
+    try {
+      await Promise.all([...selectedIds].map(id => base44.entities.SavedItem.delete(id)));
+      queryClient.invalidateQueries({ queryKey: ["savedItems"] });
+      toast.success(`Deleted ${selectedIds.size} item${selectedIds.size > 1 ? "s" : ""}`);
+      clearSelection();
+    } catch {
+      toast.error("Some items could not be deleted.");
+    } finally {
+      setBulkDeleting(false);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-0">
       <TrialBanner user={user} plan={plan} />
@@ -113,17 +147,66 @@ export default function Saves() {
           <h1 className="text-2xl font-bold">My Saves</h1>
           <p className="text-[#8B8D97] text-sm">{items.length} items in your vault</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" className="border-[#2A2D3A] text-[#E8E8ED] gap-2 animate-share-pulse"
-            onClick={() => { setShareItem(null); setShareOpen(true); }}>
-            <Share2 className="w-4 h-4" /> Share
-          </Button>
-          <Button
-            onClick={() => { setEditItem(null); setAddOpen(true); }}
-            className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2"
-          >
-            <Plus className="w-4 h-4" /> Add Save
-          </Button>
+        <div className="flex gap-2 flex-wrap">
+          {/* Bulk-select toolbar */}
+          {bulkMode ? (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-[#2A2D3A] text-[#8B8D97] gap-1.5 text-xs"
+                onClick={selectAll}
+                aria-label="Select all items"
+              >
+                <CheckSquare className="w-3.5 h-3.5" />
+                All ({filtered.length})
+              </Button>
+              {selectedIds.size > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-red-500/30 text-red-400 hover:bg-red-500/10 gap-1.5 text-xs"
+                  onClick={handleBulkDelete}
+                  disabled={bulkDeleting}
+                  aria-label={`Delete ${selectedIds.size} selected items`}
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Delete {selectedIds.size}
+                </Button>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-[#8B8D97] gap-1.5 text-xs"
+                onClick={clearSelection}
+                aria-label="Exit bulk select mode"
+              >
+                <X className="w-3.5 h-3.5" /> Done
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-[#2A2D3A] text-[#8B8D97] gap-1.5 text-xs"
+                onClick={() => setBulkMode(true)}
+                aria-label="Enter bulk select mode"
+              >
+                <Square className="w-3.5 h-3.5" /> Select
+              </Button>
+              <Button variant="outline" className="border-[#2A2D3A] text-[#E8E8ED] gap-2 animate-share-pulse"
+                onClick={() => { setShareItem(null); setShareOpen(true); }}>
+                <Share2 className="w-4 h-4" /> Share
+              </Button>
+              <Button
+                onClick={() => { setEditItem(null); setAddOpen(true); }}
+                className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white gap-2"
+              >
+                <Plus className="w-4 h-4" /> Add Save
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
@@ -188,15 +271,36 @@ export default function Saves() {
         }>
           <AnimatePresence>
             {filtered.map((item) => (
-              <SavedItemCard
-                key={item.id}
-                item={item}
-                onToggleFavorite={handleToggleFavorite}
-                onDelete={handleDelete}
-                onEdit={handleEdit}
-                onShare={handleShare}
-                isPro={isPro}
-              />
+              <div key={item.id} className="relative">
+                {/* Bulk-select overlay checkbox */}
+                {bulkMode && (
+                  <button
+                    className={`absolute top-3 left-3 z-10 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                      selectedIds.has(item.id)
+                        ? "bg-[#00BFFF] border-[#00BFFF] text-white"
+                        : "bg-[#1A1D27]/80 border-[#2A2D3A] text-transparent"
+                    }`}
+                    onClick={() => toggleSelectItem(item.id)}
+                    aria-label={selectedIds.has(item.id) ? `Deselect ${item.title}` : `Select ${item.title}`}
+                    aria-pressed={selectedIds.has(item.id)}
+                  >
+                    <CheckSquare className="w-3.5 h-3.5" />
+                  </button>
+                )}
+                <div
+                  className={bulkMode ? "cursor-pointer" : ""}
+                  onClick={bulkMode ? () => toggleSelectItem(item.id) : undefined}
+                >
+                  <SavedItemCard
+                    item={item}
+                    onToggleFavorite={bulkMode ? undefined : handleToggleFavorite}
+                    onDelete={bulkMode ? undefined : handleDelete}
+                    onEdit={bulkMode ? undefined : handleEdit}
+                    onShare={bulkMode ? undefined : handleShare}
+                    isPro={isPro}
+                  />
+                </div>
+              </div>
             ))}
           </AnimatePresence>
         </div>

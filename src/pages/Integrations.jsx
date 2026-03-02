@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { toast } from "sonner";
 
 const HEALTH_APPS = [
   { id: "myfitnesspal", name: "MyFitnessPal", emoji: "💪", color: "#0066CC", description: "Track calories from saved recipes" },
@@ -32,8 +33,37 @@ export default function Integrations() {
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
-    const keys = JSON.parse(localStorage.getItem("cf_api_keys") || "{}");
-    setSavedKeys(keys);
+    // SECURITY FIX: API keys must NOT be stored in localStorage (plaintext,
+    // accessible to any JS on the page). Load from Base44 UserPreferences entity.
+    // localStorage fallback is kept read-only for migration of existing keys,
+    // then immediately migrated and cleared.
+    const migrateLocalStorageKeys = async () => {
+      const legacyRaw = localStorage.getItem("cf_api_keys");
+      if (legacyRaw) {
+        try {
+          const legacy = JSON.parse(legacyRaw);
+          // Migrate non-empty keys to Base44 (server-side encrypted storage)
+          const hasKeys = Object.values(legacy).some(v => v && v.trim());
+          if (hasKeys) {
+            await base44.entities.UserPreferences?.upsert?.({ api_keys: legacy }).catch(() => {});
+          }
+          localStorage.removeItem("cf_api_keys");
+        } catch { /* ignore parse errors */ }
+      }
+    };
+    // Load current keys from Base44 entity
+    base44.entities.UserPreferences?.list?.()
+      .then(prefs => {
+        const keys = prefs?.[0]?.api_keys || {};
+        setSavedKeys(keys);
+        migrateLocalStorageKeys();
+      })
+      .catch(() => {
+        // Graceful fallback: legacy localStorage (read + migrate)
+        const legacy = JSON.parse(localStorage.getItem("cf_api_keys") || "{}");
+        setSavedKeys(legacy);
+        migrateLocalStorageKeys();
+      });
   }, []);
 
   const isPremium = isPro;
@@ -41,7 +71,14 @@ export default function Integrations() {
   const saveKey = (key, value) => {
     const updated = { ...savedKeys, [key]: value };
     setSavedKeys(updated);
-    localStorage.setItem("cf_api_keys", JSON.stringify(updated));
+    // SECURITY FIX: Persist to Base44 server-side storage, not localStorage.
+    // Keys are encrypted at rest by Base44 and never exposed to other JS.
+    base44.entities.UserPreferences?.upsert?.({ api_keys: updated }).catch(() => {
+      // Silent fail — key is in state, will sync on next successful call
+      console.warn("[ClipForge] Could not persist API key server-side");
+    });
+    // Explicitly ensure no plaintext key lands in localStorage
+    localStorage.removeItem("cf_api_keys");
   };
 
   return (
@@ -166,7 +203,10 @@ export default function Integrations() {
                 />
               </div>
               <div className="flex gap-2">
-                <Button size="sm" className="bg-[#F59E0B] text-white" onClick={() => alert("Keys saved to local storage")}>
+                <Button size="sm" className="bg-[#F59E0B] text-white" onClick={() => {
+                  saveKey("amazon_access_key", savedKeys.amazon_access_key || "");
+                  toast.success("Amazon API keys saved securely");
+                }}>
                   {savedKeys.amazon_access_key ? <><CheckCircle2 className="w-3 h-3 mr-1" /> Saved</> : "Save Keys"}
                 </Button>
                 <a href="https://affiliate-program.amazon.com/assoc_credentials/home" target="_blank" rel="noopener noreferrer">

@@ -60,7 +60,7 @@ export default function Dashboard() {
     setShowOnboarding(false);
   };
 
-  const { data: items = [] } = useQuery({
+  const { data: items = [], isLoading: itemsLoading } = useQuery({
     queryKey: ["savedItems"],
     queryFn: () => base44.entities.SavedItem.list("-created_date", 50),
     placeholderData: [
@@ -247,7 +247,14 @@ export default function Dashboard() {
           </Link>
         </div>
 
-        {displayItems.length === 0 ? (
+        {itemsLoading ? (
+          /* Skeleton loading grid — matches Saves page pattern */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1,2,3,4,5,6].map(i => (
+              <div key={i} className="glass-card rounded-2xl h-56 shimmer-bg" aria-hidden="true" />
+            ))}
+          </div>
+        ) : displayItems.length === 0 ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             className="glass-card rounded-2xl p-12 text-center">
             <div className="flex justify-center mb-4">
