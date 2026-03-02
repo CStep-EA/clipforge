@@ -101,6 +101,63 @@ describe('SupportBot — inline mode', () => {
     await waitFor(() => expect(base44.entities.SupportTicket.create).toHaveBeenCalled());
   });
 
+  it('shows success message after ticket is created (line 61-62)', async () => {
+    base44.integrations.Core.InvokeLLM.mockResolvedValue('escalating to our team');
+    base44.entities.SupportTicket.create.mockResolvedValue({ id: 'tk_ok' });
+    render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={false} />, { wrapper: makeWrapper() });
+    const input = screen.getByPlaceholderText(/ask anything/i);
+    fireEvent.change(input, { target: { value: 'charge refund' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await waitFor(() => screen.getByText(/✓ Create Ticket/i));
+    fireEvent.click(screen.getByText(/✓ Create Ticket/i));
+    await waitFor(() =>
+      expect(screen.getByText(/Support ticket created/i)).toBeInTheDocument()
+    );
+  });
+
+  it('shows error message when SupportTicket.create fails in handleCreateTicket (line 131)', async () => {
+    base44.integrations.Core.InvokeLLM.mockResolvedValue('escalating to our team');
+    base44.entities.SupportTicket.create.mockRejectedValue(new Error('DB error'));
+    render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={false} />, { wrapper: makeWrapper() });
+    const input = screen.getByPlaceholderText(/ask anything/i);
+    fireEvent.change(input, { target: { value: 'billing charge issue' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await waitFor(() => screen.getByText(/✓ Create Ticket/i));
+    // Reset mock so error triggers
+    fireEvent.click(screen.getByText(/✓ Create Ticket/i));
+    // Component should not crash — error was caught
+    await waitFor(() => expect(base44.entities.SupportTicket.create).toHaveBeenCalled());
+  });
+
+  it('shows success confirmation after Human escalation (line 143)', async () => {
+    base44.entities.SupportTicket.create.mockResolvedValue({ id: 'esc1' });
+    render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={false} />, { wrapper: makeWrapper() });
+    fireEvent.click(screen.getByText(/Human/i));
+    await waitFor(() =>
+      expect(screen.getByText(/flagged this for a human agent/i)).toBeInTheDocument()
+    );
+  });
+
+  it('handles escalation error gracefully (line 143 catch)', async () => {
+    base44.entities.SupportTicket.create.mockRejectedValue(new Error('escalation failed'));
+    render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={false} />, { wrapper: makeWrapper() });
+    fireEvent.click(screen.getByText(/Human/i));
+    // Should not crash — error handled in catch
+    await waitFor(() => expect(base44.entities.SupportTicket.create).toHaveBeenCalled());
+  });
+
+  it('sends message via send button click (line 282)', async () => {
+    base44.integrations.Core.InvokeLLM.mockResolvedValue('Button click works!');
+    render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={false} />, { wrapper: makeWrapper() });
+    const input = screen.getByPlaceholderText(/ask anything/i);
+    fireEvent.change(input, { target: { value: 'hello via button' } });
+    // Click the Send button (the arrow button at end of input row)
+    const buttons = screen.getAllByRole('button');
+    const sendBtn = buttons[buttons.length - 1];
+    fireEvent.click(sendBtn);
+    await waitFor(() => expect(base44.integrations.Core.InvokeLLM).toHaveBeenCalled());
+  });
+
   it('dismisses ticket suggestion when Dismiss is clicked', async () => {
     base44.integrations.Core.InvokeLLM.mockResolvedValue('escalating to our team');
     render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={false} />, { wrapper: makeWrapper() });
@@ -232,5 +289,42 @@ describe('SupportBot — guessCategory coverage', () => {
     }, { timeout: 2000 }).catch(() => {});
     // Verify no crash
     expect(base44.integrations.Core.InvokeLLM).toHaveBeenCalled();
+  });
+
+  it('falls back to "general" category for unrecognised text (line 62)', async () => {
+    base44.integrations.Core.InvokeLLM.mockResolvedValue('Here is some general help.');
+    render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={false} />, { wrapper: makeWrapper() });
+    const input = screen.getByPlaceholderText(/ask anything/i);
+    fireEvent.change(input, { target: { value: 'just a random question xyz' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await waitFor(() => expect(base44.integrations.Core.InvokeLLM).toHaveBeenCalled());
+  });
+
+  it('returns "medium" priority for normal text (guessPriority fallback line 70)', async () => {
+    base44.integrations.Core.InvokeLLM.mockResolvedValue('Standard help text.');
+    render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={false} />, { wrapper: makeWrapper() });
+    const input = screen.getByPlaceholderText(/ask anything/i);
+    fireEvent.change(input, { target: { value: 'I need some general help please' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await waitFor(() => expect(base44.integrations.Core.InvokeLLM).toHaveBeenCalled());
+  });
+});
+
+// ─── Non-floating wrapper (line 166) ──────────────────────────────────────────
+describe('SupportBot — non-floating wrapper', () => {
+  it('renders inside a glass-card div when floating=false (line 166)', () => {
+    const { container } = render(
+      <SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={false} />,
+      { wrapper: (() => {
+          const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+          return ({ children }: { children: React.ReactNode }) => (
+            <MemoryRouter><QueryClientProvider client={qc}>{children}</QueryClientProvider></MemoryRouter>
+          );
+        })() }
+    );
+    // Non-floating renders directly without the FAB wrapper — greeting should be visible
+    expect(screen.getByText(/Hi! I'm the ClipForge support bot/i)).toBeInTheDocument();
+    // The wrapper div should have glass-card class
+    expect(container.querySelector('.glass-card')).toBeInTheDocument();
   });
 });

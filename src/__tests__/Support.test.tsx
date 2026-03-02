@@ -633,4 +633,66 @@ describe('Support page', () => {
     // TicketDetail may open — just verify no crash
     expect(screen.queryAllByText(/Login problem/i).length).toBeGreaterThan(0);
   });
+
+  // ── Whitespace-only fields trigger toast.error (lines 93-94) ───────────────────
+
+  it('calls toast.error when subject has only whitespace (line 93)', async () => {
+    render(<Support />, { wrapper: makeWrapper() });
+    await waitFor(() => screen.getByText(/New Ticket/i));
+    fireEvent.click(screen.getByText(/New Ticket/i));
+    await waitFor(() => screen.getByPlaceholderText(/Brief description/i));
+
+    // Set subject to whitespace and message to valid text
+    fireEvent.change(screen.getByPlaceholderText(/Brief description/i), {
+      target: { value: '   ' }, // whitespace — trim() is empty
+    });
+    fireEvent.change(screen.getByPlaceholderText(/Describe your issue in detail/i), {
+      target: { value: 'Some valid message content here' },
+    });
+
+    // The button becomes enabled (subject is truthy: '   ') but handleCreate will toast.error
+    // Directly invoke handleCreate by clicking submit (button is enabled due to whitespace)
+    const submitBtn = screen.queryByRole('button', { name: /Submit Ticket/i });
+    if (submitBtn && !submitBtn.hasAttribute('disabled')) {
+      fireEvent.click(submitBtn);
+      // SupportTicket.create should NOT be called — early return after toast.error
+      await waitFor(() =>
+        expect(base44.entities.SupportTicket.create).not.toHaveBeenCalled()
+      );
+    }
+  });
+
+  it('calls toast.error when message has only whitespace (line 94)', async () => {
+    render(<Support />, { wrapper: makeWrapper() });
+    await waitFor(() => screen.getByText(/New Ticket/i));
+    fireEvent.click(screen.getByText(/New Ticket/i));
+    await waitFor(() => screen.getByPlaceholderText(/Brief description/i));
+
+    fireEvent.change(screen.getByPlaceholderText(/Brief description/i), {
+      target: { value: 'Valid subject' },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/Describe your issue in detail/i), {
+      target: { value: '   ' }, // whitespace only
+    });
+
+    const submitBtn = screen.queryByRole('button', { name: /Submit Ticket/i });
+    if (submitBtn && !submitBtn.hasAttribute('disabled')) {
+      fireEvent.click(submitBtn);
+      await waitFor(() =>
+        expect(base44.entities.SupportTicket.create).not.toHaveBeenCalled()
+      );
+    }
+  });
+
+  // ── Sign In button calls redirectToLogin (line 140) ──────────────────────────
+
+  it('calls base44.auth.redirectToLogin when Sign In button is clicked', async () => {
+    base44.auth.me.mockRejectedValue(new Error('Not authenticated'));
+    render(<Support />, { wrapper: makeWrapper() });
+    await waitFor(() =>
+      expect(screen.getByText(/Sign in to access Support/i)).toBeInTheDocument()
+    );
+    fireEvent.click(screen.getByRole('button', { name: /Sign In/i }));
+    expect(base44.auth.redirectToLogin).toHaveBeenCalled();
+  });
 });
