@@ -20,13 +20,12 @@ initSentry();
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [fabOpen, setFabOpen] = useState(false);
-  const navigate = useNavigate();
 
   // ── Handle share_target intent (?share=1) ────────────────────────────────
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("share") === "1") {
-      navigate(createPageUrl("ShareTarget") + window.location.search);
+      window.location.href = createPageUrl("ShareTarget") + window.location.search;
     }
     if (params.get("action") === "add-save") {
       setFabOpen(true);
