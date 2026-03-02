@@ -21,6 +21,8 @@ import { motion } from "framer-motion";
 import SupportBot from "@/components/support/SupportBot";
 import TicketDetail from "@/components/support/TicketDetail";
 import DocSearchResults from "@/components/support/DocSearchResults";
+import OnboardingVideoPlayer from "@/components/onboarding/OnboardingVideoPlayer";
+import { useOnboarding, ONBOARDING_VIDEOS } from "@/hooks/useOnboarding";
 
 const statusColors = {
   open: "bg-[#00BFFF]/15 text-[#00BFFF] border-[#00BFFF]/30",
@@ -65,6 +67,20 @@ export default function Support() {
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("tickets");
   const [docSearch, setDocSearch] = useState("");
+
+  // Onboarding video
+  const onboarding = useOnboarding(user?.email);
+  const [showSupportOnboarding, setShowSupportOnboarding] = useState(false);
+  const [dontShowSupport, setDontShowSupport] = useState(false);
+
+  // Show onboarding video once per user after auth resolves
+  useEffect(() => {
+    if (!authLoading && !onboarding.isLoading && onboarding.shouldShowVideo("support")) {
+      const t = setTimeout(() => setShowSupportOnboarding(true), 1000);
+      return () => clearTimeout(t);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, onboarding.isLoading]);
 
   // Pre-fill form with category shortcut
   const openTicketForm = (category, priority = "medium") => {
@@ -530,6 +546,29 @@ export default function Support() {
         open={!!selectedTicket}
         onOpenChange={open => { if (!open) setSelectedTicket(null); }}
       />
+
+      {/* Onboarding walkthrough video */}
+      {showSupportOnboarding && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Support walkthrough video"
+        >
+          <div className="w-full max-w-2xl">
+            <OnboardingVideoPlayer
+              video={ONBOARDING_VIDEOS.support}
+              onClose={() => {
+                if (dontShowSupport) onboarding.markVideoSeen("support");
+                setShowSupportOnboarding(false);
+              }}
+              onDontShowAgain={setDontShowSupport}
+              dontShowAgain={dontShowSupport}
+              autoPlay={true}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

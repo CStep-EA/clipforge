@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,8 @@ import AddItemDialog from "@/components/shared/AddItemDialog";
 import ShareModal from "@/components/friends/ShareModal";
 import { useSubscription } from "@/components/shared/useSubscription";
 import TrialBanner from "@/components/subscription/TrialBanner";
+import OnboardingVideoPlayer from "@/components/onboarding/OnboardingVideoPlayer";
+import { useOnboarding, ONBOARDING_VIDEOS } from "@/hooks/useOnboarding";
 
 export default function Saves() {
   const [addOpen, setAddOpen] = useState(false);
@@ -31,6 +33,19 @@ export default function Saves() {
   const [viewMode, setViewMode] = useState("grid");
 
   const queryClient = useQueryClient();
+
+  // Onboarding video for the Saves page
+  const onboarding = useOnboarding(user?.email);
+  const [showSavesOnboarding, setShowSavesOnboarding] = useState(false);
+  const [dontShowSaves, setDontShowSaves] = useState(false);
+
+  useEffect(() => {
+    if (!onboarding.isLoading && onboarding.shouldShowVideo("saves")) {
+      const t = setTimeout(() => setShowSavesOnboarding(true), 1000);
+      return () => clearTimeout(t);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onboarding.isLoading]);
 
   const { data: items = [], isLoading } = useQuery({
     queryKey: ["savedItems"],
@@ -202,6 +217,29 @@ export default function Saves() {
         user={user}
       />
       </div>
+
+      {/* Onboarding walkthrough video */}
+      {showSavesOnboarding && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Saves walkthrough video"
+        >
+          <div className="w-full max-w-2xl">
+            <OnboardingVideoPlayer
+              video={ONBOARDING_VIDEOS.saves}
+              onClose={() => {
+                if (dontShowSaves) onboarding.markVideoSeen("saves");
+                setShowSavesOnboarding(false);
+              }}
+              onDontShowAgain={setDontShowSaves}
+              dontShowAgain={dontShowSaves}
+              autoPlay={true}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

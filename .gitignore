@@ -29,3 +29,7 @@ dist-ssr
 coverage/
 
 .env
+# OS / crash dumps
+core
+core.*
+*.core

@@ -23,6 +23,8 @@ import SharingModePanel from "@/components/dashboard/SharingModePanel";
 import DashboardSearch from "@/components/dashboard/DashboardSearch";
 import TrialAndReferralBanner from "@/components/subscription/TrialAndReferralBanner";
 import IntegrationQuickBar from "@/components/dashboard/IntegrationQuickBar";
+import OnboardingVideoPlayer from "@/components/onboarding/OnboardingVideoPlayer";
+import { useOnboarding, ONBOARDING_VIDEOS } from "@/hooks/useOnboarding";
 
 // AI-driven priority ranking: deals first, then by rating, then recent
 function rankItems(items) {
@@ -40,7 +42,23 @@ export default function Dashboard() {
   const [shareItem, setShareItem] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const { user, isPro, isFamily, isDebugMode, plan } = useSubscription();
+  const onboarding = useOnboarding(user?.email);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [dontShowDashboard, setDontShowDashboard] = useState(false);
   const queryClient = useQueryClient();
+
+  // Onboarding video — show once per user, auto-dismissed on "don't show again"
+  React.useEffect(() => {
+    if (!onboarding.isLoading && onboarding.shouldShowVideo("dashboard")) {
+      const t = setTimeout(() => setShowOnboarding(true), 1200);
+      return () => clearTimeout(t);
+    }
+  }, [onboarding.isLoading]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleOnboardingClose = () => {
+    if (dontShowDashboard) onboarding.markVideoSeen("dashboard");
+    setShowOnboarding(false);
+  };
 
   const { data: items = [] } = useQuery({
     queryKey: ["savedItems"],
@@ -342,6 +360,22 @@ export default function Dashboard() {
         plan={plan}
         user={user}
       />
+
+      {/* Onboarding walkthrough video */}
+      {showOnboarding && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          role="dialog" aria-modal="true" aria-label="Dashboard walkthrough video">
+          <div className="w-full max-w-2xl">
+            <OnboardingVideoPlayer
+              video={ONBOARDING_VIDEOS.dashboard}
+              onClose={handleOnboardingClose}
+              onDontShowAgain={setDontShowDashboard}
+              dontShowAgain={dontShowDashboard}
+              autoPlay={true}
+            />
+          </div>
+        </div>
+      )}
     </div>
     </div>
   );

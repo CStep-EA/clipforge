@@ -72,6 +72,7 @@ import Events from './pages/Events';
 import ShoppingLists from './pages/ShoppingLists';
 import Support from './pages/Support';
 import BetaCoverage from './pages/BetaCoverage';
+import FAQ from './pages/FAQ';
 import __Layout from './Layout.jsx';
 
 
@@ -101,6 +102,7 @@ export const PAGES = {
     "ShoppingLists": ShoppingLists,
     "Support": Support,
     "BetaCoverage": BetaCoverage,
+    "FAQ": FAQ,
 }
 
 export const pagesConfig = {

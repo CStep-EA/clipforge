@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { User, Bell, LogOut, Save, Users, UserPlus, Gift, Lock, ArrowRight, Crown, Plug, Trash2, Download, Shield, X } from "lucide-react";
+import { User, Bell, LogOut, Save, Users, UserPlus, Gift, Lock, ArrowRight, Crown, Plug, Trash2, Download, Shield, X, PlayCircle } from "lucide-react";
 import TierGate from "@/components/shared/TierGate";
 import { Badge } from "@/components/ui/badge";
 import { useSubscription } from "@/components/shared/useSubscription";
@@ -16,6 +16,7 @@ import ReferralPanel from "@/components/referral/ReferralPanel";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
+import { useOnboarding } from "@/hooks/useOnboarding";
 
 export default function Settings() {
   const [user, setUser] = useState(null);
@@ -28,6 +29,9 @@ export default function Settings() {
   const [dataModalOpen, setDataModalOpen] = useState(null); // 'delete' | 'export' | null
   const [dataReason, setDataReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  // Onboarding settings
+  const onboarding = useOnboarding(user?.email);
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -129,6 +133,49 @@ export default function Settings() {
               checked={preferences.email_digests}
               onCheckedChange={(v) => setPreferences(p => ({ ...p, email_digests: v }))}
             />
+          </div>
+        </div>
+      </Card>
+
+      {/* Onboarding Videos */}
+      <Card className="glass-card p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <PlayCircle className="w-5 h-5 text-[#00BFFF]" />
+          <div>
+            <h2 className="font-semibold">Onboarding &amp; Walkthroughs</h2>
+            <p className="text-[10px] text-[#8B8D97]">Control feature tour videos and replays</p>
+          </div>
+        </div>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm">Show walkthrough videos</p>
+              <p className="text-xs text-[#8B8D97]">Auto-play feature tours on first visit to each page</p>
+            </div>
+            <Switch
+              checked={onboarding.videosEnabled}
+              onCheckedChange={(v) => {
+                onboarding.setVideosEnabled(v);
+                toast.success(v ? "Walkthrough videos enabled" : "Walkthrough videos disabled");
+              }}
+            />
+          </div>
+          <div className="pt-2 border-t border-[#2A2D3A]">
+            <p className="text-xs text-[#8B8D97] mb-3">
+              Want to replay the full feature tour? Reset your progress and it will show again on your next visit.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 border-[#2A2D3A] text-[#8B8D97] hover:text-[#E8E8ED] text-xs"
+              onClick={() => {
+                onboarding.resetAll();
+                toast.success("Onboarding tour reset — it will play again on your next visit!");
+              }}
+            >
+              <PlayCircle className="w-3.5 h-3.5" />
+              Replay full tour
+            </Button>
           </div>
         </div>
       </Card>
