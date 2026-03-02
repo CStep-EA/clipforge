@@ -33,6 +33,9 @@ const entities = {
   DevLog:            makeEntityMock(),
   RateLimitEvent:    makeEntityMock(),
   FeedbackEntry:     makeEntityMock(),
+  ShoppingList:      makeEntityMock(),
+  SharedBoard:       makeEntityMock(),
+  EventSuggestion:   makeEntityMock(),
 };
 
 // Proxy handles any entity not explicitly listed above
@@ -49,6 +52,9 @@ const base44 = {
     me:     jest.fn().mockResolvedValue({ id: 'test-user', email: 'test@clipforge.com', full_name: 'Test User' }),
     login:  jest.fn().mockResolvedValue({}),
     logout: jest.fn().mockResolvedValue({}),
+  },
+  functions: {
+    invoke: jest.fn().mockResolvedValue({ data: { extendedIngredients: [] } }),
   },
   integrations: {
     Core: {

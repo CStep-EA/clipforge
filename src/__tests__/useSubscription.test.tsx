@@ -129,4 +129,16 @@ describe('useSubscription — debug mode', () => {
     expect(result.current.plan).toBe('family');
     expect(result.current.isDebugMode).toBe(true);
   });
+
+  it('sets plan from active special account (isSpecialAccount branch)', async () => {
+    // Special account is active with no expiry — overrides billing tier
+    mockSpecialFilter.mockResolvedValue([{
+      is_active: true,
+      tier: 'pro',
+      expiration_date: null,
+    }]);
+    const { result } = renderHook(() => useSubscription(), { wrapper: makeWrapper() });
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(result.current.plan).toBe('pro');
+  });
 });
