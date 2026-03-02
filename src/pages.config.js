@@ -51,8 +51,12 @@ import About from './pages/About';
 import Admin from './pages/Admin';
 import Analytics from './pages/Analytics';
 import Assistant from './pages/Assistant';
+import BetaCoverage from './pages/BetaCoverage';
+import Boards from './pages/Boards';
 import Cookies from './pages/Cookies';
 import Dashboard from './pages/Dashboard';
+import Events from './pages/Events';
+import FAQ from './pages/FAQ';
 import Friends from './pages/Friends';
 import Integrations from './pages/Integrations';
 import LaunchRoadmap from './pages/LaunchRoadmap';
@@ -64,17 +68,13 @@ import Readme from './pages/Readme';
 import Saves from './pages/Saves';
 import Search from './pages/Search';
 import Settings from './pages/Settings';
+import ShareTarget from './pages/ShareTarget';
+import ShoppingLists from './pages/ShoppingLists';
+import SignIn from './pages/SignIn';
+import Support from './pages/Support';
 import Terms from './pages/Terms';
 import TestChecklist from './pages/TestChecklist';
 import VisionMission from './pages/VisionMission';
-import Boards from './pages/Boards';
-import Events from './pages/Events';
-import ShoppingLists from './pages/ShoppingLists';
-import Support from './pages/Support';
-import BetaCoverage from './pages/BetaCoverage';
-import FAQ from './pages/FAQ';
-import SignIn from './pages/SignIn';
-import ShareTarget from './pages/ShareTarget';
 import __Layout from './Layout.jsx';
 
 
@@ -83,8 +83,12 @@ export const PAGES = {
     "Admin": Admin,
     "Analytics": Analytics,
     "Assistant": Assistant,
+    "BetaCoverage": BetaCoverage,
+    "Boards": Boards,
     "Cookies": Cookies,
     "Dashboard": Dashboard,
+    "Events": Events,
+    "FAQ": FAQ,
     "Friends": Friends,
     "Integrations": Integrations,
     "LaunchRoadmap": LaunchRoadmap,
@@ -96,17 +100,13 @@ export const PAGES = {
     "Saves": Saves,
     "Search": Search,
     "Settings": Settings,
+    "ShareTarget": ShareTarget,
+    "ShoppingLists": ShoppingLists,
+    "SignIn": SignIn,
+    "Support": Support,
     "Terms": Terms,
     "TestChecklist": TestChecklist,
     "VisionMission": VisionMission,
-    "Boards": Boards,
-    "Events": Events,
-    "ShoppingLists": ShoppingLists,
-    "Support": Support,
-    "BetaCoverage": BetaCoverage,
-    "FAQ": FAQ,
-    "SignIn": SignIn,
-    "ShareTarget": ShareTarget,
 }
 
 export const pagesConfig = {
