@@ -71,6 +71,7 @@ import Boards from './pages/Boards';
 import Events from './pages/Events';
 import ShoppingLists from './pages/ShoppingLists';
 import Support from './pages/Support';
+import BetaCoverage from './pages/BetaCoverage';
 import __Layout from './Layout.jsx';
 
 
@@ -99,6 +100,7 @@ export const PAGES = {
     "Events": Events,
     "ShoppingLists": ShoppingLists,
     "Support": Support,
+    "BetaCoverage": BetaCoverage,
 }
 
 export const pagesConfig = {
