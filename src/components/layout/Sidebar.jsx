@@ -23,7 +23,8 @@ import {
   Moon,
   Plug,
   TrendingUp,
-  Info
+  Info,
+  FlaskConical
 } from "lucide-react";
 
 const navItems = [
@@ -44,6 +45,7 @@ const bottomItems = [
   { name: "Settings", icon: Settings, page: "Settings" },
   { name: "Admin", icon: Shield, page: "Admin", adminOnly: true },
   { name: "Marketing", icon: TrendingUp, page: "MarketingLaunch", adminOnly: true },
+  { name: "Beta Coverage", icon: FlaskConical, page: "BetaCoverage", adminOnly: true },
   { name: "Support", icon: MessageCircle, page: "Support" },
   { name: "About", icon: Info, page: "About" },
 ];
