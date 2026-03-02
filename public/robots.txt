@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Disallow internal/app routes that shouldn't be indexed
+Disallow: /share-target
+Disallow: /api/
+Disallow: /admin
+Disallow: /settings
+Disallow: /onboarding
+
+Sitemap: https://clipforge.app/sitemap.xml

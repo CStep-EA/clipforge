@@ -274,7 +274,7 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
                     className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-xs" />
                 </div>
                 <div>
-                  <Label className="text-[10px] text-[#8B8D97]">Venue</Label>
+                  <Label className="text-xs text-[#8B8D97]">Venue</Label>
                   <Input placeholder="Venue name"
                     value={form.event_venue || ""}
                     onChange={e => setForm({ ...form, event_venue: e.target.value })}
@@ -283,14 +283,14 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-[10px] text-[#8B8D97]">City</Label>
+                  <Label className="text-xs text-[#8B8D97]">City</Label>
                   <Input placeholder="City"
                     value={form.event_city || ""}
                     onChange={e => setForm({ ...form, event_city: e.target.value })}
                     className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-xs" />
                 </div>
                 <div>
-                  <Label className="text-[10px] text-[#8B8D97]">Ticket URL (optional)</Label>
+                  <Label className="text-xs text-[#8B8D97]">Ticket URL (optional)</Label>
                   <Input placeholder="https://..."
                     value={form.ticket_url || ""}
                     onChange={e => setForm({ ...form, ticket_url: e.target.value })}

@@ -10,6 +10,7 @@
   "lang": "en-US",
   "scope": "/",
   "categories": ["productivity", "lifestyle", "utilities"],
+
   "icons": [
     { "src": "/icons/icon-72.png",   "sizes": "72x72",   "type": "image/png" },
     { "src": "/icons/icon-96.png",   "sizes": "96x96",   "type": "image/png" },
@@ -17,6 +18,7 @@
     { "src": "/icons/icon-144.png",  "sizes": "144x144", "type": "image/png" },
     { "src": "/icons/icon-152.png",  "sizes": "152x152", "type": "image/png" },
     { "src": "/icons/icon-192.png",  "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-192.png",  "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
     { "src": "/icons/icon-384.png",  "sizes": "384x384", "type": "image/png" },
     { "src": "/icons/icon-512.png",  "sizes": "512x512", "type": "image/png" },
     {
@@ -27,6 +29,7 @@
     },
     { "src": "/icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
   ],
+
   "screenshots": [
     {
       "src": "/screenshots/dashboard.png",
@@ -43,6 +46,7 @@
       "label": "My Saves on mobile"
     }
   ],
+
   "shortcuts": [
     {
       "name": "Add Save",
@@ -59,6 +63,7 @@
       "icons": [{ "src": "/icons/shortcut-vault.png", "sizes": "96x96" }]
     }
   ],
+
   "share_target": {
     "action": "/share-target",
     "method": "GET",
@@ -69,6 +74,23 @@
       "url":   "url"
     }
   },
-  "related_applications": [],
-  "prefer_related_applications": false
+
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=app.clipforge.app",
+      "id": "app.clipforge.app"
+    },
+    {
+      "platform": "itunes",
+      "url": "https://apps.apple.com/app/clipforge/id0000000000"
+    }
+  ],
+  "prefer_related_applications": false,
+
+  "id": "/",
+
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
 }

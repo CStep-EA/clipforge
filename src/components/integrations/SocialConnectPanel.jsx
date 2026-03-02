@@ -291,7 +291,7 @@ export default function SocialConnectPanel() {
                       </div>
                     </div>
                     {isConnected && (
-                      <Badge className="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 gap-1">
+                      <Badge className="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 gap-1">
                         <CheckCircle2 className="w-2.5 h-2.5" /> Connected
                       </Badge>
                     )}
@@ -304,20 +304,20 @@ export default function SocialConnectPanel() {
                         {conn?.sync_count ? `${conn.sync_count} items synced` : "Ready to sync"}
                       </p>
                       {conn?.last_synced && (
-                        <p className="text-[9px] text-[#8B8D97] flex items-center gap-1">
+                        <p className="text-xs text-[#8B8D97] flex items-center gap-1">
                           <Clock className="w-2.5 h-2.5" />
                           Last sync: {new Date(conn.last_synced).toLocaleString("en", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
                         </p>
                       )}
                       {syncResults[platform.id] && (
-                        <p className="text-[9px] text-emerald-400">✓ +{syncResults[platform.id].count} new items just now</p>
+                        <p className="text-xs text-emerald-400">✓ +{syncResults[platform.id].count} new items just now</p>
                       )}
                     </div>
                   )}
 
                   <div className="flex flex-wrap gap-1 mb-3">
                     {platform.categoryFocus?.map(c => (
-                      <span key={c} className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#2A2D3A] text-[#8B8D97] capitalize">{c.replace("_", " ")}</span>
+                      <span key={c} className="text-xs px-1.5 py-0.5 rounded-full bg-[#2A2D3A] text-[#8B8D97] capitalize">{c.replace("_", " ")}</span>
                     ))}
                   </div>
 
@@ -392,7 +392,7 @@ export default function SocialConnectPanel() {
                     <div>
                       <div className="flex items-center gap-1.5">
                         <h3 className="font-semibold text-sm">{p.name}</h3>
-                        <Badge variant="outline" className="text-[9px] border-[#F59E0B]/30 text-[#F59E0B]">Coming Soon</Badge>
+                        <Badge variant="outline" className="text-xs border-[#F59E0B]/30 text-[#F59E0B]">Coming Soon</Badge>
                       </div>
                       <p className="text-[10px] text-[#8B8D97]">{p.description}</p>
                     </div>
@@ -401,7 +401,7 @@ export default function SocialConnectPanel() {
                 <p className="text-[10px] text-[#8B8D97] mb-3 italic">{p.reason}</p>
                 <div className="flex flex-wrap gap-1 mb-3">
                   {p.categoryFocus.map(c => (
-                    <span key={c} className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#2A2D3A] text-[#8B8D97] capitalize">{c.replace("_", " ")}</span>
+                    <span key={c} className="text-xs px-1.5 py-0.5 rounded-full bg-[#2A2D3A] text-[#8B8D97] capitalize">{c.replace("_", " ")}</span>
                   ))}
                 </div>
                 <Link to={createPageUrl("Support") + "?tab=roadmap"}>
@@ -419,7 +419,7 @@ export default function SocialConnectPanel() {
       <div>
         <h3 className="text-sm font-semibold text-[#E8E8ED] mb-3 flex items-center gap-2">
           <Ticket className="w-4 h-4 text-[#00BFFF]" /> Ticketmaster Event Discovery
-          <Badge className="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 gap-1 ml-1">
+          <Badge className="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 gap-1 ml-1">
             <CheckCircle2 className="w-2.5 h-2.5" /> Active
           </Badge>
         </h3>

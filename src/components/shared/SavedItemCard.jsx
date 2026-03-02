@@ -173,6 +173,8 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                 variant="ghost"
                 className="h-10 w-10 text-[#8B8D97] hover:text-[#FFB6C1] hover:bg-[#FFB6C1]/10"
                 onClick={() => onToggleFavorite?.(localItem)}
+                aria-label={localItem.is_favorite ? "Remove from favourites" : "Add to favourites"}
+                aria-pressed={localItem.is_favorite}
               >
                 <Heart className={cn("w-3.5 h-3.5", localItem.is_favorite && "fill-[#FFB6C1] text-[#FFB6C1] animate-pulse-glow-pink")} />
               </Button>
@@ -183,6 +185,7 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                 variant="ghost"
                 className="h-10 w-10 text-[#8B8D97] hover:text-[#9370DB] hover:bg-[#9370DB]/10"
                 onClick={() => onShare?.(localItem)}
+                aria-label="Share this save"
               >
                 <Share2 className="w-3.5 h-3.5" />
               </Button>
@@ -193,8 +196,13 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                 </span>
               )}
               {localItem.url && (
-                <a href={localItem.url} target="_blank" rel="noopener noreferrer">
-                  <Button size="icon" variant="ghost" className="h-10 w-10 text-[#8B8D97] hover:text-[#00BFFF]">
+                <a
+                  href={localItem.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open link in a new tab"
+                >
+                  <Button size="icon" variant="ghost" className="h-10 w-10 text-[#8B8D97] hover:text-[#00BFFF]" tabIndex={-1} aria-hidden="true">
                     <ExternalLink className="w-3.5 h-3.5" />
                   </Button>
                 </a>
@@ -206,13 +214,15 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                 variant="ghost"
                 className="h-7 text-[10px] text-[#9370DB] hover:bg-[#9370DB]/10 gap-1 px-2"
                 onClick={() => setShowResearch(v => !v)}
+                aria-expanded={String(showResearch)}
+                aria-label={showResearch ? "Hide AI research panel" : "Show AI research panel"}
               >
                 AI
                 {showResearch ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button size="icon" variant="ghost" className="h-10 w-10 text-[#8B8D97]">
+                  <Button size="icon" variant="ghost" className="h-10 w-10 text-[#8B8D97]" aria-label="More options">
                     <MoreHorizontal className="w-3.5 h-3.5" />
                   </Button>
                 </DropdownMenuTrigger>
