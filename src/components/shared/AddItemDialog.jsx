@@ -68,10 +68,22 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
   const handleAIAnalyze = async () => {
     if (!form.url && !form.title) return;
     setAiLoading(true);
-    const res = await base44.functions.invoke('analyzeItem', {
-      title: form.title, url: form.url, description: form.description,
-    });
-    if (res.error) {
+    let res;
+    try {
+      res = await base44.functions.invoke('analyzeItem', {
+        title: form.title, url: form.url, description: form.description,
+      });
+    } catch (err) {
+      const status = err?.response?.status;
+      if (status === 429) {
+        alert("You're doing that too fast. Please wait a moment and try again.");
+      } else {
+        alert("AI analysis failed. Please try again.");
+      }
+      setAiLoading(false);
+      return;
+    }
+    if (res?.error) {
       alert(res.error);
       setAiLoading(false);
       return;
