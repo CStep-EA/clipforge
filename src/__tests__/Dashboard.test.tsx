@@ -78,9 +78,9 @@ describe('Dashboard page', () => {
     await waitFor(() => expect(container).toBeInTheDocument());
   });
 
-  it('renders the ClipForge heading', async () => {
+  it('renders the Klip4ge heading', async () => {
     render(<Dashboard />, { wrapper: makeWrapper() });
-    await waitFor(() => expect(screen.getByText('ClipForge')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Klip4ge')).toBeInTheDocument());
   });
 
   it('renders the Quick Save button', async () => {

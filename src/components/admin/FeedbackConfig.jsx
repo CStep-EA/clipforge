@@ -43,7 +43,7 @@ export default function FeedbackConfig({ onBack }) {
     if (existing && !form) {
       setForm({
         sources: existing.sources || ALL_SOURCES.map(s => s.id),
-        keywords: existing.keywords || ["ClipForge", "clip forge"],
+        keywords: existing.keywords || ["Klip4ge", "clip forge"],
         escalation_threshold: existing.escalation_threshold || "urgent",
         escalation_negative_count: existing.escalation_negative_count ?? 5,
         auto_ticket: existing.auto_ticket !== false,
@@ -53,7 +53,7 @@ export default function FeedbackConfig({ onBack }) {
     } else if (!existing && !form) {
       setForm({
         sources: ALL_SOURCES.map(s => s.id),
-        keywords: ["ClipForge", "clip forge", "social saving app"],
+        keywords: ["Klip4ge", "clip forge", "social saving app"],
         escalation_threshold: "urgent",
         escalation_negative_count: 5,
         auto_ticket: true,

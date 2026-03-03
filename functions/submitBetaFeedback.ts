@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
     if (rating === 1) {
       try {
         await base44.asServiceRole.integrations.Core.SendEmail({
-          to: 'admin@clipforge.app',
+          to: 'admin@klip4ge.app',
           subject: '🚨 1-Star Beta Feedback Received',
           body: `A beta user left 1-star feedback.\n\nUser: ${user.email}\nPage: ${page}\n\n${content}`,
         });

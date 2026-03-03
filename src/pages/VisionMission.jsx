@@ -23,7 +23,7 @@ export default function VisionMission() {
         <h1 className="text-4xl font-black">
           <span className="gradient-text">Vision & Mission</span>
         </h1>
-        <p className="text-[#8B8D97]">Why ClipForge exists — and where we're going.</p>
+        <p className="text-[#8B8D97]">Why Klip4ge exists — and where we're going.</p>
       </motion.div>
 
       {/* Vision */}

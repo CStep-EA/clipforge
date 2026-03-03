@@ -20,7 +20,7 @@ const futureIntegrations = [
     color: "#9370DB",
     title: "Mailbox Extensions",
     subtitle: "Gmail · Outlook · Apple Mail",
-    description: "Automatically save emails, receipts, newsletters, and attachments to ClipForge — keep life organized across inbox and social.",
+    description: "Automatically save emails, receipts, newsletters, and attachments to Klip4ge — keep life organized across inbox and social.",
     eta: "Q3 2026",
   },
   {

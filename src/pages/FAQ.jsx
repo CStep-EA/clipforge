@@ -2,7 +2,7 @@
  * FAQ.jsx  — /FAQ  (or integrate into Support tabs as "FAQ" tab)
  * ─────────────────────────────────────────────────────────────────────────────
  * Searchable FAQ page with embedded walkthrough videos.
- * Each section covers a major ClipForge feature with Q&A + video embeds.
+ * Each section covers a major Klip4ge feature with Q&A + video embeds.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -28,20 +28,20 @@ const FAQ_SECTIONS = [
     badgeColor: "bg-[#00BFFF]/15 text-[#00BFFF] border-[#00BFFF]/30",
     questions: [
       {
-        q: "What is ClipForge?",
-        a: "ClipForge is your AI-powered save organiser. Clip anything — deals, recipes, events, articles — and let ClipForge sort, summarise, and share it for you. Think of it as a smart, collaborative bookmarks app for the things that actually matter in your life.",
+        q: "What is Klip4ge?",
+        a: "Klip4ge is your AI-powered save organiser. Clip anything — deals, recipes, events, articles — and let Klip4ge sort, summarise, and share it for you. Think of it as a smart, collaborative bookmarks app for the things that actually matter in your life.",
       },
       {
         q: "How do I create an account?",
-        a: "Click Sign In on the top bar. ClipForge uses secure OAuth (Google / Apple) — no new password to remember. Your account is created automatically on first login.",
+        a: "Click Sign In on the top bar. Klip4ge uses secure OAuth (Google / Apple) — no new password to remember. Your account is created automatically on first login.",
       },
       {
-        q: "Is ClipForge free?",
+        q: "Is Klip4ge free?",
         a: "Yes — the free plan gives you unlimited saves, AI summaries, and basic sharing. Pro ($4.99/mo) unlocks advanced AI, deep research, and premium integrations. Try Pro free for 7 days, no credit card required.",
       },
       {
-        q: "What devices does ClipForge support?",
-        a: "ClipForge works in any modern browser on desktop, tablet, or mobile. A native iOS and Android app is in development.",
+        q: "What devices does Klip4ge support?",
+        a: "Klip4ge works in any modern browser on desktop, tablet, or mobile. A native iOS and Android app is in development.",
       },
     ],
   },
@@ -55,15 +55,15 @@ const FAQ_SECTIONS = [
     questions: [
       {
         q: "How do I save something?",
-        a: "Click Quick Save on your Dashboard, paste a URL or type a title, and hit Save. ClipForge automatically fetches the page title, generates an AI summary, and tags the item by category (deal, recipe, event, article, etc.).",
+        a: "Click Quick Save on your Dashboard, paste a URL or type a title, and hit Save. Klip4ge automatically fetches the page title, generates an AI summary, and tags the item by category (deal, recipe, event, article, etc.).",
       },
       {
         q: "Can I save from my phone?",
-        a: "Yes — use the Share Sheet on iOS/Android and share any link to the ClipForge web app. The browser's 'Add to Home Screen' creates a shortcut that behaves like a native app.",
+        a: "Yes — use the Share Sheet on iOS/Android and share any link to the Klip4ge web app. The browser's 'Add to Home Screen' creates a shortcut that behaves like a native app.",
       },
       {
         q: "What are the save categories?",
-        a: "ClipForge supports: Deal, Product, Recipe, Event, Travel, Article, Gift Idea, and Other. The AI auto-categorises based on the URL and content — you can edit it at any time.",
+        a: "Klip4ge supports: Deal, Product, Recipe, Event, Travel, Article, Gift Idea, and Other. The AI auto-categorises based on the URL and content — you can edit it at any time.",
       },
       {
         q: "Can I add notes to a saved item?",
@@ -85,14 +85,14 @@ const FAQ_SECTIONS = [
     questions: [
       {
         q: "How do I share a saved item?",
-        a: "Click the Share icon on any saved item card. You can share via a public link, email, or directly to a friend's ClipForge account. Public shares let non-users view (with optional ad support).",
+        a: "Click the Share icon on any saved item card. You can share via a public link, email, or directly to a friend's Klip4ge account. Public shares let non-users view (with optional ad support).",
       },
       {
         q: "What are Sharing Boards?",
         a: "Boards are shared collections. Create a Couples board for date-night ideas, a Family board for the holidays wishlist, or a Friends board for group trip planning. All members see saves in real time.",
       },
       {
-        q: "Can I share with someone who doesn't have ClipForge?",
+        q: "Can I share with someone who doesn't have Klip4ge?",
         a: "Yes — public share links work for anyone. The recipient sees a read-only view of the item or board. They can sign up with one click to start saving their own clips.",
       },
       {
@@ -111,7 +111,7 @@ const FAQ_SECTIONS = [
     questions: [
       {
         q: "What does the AI Summary do?",
-        a: "When you save a URL, ClipForge's AI reads the page and writes a 2–3 sentence summary so you remember why you saved it. Summaries appear on every item card.",
+        a: "When you save a URL, Klip4ge's AI reads the page and writes a 2–3 sentence summary so you remember why you saved it. Summaries appear on every item card.",
       },
       {
         q: "What is Deep Research?",
@@ -171,7 +171,7 @@ const FAQ_SECTIONS = [
       },
       {
         q: "What is the AI Support Bot?",
-        a: "The support bot (💬 icon, bottom-right) answers questions about ClipForge instantly using AI. It can escalate to a human ticket if your issue needs hands-on help.",
+        a: "The support bot (💬 icon, bottom-right) answers questions about Klip4ge instantly using AI. It can escalate to a human ticket if your issue needs hands-on help.",
       },
       {
         q: "Where can I see my open tickets?",
@@ -218,15 +218,15 @@ const FAQ_SECTIONS = [
     badgeColor: "bg-emerald-400/15 text-emerald-400 border-emerald-400/30",
     questions: [
       {
-        q: "Is ClipForge GDPR compliant?",
-        a: "Yes. ClipForge is fully GDPR, CCPA, and COPPA compliant. We store only the data you explicitly provide. You can export or delete your data at any time from Settings → Privacy.",
+        q: "Is Klip4ge GDPR compliant?",
+        a: "Yes. Klip4ge is fully GDPR, CCPA, and COPPA compliant. We store only the data you explicitly provide. You can export or delete your data at any time from Settings → Privacy.",
       },
       {
         q: "Who can see my saved items?",
         a: "Only you — unless you share a specific item or board. Shared items are visible only to the people you explicitly invite or share a link with.",
       },
       {
-        q: "Does ClipForge sell my data?",
+        q: "Does Klip4ge sell my data?",
         a: "Never. We do not sell or share your personal data with third parties for advertising. Revenue comes from subscriptions only.",
       },
       {
@@ -383,7 +383,7 @@ export default function FAQ() {
             Frequently Asked Questions
           </h1>
           <p className="text-sm text-[#8B8D97] max-w-lg mx-auto leading-relaxed">
-            Everything you need to know about ClipForge — with short walkthrough videos
+            Everything you need to know about Klip4ge — with short walkthrough videos
             for every major feature.
           </p>
         </div>

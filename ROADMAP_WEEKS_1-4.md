@@ -1,5 +1,5 @@
-# ClipForge — Weeks 1–4 Launch Roadmap
-> Branch: `main` · Repo: https://github.com/CStep-EA/clipforge  
+# Klip4ge — Weeks 1–4 Launch Roadmap
+> Branch: `main` · Repo: https://github.com/CStep-EA/klip4ge  
 > Status after commit `16b1937`: **35 suites · 549 tests · 0 failures ✅**
 
 ---
@@ -18,14 +18,14 @@ Favicon: public/favicon.ico (32×32) + public/favicon.svg
 Tool: https://realfavicongenerator.net OR https://maskable.app
 After generating, drop files into public/icons/ and push.
 ```
-**Acceptance**: `npx lighthouse https://clipforge.app --view` → PWA section green icons
+**Acceptance**: `npx lighthouse https://klip4ge.app --view` → PWA section green icons
 
 ---
 
 ### 1.2 Smoke-Test Sign-In on Real iOS/Android Devices  📱
 **Priority**: P0  
 **Steps**:
-1. Open https://clipforge.app on iPhone Safari + Chrome Android
+1. Open https://klip4ge.app on iPhone Safari + Chrome Android
 2. Tap "Continue with Google" → OAuth screen must appear (not error)
 3. Tap "Continue with Apple" → Apple sign-in sheet must appear
 4. Tap "Continue with Email" → input appears, send magic link, check inbox
@@ -39,8 +39,8 @@ After generating, drop files into public/icons/ and push.
 **Priority**: P0  
 **Steps**:
 1. On Android Chrome, open any webpage
-2. Tap browser Share → look for "ClipForge" in the list
-3. Tap ClipForge → app opens at `/ShareTarget` with title+url pre-filled
+2. Tap browser Share → look for "Klip4ge" in the list
+3. Tap Klip4ge → app opens at `/ShareTarget` with title+url pre-filled
 4. Verify AI analysis starts automatically
 5. Tap "Save to Vault" → confirm item in Saves page
 
@@ -65,7 +65,7 @@ After generating, drop files into public/icons/ and push.
 **Priority**: P1  
 **Steps**:
 1. Deploy to Cloudflare Pages (or verify on Base44 production)
-2. `curl -I https://clipforge.app/manifest.json` → must return `Content-Type: application/manifest+json`
+2. `curl -I https://klip4ge.app/manifest.json` → must return `Content-Type: application/manifest+json`
 3. If not: add `_headers` file or Cloudflare Page Rule
 
 ```
@@ -107,7 +107,7 @@ Line 5: Free forever. Premium for $9.99/mo. Your data is never sold.
 ### 2.2 Write Privacy Policy URL & Update Manifest  🔒
 **Priority**: P1 (required for App Store submission)  
 **Steps**:
-1. Publish privacy policy at https://clipforge.app/privacy (already exists as a page)
+1. Publish privacy policy at https://klip4ge.app/privacy (already exists as a page)
 2. In `public/manifest.json` confirm `"related_applications"` points to correct URLs
 3. In Apple submission: Privacy Nutrition Labels → select "Data Not Collected" (if accurate)
 
@@ -118,15 +118,15 @@ Line 5: Free forever. Premium for $9.99/mo. Your data is never sold.
 **Install**:
 ```bash
 npm install -g @bubblewrap/cli
-bubblewrap init --manifest=https://clipforge.app/manifest.json
-# Follow prompts: package name = app.clipforge.app, version = 1
+bubblewrap init --manifest=https://klip4ge.app/manifest.json
+# Follow prompts: package name = app.klip4ge.app, version = 1
 bubblewrap build
 # Output: app-release-signed.apk → upload to Play Console
 ```
 
 **Checklist before submission**:
 - [ ] All icons generated (step 1.1)
-- [ ] `assetlinks.json` at `https://clipforge.app/.well-known/assetlinks.json`
+- [ ] `assetlinks.json` at `https://klip4ge.app/.well-known/assetlinks.json`
 - [ ] Privacy policy URL set
 - [ ] Target API level ≥ 34 (Android 14)
 - [ ] At least 2 screenshots uploaded
@@ -137,7 +137,7 @@ bubblewrap build
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
-    "package_name": "app.clipforge.app",
+    "package_name": "app.klip4ge.app",
     "sha256_cert_fingerprints": ["YOUR_CERT_FINGERPRINT"]
   }
 }]
@@ -148,11 +148,11 @@ bubblewrap build
 ### 2.4 Set Up TestFlight Build (iOS)  🍎
 **Priority**: P1  
 **Options** (pick one):
-- **PWABuilder** (easiest): https://www.pwabuilder.com → paste clipforge.app → iOS package → download Xcode project
+- **PWABuilder** (easiest): https://www.pwabuilder.com → paste klip4ge.app → iOS package → download Xcode project
 - **Capacitor** (more control): `npm install @capacitor/core @capacitor/ios` → `npx cap add ios`
 
 **Xcode checklist**:
-- [ ] Bundle ID: `app.clipforge.app`
+- [ ] Bundle ID: `app.klip4ge.app`
 - [ ] Sign in with Apple capability added
 - [ ] App Transport Security: HTTPS only
 - [ ] Icon set: AppIcon (1024×1024 required)
@@ -163,7 +163,7 @@ bubblewrap build
 ### 2.5 Lighthouse PWA Audit ≥ 90  ⚡
 **Priority**: P1  
 ```bash
-npx lighthouse https://clipforge.app --only-categories=pwa --output=html --output-path=./lighthouse-pwa.html
+npx lighthouse https://klip4ge.app --only-categories=pwa --output=html --output-path=./lighthouse-pwa.html
 open lighthouse-pwa.html
 ```
 **Common fixes needed**:
@@ -181,7 +181,7 @@ open lighthouse-pwa.html
 **Current state**: `base44.auth.redirectToLogin({ provider: 'instagram' })` is a stub  
 **Steps**:
 1. Go to [Meta for Developers](https://developers.facebook.com) → create Instagram app
-2. Set OAuth redirect URI: `https://clipforge.app/api/auth/instagram/callback`
+2. Set OAuth redirect URI: `https://klip4ge.app/api/auth/instagram/callback`
 3. Request `instagram_basic` + `instagram_manage_insights` permissions
 4. In Base44 dashboard: Auth → OAuth Providers → Add Instagram → paste App ID + Secret
 5. After callback, store `access_token` server-side via Base44 entity `UserIntegration`
@@ -245,7 +245,7 @@ grep -rn "<button" src/components --include="*.jsx" | grep -v "aria-label\|aria-
 1. "Sign in with your Google account"
 2. "Save this recipe link" (give them a URL)
 3. "Find your saved item and share it with a family member"
-4. "Look at what ClipForge thinks this is" (show AI category)
+4. "Look at what Klip4ge thinks this is" (show AI category)
 
 **Measure**: Time to complete each task, number of hesitations, any "what does this mean?" moments  
 **Target**: Each task < 60 seconds with zero assistance
@@ -272,17 +272,17 @@ grep -rn "<button" src/components --include="*.jsx" | grep -v "aria-label\|aria-
 ```
 User-agent: *
 Allow: /
-Sitemap: https://clipforge.app/sitemap.xml
+Sitemap: https://klip4ge.app/sitemap.xml
 ```
 **`public/sitemap.xml`**:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://clipforge.app/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://clipforge.app/pricing</loc></url>
-  <url><loc>https://clipforge.app/about</loc></url>
-  <url><loc>https://clipforge.app/privacy</loc></url>
-  <url><loc>https://clipforge.app/terms</loc></url>
+  <url><loc>https://klip4ge.app/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://klip4ge.app/pricing</loc></url>
+  <url><loc>https://klip4ge.app/about</loc></url>
+  <url><loc>https://klip4ge.app/privacy</loc></url>
+  <url><loc>https://klip4ge.app/terms</loc></url>
 </urlset>
 ```
 
@@ -305,7 +305,7 @@ reg.addEventListener('updatefound', () => {
   reg.installing?.addEventListener('statechange', e => {
     if (e.target.state === 'installed' && navigator.serviceWorker.controller) {
       // Show a toast: "New version available — refresh?"
-      console.log('[ClipForge] New version available');
+      console.log('[Klip4ge] New version available');
     }
   });
 });
@@ -344,8 +344,8 @@ jobs:
 | **W4** | User testing, robots/sitemap, CI | ~6 hrs | Growth + SEO |
 
 ## 🔗 Quick Links
-- **Repo**: https://github.com/CStep-EA/clipforge
-- **Live App**: https://clipforge.app  
+- **Repo**: https://github.com/CStep-EA/klip4ge
+- **Live App**: https://klip4ge.app  
 - **Base44 Dashboard**: https://base44.com/dashboard
 - **PWA Builder**: https://www.pwabuilder.com
 - **Bubblewrap CLI**: https://github.com/GoogleChromeLabs/bubblewrap
@@ -353,4 +353,4 @@ jobs:
 - **Maskable App**: https://maskable.app
 
 ---
-*Generated by ClipForge AI DevOps · Commit `16b1937` · 2026-03-02*
+*Generated by Klip4ge AI DevOps · Commit `16b1937` · 2026-03-02*

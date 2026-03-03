@@ -6,11 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Send, Sparkles, Loader2, Bot, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
-const SYSTEM_CONTEXT = `You are ClipForge's internal AI assistant for admin users. You help admins understand app metrics, draft support responses, suggest product improvements, and answer questions about the platform. ClipForge is a social media content saving & AI organization app with features: social connects (Instagram, Facebook, Pinterest, Twitter, TikTok), AI summaries, shared boards, shopping lists, events, freemium plans (free/pro/premium). Be concise, helpful, and professional.`;
+const SYSTEM_CONTEXT = `You are Klip4ge's internal AI assistant for admin users. You help admins understand app metrics, draft support responses, suggest product improvements, and answer questions about the platform. Klip4ge is a social media content saving & AI organization app with features: social connects (Instagram, Facebook, Pinterest, Twitter, TikTok), AI summaries, shared boards, shopping lists, events, freemium plans (free/pro/premium). Be concise, helpful, and professional.`;
 
 export default function AdminChatbot() {
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Hi! I'm your ClipForge admin assistant. Ask me anything — user trends, feature ideas, support templates, or product strategy. 🚀" }
+    { role: "assistant", content: "Hi! I'm your Klip4ge admin assistant. Ask me anything — user trends, feature ideas, support templates, or product strategy. 🚀" }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -45,7 +45,7 @@ export default function AdminChatbot() {
           <Sparkles className="w-4 h-4 text-white" />
         </div>
         <div>
-          <p className="text-sm font-semibold">ClipForge Admin AI</p>
+          <p className="text-sm font-semibold">Klip4ge Admin AI</p>
           <p className="text-[10px] text-[#8B8D97]">Your internal product & support assistant</p>
         </div>
       </div>
@@ -103,7 +103,7 @@ export default function AdminChatbot() {
 
       <div className="p-4 border-t border-[#2A2D3A] flex gap-2">
         <Input
-          placeholder="Ask anything about ClipForge..."
+          placeholder="Ask anything about Klip4ge..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}

@@ -17,12 +17,12 @@ describe('PWA manifest.json', () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const manifest = require('../../public/manifest.json');
 
-  it('name is ClipForge', () => {
-    expect(manifest.name).toBe('ClipForge');
+  it('name is Klip4ge', () => {
+    expect(manifest.name).toBe('Klip4ge');
   });
 
-  it('short_name is ClipForge', () => {
-    expect(manifest.short_name).toBe('ClipForge');
+  it('short_name is Klip4ge', () => {
+    expect(manifest.short_name).toBe('Klip4ge');
   });
 
   it('display is standalone', () => {
@@ -177,8 +177,8 @@ describe('index.html PWA meta', () => {
     html = fs.readFileSync(htmlPath, 'utf8');
   });
 
-  it('title is ClipForge (not Base44 APP)', () => {
-    expect(html).toContain('ClipForge');
+  it('title is Klip4ge (not Base44 APP)', () => {
+    expect(html).toContain('Klip4ge');
     expect(html).not.toContain('Base44 APP');
   });
 

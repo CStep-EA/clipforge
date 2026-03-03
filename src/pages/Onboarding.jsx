@@ -152,7 +152,7 @@ function StepMonitoring({ onNext }) {
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-black tracking-tight">Feedback monitoring</h1>
         <p className="text-sm font-bold uppercase tracking-widest text-[#F59E0B]">Stay in the loop</p>
-        <p className="text-sm text-[#8B8D97] leading-relaxed">ClipForge can monitor mentions of your brand or keywords across the web and surface insights for you.</p>
+        <p className="text-sm text-[#8B8D97] leading-relaxed">Klip4ge can monitor mentions of your brand or keywords across the web and surface insights for you.</p>
       </div>
 
       {/* Opt-in toggle */}
@@ -200,7 +200,7 @@ function StepMonitoring({ onNext }) {
 const INFO_STEPS = [
   {
     id: "welcome", icon: Zap, accent: "#00BFFF",
-    title: "Welcome to ClipForge! ⚡", subtitle: "Your AI-powered digital vault",
+    title: "Welcome to Klip4ge! ⚡", subtitle: "Your AI-powered digital vault",
     description: "Save anything from the web and social media. AI automatically categorizes, summarizes, and helps you rediscover your saves.",
     action: "Get Started",
   },
@@ -219,7 +219,7 @@ const INFO_STEPS = [
   {
     id: "shopping", icon: ShoppingCart, accent: "#10B981",
     title: "Recipes → Shopping lists", subtitle: "Auto-generated grocery lists",
-    description: "Save a recipe, and ClipForge AI automatically extracts every ingredient into a shareable shopping list.",
+    description: "Save a recipe, and Klip4ge AI automatically extracts every ingredient into a shareable shopping list.",
     action: "Amazing!",
   },
   {

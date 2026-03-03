@@ -63,8 +63,8 @@ It looks like you haven't purchased tickets yet. Don't miss out!
 
 👉 Get Tickets: ${buyLink}
 
-You're receiving this because you enabled reminders in ClipForge.
-To turn off reminders, open the event in ClipForge and disable them.
+You're receiving this because you enabled reminders in Klip4ge.
+To turn off reminders, open the event in Klip4ge and disable them.
       `.trim();
 
       await base44.asServiceRole.integrations.Core.SendEmail({ to: email, subject, body });

@@ -26,7 +26,7 @@ export default function AdminTickets() {
   const handleAIDraft = async (ticket) => {
     setGenerating(true);
     const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are a friendly support agent for ClipForge, a social media content saving & organization app. Draft a helpful, empathetic response to this support ticket:
+      prompt: `You are a friendly support agent for Klip4ge, a social media content saving & organization app. Draft a helpful, empathetic response to this support ticket:
 
 Subject: ${ticket.subject}
 Category: ${ticket.category}

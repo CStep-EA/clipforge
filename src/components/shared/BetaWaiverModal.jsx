@@ -33,13 +33,13 @@ export default function BetaWaiverModal() {
         </div>
 
         <div className="space-y-3 text-sm text-[#8B8D97] leading-relaxed">
-          <p>ClipForge is <strong className="text-[#F59E0B]">pre-release software</strong>. By continuing you agree:</p>
+          <p>Klip4ge is <strong className="text-[#F59E0B]">pre-release software</strong>. By continuing you agree:</p>
           <ul className="space-y-1.5 pl-4">
             {[
               "This software is provided \"as-is\" with no warranty of any kind.",
               "Features may change or be removed without notice.",
-              "Data loss is possible — do not rely solely on ClipForge for important content.",
-              "You will not hold ClipForge or its team liable for any loss or damage.",
+              "Data loss is possible — do not rely solely on Klip4ge for important content.",
+              "You will not hold Klip4ge or its team liable for any loss or damage.",
               "Uptime and reliability are not guaranteed during beta.",
             ].map((item, i) => (
               <li key={i} className="flex items-start gap-2">
@@ -61,7 +61,7 @@ export default function BetaWaiverModal() {
           className="w-full bg-[#F59E0B] hover:bg-[#F59E0B]/90 text-black font-bold gap-2"
         >
           <CheckCircle2 className="w-4 h-4" />
-          I Understand — Continue to ClipForge
+          I Understand — Continue to Klip4ge
         </Button>
       </div>
     </div>

@@ -49,9 +49,9 @@ beforeEach(() => {
 // ── Render tests ─────────────────────────────────────────────────────────────
 
 describe('SignIn – render', () => {
-  it('renders ClipForge brand name', () => {
+  it('renders Klip4ge brand name', () => {
     renderSignIn();
-    expect(screen.getByText('ClipForge')).toBeInTheDocument();
+    expect(screen.getByText('Klip4ge')).toBeInTheDocument();
   });
 
   it('renders tagline', () => {

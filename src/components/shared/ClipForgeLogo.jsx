@@ -2,11 +2,11 @@ import React from "react";
 import { motion } from "framer-motion";
 
 /**
- * ClipForge polygonal vault with inner diamond/lock + animated AI sparks.
+ * Klip4ge polygonal vault with inner diamond/lock + animated AI sparks.
  *
  * size     : number (px) — icon dimensions. Presets: sm=24, md=36, lg=48
  * variant  : "default" | "mono" | "spin" | "loading" | "hover" | "morph"
- * showText : boolean — render "ClipForge" gradient text beside icon
+ * showText : boolean — render "Klip4ge" gradient text beside icon
  * className: string
  */
 export default function ClipForgeLogo({ size = 36, variant = "default", showText = false, className = "" }) {
@@ -36,7 +36,7 @@ export default function ClipForgeLogo({ size = 36, variant = "default", showText
     <div className={`flex items-center gap-2 select-none ${className}`} style={{ lineHeight: 1 }}>
       <motion.svg
         role="img"
-        aria-label="ClipForge Logo"
+        aria-label="Klip4ge Logo"
         width={size}
         height={size}
         viewBox="0 0 96 96"
@@ -191,7 +191,7 @@ export default function ClipForgeLogo({ size = 36, variant = "default", showText
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.35, delay: 0.15 }}
         >
-          ClipForge
+          Klip4ge
         </motion.span>
       )}
     </div>

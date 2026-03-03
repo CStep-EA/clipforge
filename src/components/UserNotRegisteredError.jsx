@@ -15,7 +15,7 @@ const UserNotRegisteredError = () => {
         </div>
         <h1 className="text-2xl font-black text-[#E8E8ED]">Access Restricted</h1>
         <p className="text-sm text-[#8B8D97]">
-          You are not registered to use ClipForge. Please contact the administrator to request access.
+          You are not registered to use Klip4ge. Please contact the administrator to request access.
         </p>
         <div className="p-4 bg-[#0F1117] rounded-xl border border-[#2A2D3A] text-left text-xs text-[#8B8D97] space-y-1">
           <p className="font-semibold text-[#E8E8ED] mb-2">Try these steps:</p>

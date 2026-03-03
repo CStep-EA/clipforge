@@ -24,7 +24,7 @@ const AuthenticatedApp = () => {
     return (
       <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#0F1117] gap-4">
         <div className="w-10 h-10 border-4 border-[#2A2D3A] border-t-[#00BFFF] rounded-full animate-spin" />
-        <p className="text-sm text-[#8B8D97]">Loading ClipForge…</p>
+        <p className="text-sm text-[#8B8D97]">Loading Klip4ge…</p>
       </div>
     );
   }

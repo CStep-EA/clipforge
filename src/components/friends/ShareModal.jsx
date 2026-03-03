@@ -271,7 +271,7 @@ export default function ShareModal({ open, onOpenChange, item, type = "save", pl
         {tierCfg.hasAds && (
           <div className="p-2.5 rounded-lg bg-amber-500/5 border border-amber-500/20">
             <p className="text-[10px] text-amber-400">
-              ℹ️ Free plan: shared pages include ClipForge ads. <a href="/Pricing" className="underline">Upgrade to Pro</a> for ad-free shares.
+              ℹ️ Free plan: shared pages include Klip4ge ads. <a href="/Pricing" className="underline">Upgrade to Pro</a> for ad-free shares.
             </p>
           </div>
         )}

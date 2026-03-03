@@ -7,7 +7,7 @@
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
 
     <!-- ── Viewport – disable user-scalable for app feel ─ -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 
     <!-- ── PWA manifest ────────────────────────────────── -->
     <link rel="manifest" href="/manifest.json" />
@@ -16,23 +16,29 @@
     <meta name="theme-color" content="#0F1117" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="ClipForge" />
+    <meta name="apple-mobile-web-app-title" content="Klip4ge" />
     <meta name="mobile-web-app-capable" content="yes" />
 
+    <!-- ── Android TWA / WebView hints ────────────────── -->
+    <!-- Disable overscroll navigation (back/forward swipe) -->
+    <meta name="google" content="notranslate" />
+    <!-- Instruct Chrome on Android to use the manifest color for status bar -->
+    <meta name="msapplication-navbutton-color" content="#0F1117" />
+
     <!-- ── SEO & social ────────────────────────────────── -->
-    <title>ClipForge – Save smarter. Share better. Live together.</title>
-    <meta name="description" content="ClipForge is the AI-powered personal and family save organiser. Collect, organise, and share what you love — from any platform, in one place." />
+    <title>Klip4ge – Save smarter. Share better. Live together.</title>
+    <meta name="description" content="Klip4ge is the AI-powered personal and family save organiser. Collect, organise, and share what you love — from any platform, in one place." />
 
     <!-- Open Graph -->
-    <meta property="og:title" content="ClipForge – Save smarter. Share better." />
+    <meta property="og:title" content="Klip4ge – Save smarter. Share better." />
     <meta property="og:description" content="AI-powered personal and family save organiser." />
     <meta property="og:image" content="/icons/og-image.png" />
-    <meta property="og:url" content="https://clipforge.app" />
+    <meta property="og:url" content="https://klip4ge.app" />
     <meta property="og:type" content="website" />
 
     <!-- Twitter card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ClipForge" />
+    <meta name="twitter:title" content="Klip4ge" />
     <meta name="twitter:description" content="Save smarter. Share better. Live together." />
     <meta name="twitter:image" content="/icons/og-image.png" />
   </head>

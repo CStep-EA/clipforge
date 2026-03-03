@@ -15,7 +15,7 @@ import { toast } from "sonner";
 const PLATFORMS = [
   {
     id: "instagram", name: "Instagram", emoji: "📸", color: "#E1306C",
-    description: "Find followers & followees who also use ClipForge",
+    description: "Find followers & followees who also use Klip4ge",
     note: "We only read your public follower list. We never post on your behalf.",
     available: true,
   },
@@ -27,7 +27,7 @@ const PLATFORMS = [
   },
   {
     id: "twitter", name: "X / Twitter", emoji: "🐦", color: "#1DA1F2",
-    description: "Match Twitter followers to ClipForge accounts",
+    description: "Match Twitter followers to Klip4ge accounts",
     note: "Read-only: public followers/following list.",
     available: true,
   },
@@ -45,7 +45,7 @@ const PLATFORMS = [
   },
   {
     id: "youtube", name: "YouTube", emoji: "▶️", color: "#FF0000",
-    description: "Match subscriptions to ClipForge creators",
+    description: "Match subscriptions to Klip4ge creators",
     note: "Channel subscriptions only — history never accessed.",
     available: false, // coming soon
   },
@@ -83,7 +83,7 @@ export default function FindFriendsPanel({ user, plan = "free" }) {
 
     // Simulate follower discovery via AI (real OAuth would use a backend function)
     const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Generate 4-6 realistic mock friend suggestions for a user who connected their ${platform.name} account to a content-saving app called ClipForge. Return JSON with an array of objects: { name, username, platform, mutual_interests, email_hint }. Use plausible but fictional names.`,
+      prompt: `Generate 4-6 realistic mock friend suggestions for a user who connected their ${platform.name} account to a content-saving app called Klip4ge. Return JSON with an array of objects: { name, username, platform, mutual_interests, email_hint }. Use plausible but fictional names.`,
       response_json_schema: {
         type: "object",
         properties: {
@@ -134,7 +134,7 @@ export default function FindFriendsPanel({ user, plan = "free" }) {
           <Search className="w-4 h-4 text-[#00BFFF]" /> Find Friends via Social Platforms
         </h3>
         <p className="text-xs text-[#8B8D97]">
-          Connect a platform to discover followers who are already on ClipForge. We only request read-only access with your consent.
+          Connect a platform to discover followers who are already on Klip4ge. We only request read-only access with your consent.
         </p>
       </div>
 

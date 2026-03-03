@@ -3,7 +3,7 @@
  *
  * Route: /share-target  (registered in manifest.json share_target.action)
  * Triggered by:
- *   - Android Chrome "Share to ClipForge" from any app
+ *   - Android Chrome "Share to Klip4ge" from any app
  *   - iOS "share-ios.html" redirect
  *   - Direct URL: /?share=1&title=...&url=...
  *
@@ -122,7 +122,7 @@ export default function ShareTarget() {
         <div className="flex items-center gap-3 mb-2">
           <ClipForgeLogo size={40} showText={false} />
           <div>
-            <h1 className="text-lg font-bold text-[#E8E8ED]">Save to ClipForge</h1>
+            <h1 className="text-lg font-bold text-[#E8E8ED]">Save to Klip4ge</h1>
             <p className="text-xs text-[#8B8D97]">AI is analysing your share…</p>
           </div>
         </div>

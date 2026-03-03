@@ -8,29 +8,29 @@ const sections = [
     icon: AlertTriangle,
     title: "Alpha / Beta Software — Tester Agreement",
     color: "#F59E0B",
-    content: `ClipForge is currently in alpha/beta ("early access"). By using ClipForge during this period you explicitly acknowledge and agree:
+    content: `Klip4ge is currently in alpha/beta ("early access"). By using Klip4ge during this period you explicitly acknowledge and agree:
 
 • THIS IS PRE-RELEASE SOFTWARE provided "as-is", with no warranty of any kind, express or implied.
 • Features may be incomplete, change without notice, or be removed entirely.
-• Data loss is possible. You should not rely on ClipForge as your sole copy of important content.
+• Data loss is possible. You should not rely on Klip4ge as your sole copy of important content.
 • Uptime and reliability are NOT guaranteed during alpha/beta.
-• You will NOT hold ClipForge, its founders, employees, contractors, or affiliates liable for any loss, damage, or harm arising from your use of this software during the early-access period.
+• You will NOT hold Klip4ge, its founders, employees, contractors, or affiliates liable for any loss, damage, or harm arising from your use of this software during the early-access period.
 • Your feedback may be used to improve the product without compensation.
-• Early-access pricing is subject to change when ClipForge reaches general availability.
+• Early-access pricing is subject to change when Klip4ge reaches general availability.
 
 BY CONTINUING TO USE CLIPFORGE YOU CONFIRM YOU HAVE READ, UNDERSTOOD, AND AGREED TO THIS TESTER AGREEMENT.`
   },
   {
     icon: FileText,
     title: "Acceptance of Terms",
-    content: `By accessing or using ClipForge, you agree to be bound by these Terms of Service. If you do not agree, do not use the service.
+    content: `By accessing or using Klip4ge, you agree to be bound by these Terms of Service. If you do not agree, do not use the service.
 
 These terms apply to all users, including those on free and paid plans. We reserve the right to update these terms with 30 days notice.`
   },
   {
     icon: CreditCard,
     title: "Subscriptions & Billing",
-    content: `ClipForge offers the following plans:
+    content: `Klip4ge offers the following plans:
 • Free: Limited saves, basic features
 • Pro ($7.99/mo): Unlimited saves, AI research, friends
 • Premium ($14.99/mo): All Pro features + streaming integrations, advanced AI
@@ -44,7 +44,7 @@ Payments are processed by Stripe. We do not store payment card information.`
     icon: FileText,
     title: "Acceptable Use",
     content: `You agree not to:
-• Use ClipForge for illegal purposes or to distribute harmful content
+• Use Klip4ge for illegal purposes or to distribute harmful content
 • Attempt to reverse-engineer, scrape, or abuse the API
 • Share account credentials with others (except via legitimate Family plan)
 • Use automated tools to bulk-save content without consent
@@ -55,30 +55,30 @@ We reserve the right to suspend accounts that violate these terms.`
   {
     icon: AlertTriangle,
     title: "AI-Generated Content & No Professional Advice",
-    content: `ClipForge uses AI to generate summaries, reviews, and recommendations. This content is:
+    content: `Klip4ge uses AI to generate summaries, reviews, and recommendations. This content is:
 • Provided "as-is" for informational purposes only
 • NOT professional legal, medical, financial, dietary, or investment advice
 • Subject to AI limitations and may contain inaccuracies
 • Not a substitute for professional consultation
 
-ClipForge expressly disclaims any liability for decisions made based on AI-generated content. Always consult a qualified professional for medical, legal, or financial matters.`
+Klip4ge expressly disclaims any liability for decisions made based on AI-generated content. Always consult a qualified professional for medical, legal, or financial matters.`
   },
   {
     icon: Baby,
     title: "Children's Privacy (COPPA)",
-    content: `ClipForge is not directed at children under the age of 13.
+    content: `Klip4ge is not directed at children under the age of 13.
 
 • We do not knowingly collect personal information from children under 13 without verifiable parental consent
 • Family plan child accounts require a parent or guardian to create and manage the account
-• Parents may review, update, or request deletion of a child's data at any time via the Family Management panel or by contacting privacy@clipforge.app
+• Parents may review, update, or request deletion of a child's data at any time via the Family Management panel or by contacting privacy@klip4ge.app
 • If we discover we have inadvertently collected data from a child under 13, we will delete it promptly
 
-For questions about children's privacy, email privacy@clipforge.app`
+For questions about children's privacy, email privacy@klip4ge.app`
   },
   {
     icon: Scale,
     title: "Limitation of Liability",
-    content: `ClipForge is provided "as is" without warranties of any kind. To the maximum extent permitted by law:
+    content: `Klip4ge is provided "as is" without warranties of any kind. To the maximum extent permitted by law:
 • We are not liable for indirect, incidental, or consequential damages
 • Our total liability shall not exceed the amount you paid us in the last 12 months
 • We are not responsible for third-party content saved through our service
@@ -89,9 +89,9 @@ For questions about children's privacy, email privacy@clipforge.app`
     title: "Governing Law & Arbitration",
     content: `These terms are governed by the laws of the State of Delaware, USA.
 
-ARBITRATION CLAUSE: Any dispute, claim, or controversy arising out of or relating to these Terms or the use of ClipForge shall be resolved by binding individual arbitration administered by JAMS under its Streamlined Arbitration Rules, except:
+ARBITRATION CLAUSE: Any dispute, claim, or controversy arising out of or relating to these Terms or the use of Klip4ge shall be resolved by binding individual arbitration administered by JAMS under its Streamlined Arbitration Rules, except:
 • Either party may seek injunctive relief in court for IP infringement or misappropriation.
-• You may opt out of arbitration within 30 days of first account creation by emailing legal@clipforge.app.
+• You may opt out of arbitration within 30 days of first account creation by emailing legal@klip4ge.app.
 
 CLASS ACTION WAIVER: You agree to resolve disputes individually. You waive any right to bring or participate in a class action or consolidated proceeding.
 
@@ -139,7 +139,7 @@ export default function Terms() {
         <span>·</span>
         <Link to={createPageUrl("Support")} className="hover:text-[#00BFFF]">Support</Link>
         <span>·</span>
-        <span>© 2026 ClipForge</span>
+        <span>© 2026 Klip4ge</span>
       </div>
     </div>
   );

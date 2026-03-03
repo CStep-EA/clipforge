@@ -1,6 +1,6 @@
-# ClipForge PWA Icons — Required Files
+# Klip4ge PWA Icons — Required Files
 
-Generate all icons from the master SVG `/src/assets/clipforge-logo.svg`
+Generate all icons from the master SVG `/src/assets/klip4ge-logo.svg`
 (or export from Figma) at 1x resolution, then export to PNG.
 
 ## ⚡ Quick Generation (Sharp CLI — recommended)
@@ -10,7 +10,7 @@ Generate all icons from the master SVG `/src/assets/clipforge-logo.svg`
 npm install -g sharp-cli
 
 # 2. Place your 1024×1024 source PNG at the repo root as logo.png
-#    (export from Figma or use Inkscape: inkscape -w 1024 -h 1024 src/assets/clipforge-logo.svg -o logo.png)
+#    (export from Figma or use Inkscape: inkscape -w 1024 -h 1024 src/assets/klip4ge-logo.svg -o logo.png)
 
 # 3. Run the generator script
 bash scripts/generate-icons.sh
@@ -54,7 +54,7 @@ for SIZE in 72 96 128 144 152 192 384 512; do
 done
 
 # Maskable icon — 410×410 content + 51px padding on each side = 512px total
-# Background fill = #0F1117 (ClipForge dark)
+# Background fill = #0F1117 (Klip4ge dark)
 sharp -i "$SRC" -o "$OUT/icon-512-maskable.png" \
   resize 410 410 \
   extend 51 51 51 51 \
@@ -79,7 +79,7 @@ echo "✅  shortcut-save.png  shortcut-vault.png"
 
 echo ""
 echo "🎉 All icons generated in $OUT/"
-echo "Run: npx lighthouse https://clipforge.app --only-categories=pwa --output=html"
+echo "Run: npx lighthouse https://klip4ge.app --only-categories=pwa --output=html"
 ```
 
 ## 🔗 Online Tools (no-code alternative)
@@ -94,11 +94,11 @@ echo "Run: npx lighthouse https://clipforge.app --only-categories=pwa --output=h
 
 After placing all icons, run:
 ```bash
-npx lighthouse https://clipforge.app --only-categories=pwa --output=html --output-path=./lighthouse-pwa.html
+npx lighthouse https://klip4ge.app --only-categories=pwa --output=html --output-path=./lighthouse-pwa.html
 open lighthouse-pwa.html
 ```
 
 Expected: PWA section → all checks green, score ≥ 90.
 
 ---
-*Last updated: 2026-03-02 · ClipForge commit `16b1937`*
+*Last updated: 2026-03-02 · Klip4ge commit `16b1937`*

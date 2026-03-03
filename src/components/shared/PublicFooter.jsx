@@ -20,7 +20,7 @@ export default function PublicFooter() {
           {l.label}
         </Link>
       ))}
-      <span className="w-full text-center mt-1">© 2026 ClipForge</span>
+      <span className="w-full text-center mt-1">© 2026 Klip4ge</span>
     </div>
   );
 }

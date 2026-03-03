@@ -119,9 +119,12 @@ describe('SavedItemCard', () => {
       <SavedItemCard item={baseItem} onToggleFavorite={jest.fn()} onDelete={jest.fn()} onEdit={jest.fn()} onShare={jest.fn()} />,
       { wrapper: makeWrapper() }
     );
-    // ExternalLink icon should be wrapped in an <a> tag pointing to the item URL
-    const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('href', 'https://dealsite.com/mineral-mix');
+    // Card now renders multiple <a> links (title, external link button, card role=link)
+    // Verify at least one link points to the item URL
+    const links = screen.getAllByRole('link');
+    const matchingLink = links.find(l => l.getAttribute('href') === 'https://dealsite.com/mineral-mix');
+    expect(matchingLink).toBeTruthy();
+    expect(matchingLink).toHaveAttribute('href', 'https://dealsite.com/mineral-mix');
   });
 
   it('calls onShare when the Share button is clicked', async () => {

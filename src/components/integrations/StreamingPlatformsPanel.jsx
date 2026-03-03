@@ -324,13 +324,13 @@ export default function StreamingPlatformsPanel() {
                 Connect {selectedPlatform.name}
               </DialogTitle>
               <DialogDescription className="text-xs text-[#8B8D97]">
-                ClipForge will securely request read-only access to your {selectedPlatform.name} account via OAuth.
+                Klip4ge will securely request read-only access to your {selectedPlatform.name} account via OAuth.
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4">
               <div className="p-3 rounded-xl bg-[#0F1117] border border-[#2A2D3A] space-y-2">
-                <p className="text-xs font-semibold text-[#E8E8ED]">ClipForge will access:</p>
+                <p className="text-xs font-semibold text-[#E8E8ED]">Klip4ge will access:</p>
                 <ul className="space-y-1">
                   {selectedPlatform.features.map(f => (
                     <li key={f} className="text-xs text-[#8B8D97] flex items-center gap-2">

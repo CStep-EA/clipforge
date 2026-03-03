@@ -191,7 +191,7 @@ export default function Dashboard() {
         <div>
           <div className="flex items-center gap-3 mb-1">
             <ClipForgeLogo size={32} variant="loading" />
-            <h1 className="text-2xl md:text-3xl font-black tracking-tight gradient-text">ClipForge</h1>
+            <h1 className="text-2xl md:text-3xl font-black tracking-tight gradient-text">Klip4ge</h1>
           </div>
           <p className="text-[#8B8D97] text-sm">
             Welcome back{user?.full_name ? `, ${user.full_name.split(" ")[0]}` : ""}
@@ -402,7 +402,7 @@ export default function Dashboard() {
             <div className="flex items-center gap-3">
               <ClipForgeLogo size={28} variant="default" />
               <div>
-                <p className="text-sm font-black uppercase tracking-wide gradient-text">Unlock ClipForge Pro</p>
+                <p className="text-sm font-black uppercase tracking-wide gradient-text">Unlock Klip4ge Pro</p>
                 <p className="text-xs text-[#8B8D97]">Unlimited saves · AI research · No ads — from $7.99/mo</p>
               </div>
             </div>

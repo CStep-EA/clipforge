@@ -169,3 +169,91 @@
 }
 .animate-pulse-glow      { animation: pulse-glow 3s ease-in-out infinite; }
 .animate-pulse-glow-pink { animation: pulse-glow-pink 3s ease-in-out infinite; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ANDROID / PWA / TWA READINESS
+   Fixes overscroll glow, sticky headers, system gestures, pull-to-refresh,
+   and text/element selection in standalone / TWA mode.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* 1. Disable native Android overscroll "glow" effect on the root scroll container */
+html, body {
+  overscroll-behavior: none;           /* kills edge-glow + pull-to-refresh in TWA */
+  -webkit-overflow-scrolling: touch;   /* smooth momentum scroll on iOS */
+  touch-action: pan-y;                 /* allow vertical panning, block horizontal swipe nav */
+}
+
+/* 2. Individual scroll containers — keep per-element overscroll contained */
+.scroll-container,
+.overflow-y-auto,
+.overflow-y-scroll {
+  overscroll-behavior-y: contain;
+}
+
+/* 3. Prevent text selection on interactive / navigational chrome */
+nav,
+header,
+.no-select,
+[data-no-select] {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;  /* removes Android tap flash */
+}
+
+/* 4. Allow selection only in editable / content areas */
+input, textarea, [contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* 5. Sticky navigation — add safe-area inset + prevent overlap with system bars */
+.sticky-top {
+  position: sticky;
+  top: 0;
+  top: env(safe-area-inset-top, 0px);   /* respect Android status bar */
+  z-index: 40;
+}
+
+/* 6. Bottom-nav / fixed footers — above Android home-indicator */
+.fixed-bottom,
+.mobile-nav,
+[data-bottom-nav] {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* 7. Full-height layout in TWA (avoids address-bar gap on web fallback) */
+.app-shell {
+  min-height: 100dvh;   /* dynamic viewport height — collapses browser UI */
+  min-height: 100svh;   /* small viewport fallback */
+}
+
+/* 8. Disable iOS/Android long-press context menu on images and links in card UI */
+.saved-item-card img,
+.saved-item-card a {
+  -webkit-touch-callout: none;
+}
+
+/* 9. Smooth page transitions (reduces jank on back-stack navigation in TWA) */
+@media (prefers-reduced-motion: no-preference) {
+  .page-transition-enter {
+    animation: page-fade-in 0.18s ease-out both;
+  }
+}
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 10. Dropdown / popover — GPU layer promotion prevents clipping in TWA WebView */
+[data-radix-popper-content-wrapper],
+[data-radix-select-content],
+[data-radix-dropdown-menu-content] {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* 11. Disable Android's default pull-to-refresh gesture across the whole app */
+body {
+  overscroll-behavior-y: none;
+}
+

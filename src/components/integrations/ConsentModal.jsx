@@ -33,7 +33,7 @@ export default function ConsentModal({ open, onClose, onAccept, platform }) {
 
         <div className="space-y-4 py-2">
           <p className="text-sm text-[#8B8D97]">
-            To connect <strong className="text-[#E8E8ED]">{platform.name}</strong>, ClipForge will read the following data using your API token:
+            To connect <strong className="text-[#E8E8ED]">{platform.name}</strong>, Klip4ge will read the following data using your API token:
           </p>
 
           <ul className="space-y-2">

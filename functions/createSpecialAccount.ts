@@ -63,8 +63,8 @@ Deno.serve(async (req) => {
       const typeLabel = account_type === 'development' ? 'internal development' : 'complimentary gift';
       await base44.asServiceRole.integrations.Core.SendEmail({
         to: email,
-        subject: `🎉 Your ClipForge ${tierLabel} access is ready`,
-        body: `Hi ${full_name || 'there'},\n\nYou've been granted ${typeLabel} access to ClipForge ${tierLabel}!\n\nYou can log in at any time at https://app.clipforge.com — your account is already set up and ready to use.\n\n${account_type === 'development' ? 'This is an internal development account with full feature access.' : 'Enjoy your complimentary access — no payment required!'}\n\n${notes ? `Note: ${notes}\n\n` : ''}— The ClipForge Team`,
+        subject: `🎉 Your Klip4ge ${tierLabel} access is ready`,
+        body: `Hi ${full_name || 'there'},\n\nYou've been granted ${typeLabel} access to Klip4ge ${tierLabel}!\n\nYou can log in at any time at https://app.klip4ge.com — your account is already set up and ready to use.\n\n${account_type === 'development' ? 'This is an internal development account with full feature access.' : 'Enjoy your complimentary access — no payment required!'}\n\n${notes ? `Note: ${notes}\n\n` : ''}— The Klip4ge Team`,
       });
 
       await base44.asServiceRole.entities.SpecialAccount.update(specialAccount.id, { welcome_email_sent: true });

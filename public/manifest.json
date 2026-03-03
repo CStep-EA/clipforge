@@ -1,6 +1,6 @@
 {
-  "name": "ClipForge",
-  "short_name": "ClipForge",
+  "name": "Klip4ge",
+  "short_name": "Klip4ge",
   "description": "Save smarter. Share better. Live together.",
   "start_url": "/",
   "display": "standalone",
@@ -36,7 +36,21 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "ClipForge Dashboard"
+      "label": "Klip4ge Dashboard — Your save vault at a glance"
+    },
+    {
+      "src": "/screenshots/saves.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Saves — Browse and manage all your saved items"
+    },
+    {
+      "src": "/screenshots/search.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "AI Search — Find anything instantly"
     },
     {
       "src": "/screenshots/saves-mobile.png",
@@ -78,12 +92,12 @@
   "related_applications": [
     {
       "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=app.clipforge.app",
-      "id": "app.clipforge.app"
+      "url": "https://play.google.com/store/apps/details?id=app.klip4ge.app",
+      "id": "app.klip4ge.app"
     },
     {
       "platform": "itunes",
-      "url": "https://apps.apple.com/app/clipforge/id0000000000"
+      "url": "https://apps.apple.com/app/klip4ge/id0000000000"
     }
   ],
   "prefer_related_applications": false,

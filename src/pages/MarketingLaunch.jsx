@@ -76,7 +76,7 @@ export default function MarketingLaunch() {
         <Shield className="w-8 h-8 text-[#8B8D97]" />
       </div>
       <h2 className="text-lg font-semibold">Admin Access Required</h2>
-      <p className="text-sm text-[#8B8D97]">Marketing & Growth is restricted to ClipForge admins.</p>
+      <p className="text-sm text-[#8B8D97]">Marketing & Growth is restricted to Klip4ge admins.</p>
     </div>
   );
 

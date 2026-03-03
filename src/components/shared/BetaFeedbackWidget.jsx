@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import {
   Dialog,
@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Star, Camera, Loader2, MessageSquarePlus } from "lucide-react";
+import { Star, Camera, Loader2, MessageSquarePlus, X as CloseIcon } from "lucide-react";
 import html2canvas from "html2canvas";
 
 function StarRating({ value, onChange }) {
@@ -43,9 +43,16 @@ function StarRating({ value, onChange }) {
   );
 }
 
+// Dismiss persistence key — also read by Settings page
+export const BETA_WIDGET_DISMISSED_KEY = "klip4ge_betawidget_dismissed";
+
 export default function BetaFeedbackWidget({ user }) {
   // Only show for admin or beta role
   const isBetaUser = user?.role === "admin" || user?.role === "beta";
+  // Persistent dismiss state
+  const [dismissed, setDismissed] = useState(
+    () => localStorage.getItem(BETA_WIDGET_DISMISSED_KEY) === "true"
+  );
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [wentWell, setWentWell] = useState("");
@@ -136,6 +143,8 @@ export default function BetaFeedbackWidget({ user }) {
   };
 
   if (!isBetaUser) return null;
+  // Hidden until user restores from Settings → Preferences
+  if (dismissed) return null;
 
   return (
     <>
@@ -144,6 +153,29 @@ export default function BetaFeedbackWidget({ user }) {
         className="fixed bottom-24 left-4 md:bottom-8 md:left-6 z-[60] flex flex-col items-start gap-1"
         aria-label="Open beta feedback form"
       >
+        {/* Dismiss (X) button — top-right of the FAB */}
+        <button
+          onClick={() => {
+            localStorage.setItem(BETA_WIDGET_DISMISSED_KEY, "true");
+            setDismissed(true);
+            toast("Feedback bubble hidden. Restore it in Settings → Preferences.", {
+              duration: 5000,
+              action: {
+                label: "Undo",
+                onClick: () => {
+                  localStorage.removeItem(BETA_WIDGET_DISMISSED_KEY);
+                  setDismissed(false);
+                },
+              },
+            });
+          }}
+          aria-label="Dismiss beta feedback button"
+          title="Hide feedback bubble (restore in Settings)"
+          className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#1A1D27] border border-[#2A2D3A] flex items-center justify-center text-[#8B8D97] hover:text-[#E8E8ED] hover:border-red-400 transition-all z-10"
+        >
+          <CloseIcon className="w-2.5 h-2.5" />
+        </button>
+
         <button
           onClick={handleOpen}
           aria-label="Give beta feedback"

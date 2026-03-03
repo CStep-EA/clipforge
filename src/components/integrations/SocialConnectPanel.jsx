@@ -376,7 +376,7 @@ export default function SocialConnectPanel() {
         <div className="mt-3 p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 flex gap-2">
           <Shield className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
           <p className="text-xs text-[#8B8D97]">
-            One tap to connect — no API keys, no developer setup. ClipForge uses secure OAuth so your passwords stay private. AI automatically organises your saves by category.
+            One tap to connect — no API keys, no developer setup. Klip4ge uses secure OAuth so your passwords stay private. AI automatically organises your saves by category.
           </p>
         </div>
 
@@ -499,7 +499,7 @@ export default function SocialConnectPanel() {
             </DialogTitle>
             <DialogDescription className="text-[#8B8D97] text-sm">
               This will take you to {connectDialog?.name}'s official sign-in page.
-              No API keys needed — ClipForge handles everything securely.
+              No API keys needed — Klip4ge handles everything securely.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 pt-2">
@@ -507,7 +507,7 @@ export default function SocialConnectPanel() {
             <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 flex gap-2">
               <Shield className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
               <p className="text-xs text-[#8B8D97]">
-                Your {connectDialog?.name} password is never shared with ClipForge.
+                Your {connectDialog?.name} password is never shared with Klip4ge.
                 We use official OAuth — the same method trusted by millions of apps.
               </p>
             </div>

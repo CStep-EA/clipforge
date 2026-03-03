@@ -237,7 +237,7 @@ describe('ShareModal', () => {
       { wrapper: makeWrapper() }
     );
     await waitFor(() =>
-      expect(screen.getByText(/shared pages include ClipForge ads/i)).toBeInTheDocument()
+      expect(screen.getByText(/shared pages include Klip4ge ads/i)).toBeInTheDocument()
     );
   });
 

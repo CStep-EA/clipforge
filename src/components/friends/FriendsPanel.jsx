@@ -207,7 +207,7 @@ export default function FriendsPanel({ user, plan = "free" }) {
                 className="bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED]" />
             </div>
             <p className="text-[10px] text-[#8B8D97]">
-              By sending an invite you consent to sharing your ClipForge profile with this person. They'll receive an email link to connect. (GDPR: you can remove connections anytime.)
+              By sending an invite you consent to sharing your Klip4ge profile with this person. They'll receive an email link to connect. (GDPR: you can remove connections anytime.)
             </p>
           </div>
           <DialogFooter>

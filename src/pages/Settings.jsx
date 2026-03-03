@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { User, Bell, LogOut, Save, Users, UserPlus, Gift, Lock, ArrowRight, Crown, Plug, Trash2, Download, Shield, X, PlayCircle } from "lucide-react";
+import { User, Bell, LogOut, Save, Users, UserPlus, Gift, Lock, ArrowRight, Crown, Plug, Trash2, Download, Shield, X, PlayCircle, Eye, EyeOff, MessageCircle, MessageSquarePlus } from "lucide-react";
 import TierGate from "@/components/shared/TierGate";
 import { Badge } from "@/components/ui/badge";
 import { useSubscription } from "@/components/shared/useSubscription";
@@ -17,6 +17,8 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { SUPPORT_BOT_DISMISSED_KEY } from "@/components/support/SupportBot";
+import { BETA_WIDGET_DISMISSED_KEY } from "@/components/shared/BetaFeedbackWidget";
 
 export default function Settings() {
   const [user, setUser] = useState(null);
@@ -26,6 +28,13 @@ export default function Settings() {
     email_digests: true,
     dark_mode: true,
   });
+  // Bubble visibility — read from localStorage so they persist across renders
+  const [supportBotHidden, setSupportBotHidden] = useState(
+    () => localStorage.getItem(SUPPORT_BOT_DISMISSED_KEY) === "true"
+  );
+  const [betaWidgetHidden, setBetaWidgetHidden] = useState(
+    () => localStorage.getItem(BETA_WIDGET_DISMISSED_KEY) === "true"
+  );
   const [dataModalOpen, setDataModalOpen] = useState(null); // 'delete' | 'export' | null
   const [dataReason, setDataReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -93,7 +102,7 @@ export default function Settings() {
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement("a");
       a.href     = url;
-      a.download = `clipforge-saves-${new Date().toISOString().slice(0,10)}.${extension}`;
+      a.download = `klip4ge-saves-${new Date().toISOString().slice(0,10)}.${extension}`;
       document.body.appendChild(a);
       a.click();
       setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
@@ -214,6 +223,69 @@ export default function Settings() {
               Replay full tour
             </Button>
           </div>
+        </div>
+      </Card>
+
+      {/* Bubbles & Widgets */}
+      <Card className="glass-card p-6">
+        <div className="flex items-center gap-3 mb-5">
+          <Eye className="w-5 h-5 text-[#00BFFF]" />
+          <div>
+            <h2 className="font-semibold">Bubbles &amp; Widgets</h2>
+            <p className="text-[10px] text-[#8B8D97]">Show or hide floating UI elements</p>
+          </div>
+        </div>
+        <div className="space-y-4">
+          {/* Support Bot bubble */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MessageCircle className="w-4 h-4 text-[#00BFFF]" />
+              <div>
+                <p className="text-sm">AI Support Chat</p>
+                <p className="text-xs text-[#8B8D97]">Floating help bubble (bottom-right)</p>
+              </div>
+            </div>
+            <Switch
+              checked={!supportBotHidden}
+              onCheckedChange={(v) => {
+                if (v) {
+                  localStorage.removeItem(SUPPORT_BOT_DISMISSED_KEY);
+                  setSupportBotHidden(false);
+                  toast.success("Support chat restored — refresh the page to see it.");
+                } else {
+                  localStorage.setItem(SUPPORT_BOT_DISMISSED_KEY, "true");
+                  setSupportBotHidden(true);
+                  toast("Support chat hidden.");
+                }
+              }}
+            />
+          </div>
+          {/* Beta Feedback bubble — only relevant to beta/admin users */}
+          {(user?.role === "admin" || user?.role === "beta") && (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <MessageSquarePlus className="w-4 h-4 text-[#9370DB]" />
+                <div>
+                  <p className="text-sm">Beta Feedback Button</p>
+                  <p className="text-xs text-[#8B8D97]">Floating feedback bubble (bottom-left)</p>
+                </div>
+              </div>
+              <Switch
+                checked={!betaWidgetHidden}
+                onCheckedChange={(v) => {
+                  if (v) {
+                    localStorage.removeItem(BETA_WIDGET_DISMISSED_KEY);
+                    setBetaWidgetHidden(false);
+                    toast.success("Feedback bubble restored — refresh the page to see it.");
+                  } else {
+                    localStorage.setItem(BETA_WIDGET_DISMISSED_KEY, "true");
+                    setBetaWidgetHidden(true);
+                    toast("Feedback bubble hidden.");
+                  }
+                }}
+              />
+            </div>
+          )}
         </div>
       </Card>
 

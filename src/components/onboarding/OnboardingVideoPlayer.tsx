@@ -215,7 +215,7 @@ export default function OnboardingVideoPlayer({
       )}>
         <div>
           <p className="text-[11px] text-[#00BFFF] font-semibold tracking-widest uppercase mb-0.5">
-            ClipForge Walkthrough
+            Klip4ge Walkthrough
           </p>
           <h3 className="text-sm font-bold text-white leading-tight">{video.title}</h3>
         </div>

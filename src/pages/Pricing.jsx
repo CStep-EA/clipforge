@@ -147,7 +147,7 @@ export default function Pricing() {
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
       <div className="text-center">
         <h1 className="text-3xl font-bold mb-2">
-          <span className="gradient-text">ClipForge</span> Plans
+          <span className="gradient-text">Klip4ge</span> Plans
         </h1>
         <p className="text-[#8B8D97]">Choose the plan that fits your saving habits</p>
         {currentPlan !== "free" && (

@@ -169,7 +169,7 @@ export default function FeedbackIntelligence() {
         <Card className="glass-card p-10 text-center">
           <div className="text-4xl mb-3">📡</div>
           <p className="font-semibold mb-1">No feedback collected yet</p>
-          <p className="text-sm text-[#8B8D97] mb-4">Click "Fetch Now" to scan for mentions, reviews, and feedback about ClipForge across the web.</p>
+          <p className="text-sm text-[#8B8D97] mb-4">Click "Fetch Now" to scan for mentions, reviews, and feedback about Klip4ge across the web.</p>
           <Button onClick={handleFetch} disabled={fetching} className="bg-gradient-to-r from-[#9370DB] to-[#00BFFF] text-white gap-2">
             {fetching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
             {fetching ? "Scanning…" : "Start Intelligence Scan"}

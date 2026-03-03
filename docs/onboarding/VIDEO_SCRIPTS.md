@@ -1,4 +1,4 @@
-# ClipForge Onboarding Video Scripts
+# Klip4ge Onboarding Video Scripts
 
 Scripts for 6 walkthrough videos (30–90 s each).  
 Produce as screen-recording + voiceover. Export H.264 MP4 @ 1280×720 minimum.
@@ -13,14 +13,14 @@ Produce as screen-recording + voiceover. Export H.264 MP4 @ 1280×720 minimum.
 
 | Time    | Visual                                          | Voiceover                                                                                 |
 |---------|-------------------------------------------------|-------------------------------------------------------------------------------------------|
-| 0–3 s   | ClipForge logo + tagline fade in                | *[Silent — plays muted by default]*                                                       |
-| 3–8 s   | Dashboard hero, trending items grid             | "Welcome to ClipForge — your AI-powered save organiser."                                  |
-| 8–18 s  | Click "+ Quick Save", paste a URL               | "Hit Quick Save, paste any URL, and ClipForge instantly summarises it and tags it for you." |
+| 0–3 s   | Klip4ge logo + tagline fade in                | *[Silent — plays muted by default]*                                                       |
+| 3–8 s   | Dashboard hero, trending items grid             | "Welcome to Klip4ge — your AI-powered save organiser."                                  |
+| 8–18 s  | Click "+ Quick Save", paste a URL               | "Hit Quick Save, paste any URL, and Klip4ge instantly summarises it and tags it for you." |
 | 18–28 s | Item card appears with AI summary badge         | "Every save gets an AI summary, a category, and a relevance score — so you never forget why you saved it." |
 | 28–40 s | Show Trending sidebar, category filter pills    | "Browse trending saves in your circle, filter by category, or search with natural language." |
 | 40–52 s | Open an item card, show edit / share icons      | "Edit, rate, favourite, or share any item in one click."                                   |
 | 52–62 s | Show the Pro trial banner                       | "Unlock Pro for deep AI research, smart reminders, and family sharing — free for 7 days." |
-| 62–75 s | Zoom out to full dashboard, ClipForge logo fade | "That's ClipForge in under a minute. Let's dig in."                                       |
+| 62–75 s | Zoom out to full dashboard, Klip4ge logo fade | "That's Klip4ge in under a minute. Let's dig in."                                       |
 
 ### Key UI elements to show
 - QuickSave button → AddItemDialog
@@ -41,7 +41,7 @@ Produce as screen-recording + voiceover. Export H.264 MP4 @ 1280×720 minimum.
 |---------|-------------------------------------------------|------------------------------------------------------------------------------------|
 | 0–5 s   | Saves page overview                             | "The Saves page is your personal content library — everything you've ever clipped." |
 | 5–18 s  | Click "+ Add Item", fill URL + title            | "Save anything: a deal, recipe, event, article — just paste the URL and go."       |
-| 18–28 s | AI summary appears, category auto-set           | "ClipForge reads the page and writes the summary, so you don't have to."            |
+| 18–28 s | AI summary appears, category auto-set           | "Klip4ge reads the page and writes the summary, so you don't have to."            |
 | 28–38 s | Search bar: type "Italian recipe"               | "Use natural-language search to find saves across your entire library."             |
 | 38–48 s | Sort dropdown, category filter                  | "Sort by date, rating, or price. Filter by category. Grid or list view."            |
 | 48–60 s | Edit card modal — add personal note + rating    | "Add your own notes and a 1–10 rating to help you decide later."                   |
@@ -56,7 +56,7 @@ Produce as screen-recording + voiceover. Export H.264 MP4 @ 1280×720 minimum.
 
 | Time    | Visual                                          | Voiceover                                                                                         |
 |---------|------------------------------------------------|--------------------------------------------------------------------------------------------------|
-| 0–5 s   | Friends page overview                           | "ClipForge turns saving into a social experience."                                               |
+| 0–5 s   | Friends page overview                           | "Klip4ge turns saving into a social experience."                                               |
 | 5–18 s  | Click "Create Board" → choose Couples mode      | "Create a board for any occasion — couples, family, friends, or a work team."                    |
 | 18–30 s | Invite email field, send invite                 | "Invite anyone by email. They get a one-click join link — no downloads needed."                  |
 | 30–42 s | Board view, both users' saves appear            | "Everyone on the board sees each other's saves in real time."                                    |
@@ -73,9 +73,9 @@ Produce as screen-recording + voiceover. Export H.264 MP4 @ 1280×720 minimum.
 
 | Time    | Visual                                          | Voiceover                                                                               |
 |---------|------------------------------------------------|----------------------------------------------------------------------------------------|
-| 0–5 s   | Support page hero                               | "Need help? ClipForge has three layers of support."                                    |
+| 0–5 s   | Support page hero                               | "Need help? Klip4ge has three layers of support."                                    |
 | 5–18 s  | Click "New Ticket", fill subject + message      | "For anything needing a real human, open a ticket. We respond within 24 hours."        |
-| 18–30 s | Click AI Bot tab, type a question               | "For instant answers, use the AI Support Bot in the bottom right — it knows ClipForge." |
+| 18–30 s | Click AI Bot tab, type a question               | "For instant answers, use the AI Support Bot in the bottom right — it knows Klip4ge." |
 | 30–42 s | Bot reply + "Escalate to human" button          | "The bot can escalate complex issues directly to our support team."                     |
 | 42–50 s | Documentation tab, search box                  | "The Docs tab has a full searchable knowledge base."                                    |
 | 50–55 s | Roadmap tab, upvote a feature                  | "And the Roadmap shows exactly what's coming next — vote on the features you want."    |
@@ -90,7 +90,7 @@ Produce as screen-recording + voiceover. Export H.264 MP4 @ 1280×720 minimum.
 
 | Time    | Visual                                          | Voiceover                                                                                    |
 |---------|------------------------------------------------|----------------------------------------------------------------------------------------------|
-| 0–6 s   | Pricing page, three plan cards                  | "ClipForge has three plans designed for every kind of saver."                               |
+| 0–6 s   | Pricing page, three plan cards                  | "Klip4ge has three plans designed for every kind of saver."                               |
 | 6–18 s  | Highlight Free plan features                   | "Free is genuinely free — unlimited saves, AI summaries, basic sharing, forever."           |
 | 18–32 s | Highlight Pro features, click "Start free trial"| "Pro unlocks deep AI research, smart event reminders, and 10-person boards — $4.99 a month." |
 | 32–42 s | Family plan, child-safe badges                 | "Family covers up to 6 household members with child-safe profiles and parental controls."    |
@@ -110,7 +110,7 @@ Produce as screen-recording + voiceover. Export H.264 MP4 @ 1280×720 minimum.
 | 6–20 s  | Click "Save" on an event card                  | "Save any event to your library with one click — date, venue, and AI review included."    |
 | 20–34 s | Open event, click "Add to Calendar" → Google   | "Add events directly to Google Calendar, Apple Calendar, or Outlook."                    |
 | 34–46 s | Enable reminder toggle, enter email             | "Pro users can set email reminders — so you never miss the ticket sale window."           |
-| 46–60 s | Paste Ticketmaster link, event parsed           | "Or paste any Ticketmaster or Eventbrite URL and ClipForge does the rest."               |
+| 46–60 s | Paste Ticketmaster link, event parsed           | "Or paste any Ticketmaster or Eventbrite URL and Klip4ge does the rest."               |
 
 ---
 

@@ -8,11 +8,11 @@ const FEATURES = [
   { icon: Sparkles, color: "#9370DB", title: "AI Assistant", desc: "Ask natural language questions across your saves. Deep research, price comparisons, gift ideas, personalized recommendations — all in one chat." },
   { icon: Calendar, color: "#9370DB", title: "Events & Reminders", desc: "Search live events via Ticketmaster, get AI-generated reviews, add to Google/Apple/Outlook calendar, and receive email reminders 7 days & 24 hours before." },
   { icon: Users, color: "#FFB6C1", title: "Shared Boards", desc: "Create collaborative boards for couples, roommates, or families. Real-time sync keeps everyone aligned on wishlists, date nights, and travel plans." },
-  { icon: ShoppingCart, color: "#10B981", title: "Recipe → Shopping List", desc: "Save a recipe and ClipForge AI extracts every ingredient into a shareable shopping list. Perfect for grocery trips." },
+  { icon: ShoppingCart, color: "#10B981", title: "Recipe → Shopping List", desc: "Save a recipe and Klip4ge AI extracts every ingredient into a shareable shopping list. Perfect for grocery trips." },
   { icon: Bell, color: "#F59E0B", title: "Smart Reminders", desc: "Set reminder dates on any saved item. Event reminders send automatic emails at 7 days, 24 hours, and 1 hour (Premium) before the event." },
   { icon: Gift, color: "#EC4899", title: "Referrals & Trials", desc: "Invite friends with a unique referral link. Both parties earn a free month when a friend subscribes. 7-day Premium trial available — no credit card required." },
   { icon: Shield, color: "#9370DB", title: "Family Premium", desc: "Invite up to 5 family members. Parental controls, child-safe content filters, and COPPA compliance built in." },
-  { icon: MessageCircle, color: "#FFB6C1", title: "AI Support Bot", desc: "Instant answers from an AI that knows ClipForge inside out. Escalate to human support tickets with one click. 24-hour response guarantee." },
+  { icon: MessageCircle, color: "#FFB6C1", title: "AI Support Bot", desc: "Instant answers from an AI that knows Klip4ge inside out. Escalate to human support tickets with one click. 24-hour response guarantee." },
 ];
 
 const PLANS = [
@@ -33,9 +33,9 @@ export default function Readme() {
       {/* Hero */}
       <div className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#00BFFF]/30 bg-[#00BFFF]/5 text-[#00BFFF] text-xs font-bold uppercase tracking-widest">
-          <Zap className="w-3.5 h-3.5" /> ClipForge — App Documentation
+          <Zap className="w-3.5 h-3.5" /> Klip4ge — App Documentation
         </div>
-        <h1 className="text-4xl md:text-5xl font-black gradient-text leading-tight">ClipForge</h1>
+        <h1 className="text-4xl md:text-5xl font-black gradient-text leading-tight">Klip4ge</h1>
         <p className="text-lg text-[#8B8D97] max-w-2xl mx-auto leading-relaxed">
           Your AI-powered digital vault. Save anything from the web and social media. Rediscover, organize, share, and never miss a deal, recipe, or event again.
         </p>
@@ -53,7 +53,7 @@ export default function Readme() {
           <h2 className="text-lg font-bold text-[#F59E0B]">🚀 Launch Note</h2>
         </div>
         <p className="text-sm text-[#8B8D97] leading-relaxed">
-          ClipForge launched in 2026 as an AI-first content management app designed for consumers who live across social media and the web. 
+          Klip4ge launched in 2026 as an AI-first content management app designed for consumers who live across social media and the web. 
           Our mission: make saving, organizing, and acting on digital content effortless — whether that's buying concert tickets before they sell out, 
           cooking a recipe you bookmarked 3 months ago, or sharing gift ideas with your family.
         </p>
@@ -150,7 +150,7 @@ export default function Readme() {
         </div>
       </div>
 
-      <p className="text-center text-xs text-[#8B8D97] pt-4">© 2026 ClipForge · Built on Base44 · All rights reserved</p>
+      <p className="text-center text-xs text-[#8B8D97] pt-4">© 2026 Klip4ge · Built on Base44 · All rights reserved</p>
     </div>
   );
 }

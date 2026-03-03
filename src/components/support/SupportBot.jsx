@@ -1,15 +1,18 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Sparkles, Loader2, Ticket, ChevronDown, HandHeart, AlertCircle } from "lucide-react";
+import { MessageCircle, X, Send, Sparkles, Loader2, Ticket, ChevronDown, HandHeart, AlertCircle, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
-const SYSTEM_PROMPT = `You are the ClipForge AI Support Assistant. Help users with:
+// Dismiss persistence key — also read by Settings page to show restore option
+export const SUPPORT_BOT_DISMISSED_KEY = "klip4ge_supportbot_dismissed";
+
+const SYSTEM_PROMPT = `You are the Klip4ge AI Support Assistant. Help users with:
 
 FEATURES:
 - Saves & Boards: Save any URL/content, auto-categorized (deals, events, recipes, articles, products, travel, gifts, streams, podcasts). Create shared boards, invite members by email.
@@ -71,9 +74,30 @@ const guessPriority = (text) => {
 };
 
 export default function SupportBot({ user, floating = false }) {
+  // Persistent dismiss: user can long-press or click X to fully hide the FAB
+  const [dismissed, setDismissed] = useState(
+    () => floating && localStorage.getItem(SUPPORT_BOT_DISMISSED_KEY) === "true"
+  );
   const [open, setOpen] = useState(!floating);
+
+  // Long-press to dismiss (500 ms)
+  const longPressTimer = useRef(null);
+  const startLongPress = useCallback(() => {
+    longPressTimer.current = setTimeout(() => {
+      localStorage.setItem(SUPPORT_BOT_DISMISSED_KEY, "true");
+      setDismissed(true);
+      setOpen(false);
+      toast("Support chat hidden. Restore it in Settings → Preferences.", {
+        duration: 5000,
+        action: { label: "Undo", onClick: () => { localStorage.removeItem(SUPPORT_BOT_DISMISSED_KEY); setDismissed(false); } },
+      });
+    }, 500);
+  }, []);
+  const cancelLongPress = useCallback(() => {
+    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+  }, []);
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "👋 Hi! I'm the ClipForge support bot. Ask me anything about the app, or describe an issue and I'll help resolve it or escalate to our team!" }
+    { role: "assistant", content: "👋 Hi! I'm the Klip4ge support bot. Ask me anything about the app, or describe an issue and I'll help resolve it or escalate to our team!" }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -289,6 +313,9 @@ export default function SupportBot({ user, floating = false }) {
 
   if (!floating) return <div className="glass-card rounded-2xl overflow-hidden">{chat}</div>;
 
+  // Fully hidden — user dismissed via long-press or X-hold; restored via Settings
+  if (dismissed) return null;
+
   return (
     <div className="fixed bottom-20 md:bottom-8 right-4 md:right-6 z-50">
       <AnimatePresence>
@@ -304,11 +331,43 @@ export default function SupportBot({ user, floating = false }) {
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="flex justify-end">
+
+      <div className="flex justify-end items-center gap-1.5">
+        {/* Dismiss button — visible when chat is closed; long-press or click to hide FAB permanently */}
+        {!open && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            title="Hide support chat (long-press to dismiss permanently)"
+            aria-label="Dismiss support chat"
+            onPointerDown={startLongPress}
+            onPointerUp={cancelLongPress}
+            onPointerLeave={cancelLongPress}
+            onClick={() => {
+              localStorage.setItem(SUPPORT_BOT_DISMISSED_KEY, "true");
+              setDismissed(true);
+              toast("Support chat hidden. Restore it in Settings → Preferences.", {
+                duration: 5000,
+                action: {
+                  label: "Undo",
+                  onClick: () => {
+                    localStorage.removeItem(SUPPORT_BOT_DISMISSED_KEY);
+                    setDismissed(false);
+                  },
+                },
+              });
+            }}
+            className="w-6 h-6 rounded-full bg-[#1A1D27] border border-[#2A2D3A] flex items-center justify-center text-[#8B8D97] hover:text-[#E8E8ED] hover:border-[#8B8D97] transition-all"
+          >
+            <EyeOff className="w-3 h-3" />
+          </motion.button>
+        )}
+
         <motion.button
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setOpen(o => !o)}
+          aria-label={open ? "Close support chat" : "Open support chat"}
           className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00BFFF] to-[#9370DB] flex items-center justify-center shadow-xl"
         >
           <AnimatePresence mode="wait">

@@ -44,7 +44,7 @@ function buildICS(ev) {
   return [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//ClipForge//EN",
+    "PRODID:-//Klip4ge//EN",
     "BEGIN:VEVENT",
     `DTSTART:${start}`,
     `DTEND:${end}`,

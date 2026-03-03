@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,8 @@ import {
   MoreHorizontal,
   ChevronDown,
   ChevronUp,
-  Gift
+  Gift,
+  Globe,
 } from "lucide-react";
 import RecipeExportButton from "@/components/dashboard/RecipeExportButton";
 import AddToCalendarButton from "@/components/events/AddToCalendarButton";
@@ -46,13 +47,66 @@ const sourceIcons = {
   web: "🌐",
 };
 
+/**
+ * getFaviconUrl — returns a Google Favicon CDN URL for the given page URL.
+ * Falls back to null if the URL can't be parsed.
+ */
+function getFaviconUrl(pageUrl) {
+  if (!pageUrl) return null;
+  try {
+    const { hostname } = new URL(pageUrl);
+    return `https://www.google.com/s2/favicons?domain=${hostname}&sz=64`;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * extractDomain — returns just the bare domain (e.g. "reddit.com") for display.
+ */
+function extractDomain(pageUrl) {
+  if (!pageUrl) return null;
+  try {
+    return new URL(pageUrl).hostname.replace(/^www\./, "");
+  } catch {
+    return null;
+  }
+}
+
+// ── Favicon image with graceful fallback ──────────────────────────────────────
+function FaviconImg({ url, className }) {
+  const [failed, setFailed] = useState(false);
+  const faviconUrl = getFaviconUrl(url);
+  if (!faviconUrl || failed) {
+    return <Globe className={cn("text-[#8B8D97]", className)} />;
+  }
+  return (
+    <img
+      src={faviconUrl}
+      alt=""
+      aria-hidden="true"
+      onError={() => setFailed(true)}
+      className={cn("rounded-sm object-contain", className)}
+    />
+  );
+}
+
 export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit, onShare, onItemUpdated, isPro = false }) {
   const [showResearch, setShowResearch] = useState(false);
   const [localItem, setLocalItem] = useState(item);
   const cat = categoryConfig[localItem.category] || categoryConfig.other;
+  const domain = extractDomain(localItem.url);
 
   // Sync if parent changes the item
   React.useEffect(() => { setLocalItem(item); }, [item]);
+
+  // Open URL in new tab (used by card click — stops propagation from action buttons)
+  const openUrl = useCallback((e) => {
+    if (!localItem.url) return;
+    // Don't navigate if clicking on an interactive child
+    if (e.target.closest("button, a, [role='button'], input, select, textarea")) return;
+    window.open(localItem.url, "_blank", "noopener,noreferrer");
+  }, [localItem.url]);
 
   return (
     <motion.div
@@ -63,18 +117,35 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
       layout
       transition={{ type: "spring", stiffness: 300, damping: 24 }}
     >
-      <Card className={cn(
-        "glass-card overflow-hidden group hover:border-[#00BFFF]/40 hover:shadow-[0_0_28px_rgba(0,191,255,0.18),0_0_8px_rgba(147,112,219,0.1)] transition-all duration-300 relative",
-        `category-${localItem.category}`
-      )}>
+      <Card
+        className={cn(
+          "saved-item-card glass-card overflow-hidden group hover:border-[#00BFFF]/40",
+          "hover:shadow-[0_0_28px_rgba(0,191,255,0.18),0_0_8px_rgba(147,112,219,0.1)]",
+          "transition-all duration-300 relative",
+          localItem.url && "cursor-pointer",
+          `category-${localItem.category}`
+        )}
+        onClick={localItem.url ? openUrl : undefined}
+        // Keyboard accessibility: open link on Enter if card has URL
+        onKeyDown={localItem.url ? (e) => {
+          if (e.key === "Enter" && !e.target.closest("button, a, [role='button']")) openUrl(e);
+        } : undefined}
+        tabIndex={localItem.url ? 0 : undefined}
+        role={localItem.url ? "link" : undefined}
+        aria-label={localItem.url ? `Open ${localItem.title}` : undefined}
+      >
         {/* shimmer overlay on hover */}
         <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shimmer-bg z-0" />
-        {localItem.image_url && (
+
+        {/* ── Hero image (OG/thumbnail) ──────────────────────────────── */}
+        {localItem.image_url ? (
           <div className="relative h-40 overflow-hidden">
             <img
               src={localItem.image_url}
               alt={localItem.title}
+              loading="lazy"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onError={(e) => { e.currentTarget.style.display = "none"; }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-transparent" />
             <div className="absolute top-2 right-2 flex gap-1.5">
@@ -85,11 +156,35 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
             {localItem.source && (
               <span className="absolute top-2 left-2 text-lg">{sourceIcons[localItem.source]}</span>
             )}
+            {/* Favicon + domain overlay bottom-left */}
+            {domain && (
+              <div className="absolute bottom-2 left-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/50 backdrop-blur-sm">
+                <FaviconImg url={localItem.url} className="w-3 h-3" />
+                <span className="text-[9px] text-white/70 leading-none">{domain}</span>
+              </div>
+            )}
           </div>
+        ) : (
+          /* ── No image: show favicon + domain banner ──────────────── */
+          localItem.url && (
+            <div className="h-12 bg-gradient-to-r from-[#1A1D27] to-[#0F1117] border-b border-[#2A2D3A] flex items-center px-4 gap-2 overflow-hidden">
+              <FaviconImg url={localItem.url} className="w-5 h-5 shrink-0" />
+              {domain && (
+                <span className="text-[11px] text-[#8B8D97] truncate">{domain}</span>
+              )}
+              <div className="ml-auto flex-shrink-0">
+                <Badge variant="outline" className={cn("text-[9px]", cat.color)}>
+                  {localItem.source && <span className="mr-1">{sourceIcons[localItem.source]}</span>}
+                  {cat.label}
+                </Badge>
+              </div>
+            </div>
+          )
         )}
 
         <div className="p-4 space-y-3">
-          {!localItem.image_url && (
+          {/* Category badge when no image AND no URL (no banner shown above) */}
+          {!localItem.image_url && !localItem.url && (
             <div className="flex items-center justify-between">
               <Badge variant="outline" className={cn("text-[10px]", cat.color)}>
                 {localItem.source && <span className="mr-1">{sourceIcons[localItem.source]}</span>}
@@ -103,10 +198,32 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
               )}
             </div>
           )}
+          {/* Rating row when image exists */}
+          {localItem.image_url && localItem.rating && (
+            <div className="flex items-center gap-1 text-xs text-amber-400">
+              <Star className="w-3 h-3 fill-current" />
+              {localItem.rating}/10
+            </div>
+          )}
 
+          {/* ── Title — clickable link if URL exists ──────────────── */}
           <h3 className="font-black text-[#E8E8ED] text-sm leading-tight line-clamp-2 group-hover:text-[#00BFFF] transition-colors">
             {localItem.is_favorite && <span className="mr-1 text-[#FFB6C1] animate-pulse-glow-pink inline-block">♥</span>}
-            {localItem.title}
+            {localItem.url ? (
+              <a
+                href={localItem.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline focus:outline-none focus-visible:underline"
+                // Don't bubble up to the card's own onClick
+                onClick={(e) => e.stopPropagation()}
+                aria-label={`Open ${localItem.title} in new tab`}
+              >
+                {localItem.title}
+              </a>
+            ) : (
+              localItem.title
+            )}
           </h3>
 
           {localItem.ai_summary && (
@@ -172,7 +289,7 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                 size="icon"
                 variant="ghost"
                 className="h-10 w-10 text-[#8B8D97] hover:text-[#FFB6C1] hover:bg-[#FFB6C1]/10"
-                onClick={() => onToggleFavorite?.(localItem)}
+                onClick={(e) => { e.stopPropagation(); onToggleFavorite?.(localItem); }}
                 aria-label={localItem.is_favorite ? "Remove from favourites" : "Add to favourites"}
                 aria-pressed={localItem.is_favorite}
               >
@@ -184,7 +301,7 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                 size="icon"
                 variant="ghost"
                 className="h-10 w-10 text-[#8B8D97] hover:text-[#9370DB] hover:bg-[#9370DB]/10"
-                onClick={() => onShare?.(localItem)}
+                onClick={(e) => { e.stopPropagation(); onShare?.(localItem); }}
                 aria-label="Share this save"
               >
                 <Share2 className="w-3.5 h-3.5" />
@@ -195,14 +312,22 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                   <Gift className="w-3.5 h-3.5" />
                 </span>
               )}
+              {/* External link button — explicit "open in new tab" affordance */}
               {localItem.url && (
                 <a
                   href={localItem.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Open link in a new tab"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <Button size="icon" variant="ghost" className="h-10 w-10 text-[#8B8D97] hover:text-[#00BFFF]" tabIndex={-1} aria-hidden="true">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-10 w-10 text-[#8B8D97] hover:text-[#00BFFF]"
+                    tabIndex={-1}
+                    aria-hidden="true"
+                  >
                     <ExternalLink className="w-3.5 h-3.5" />
                   </Button>
                 </a>
@@ -213,7 +338,7 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                 size="sm"
                 variant="ghost"
                 className="h-7 text-[10px] text-[#9370DB] hover:bg-[#9370DB]/10 gap-1 px-2"
-                onClick={() => setShowResearch(v => !v)}
+                onClick={(e) => { e.stopPropagation(); setShowResearch(v => !v); }}
                 aria-expanded={String(showResearch)}
                 aria-label={showResearch ? "Hide AI research panel" : "Show AI research panel"}
               >
@@ -222,15 +347,21 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button size="icon" variant="ghost" className="h-10 w-10 text-[#8B8D97]" aria-label="More options">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-10 w-10 text-[#8B8D97]"
+                    aria-label="More options"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <MoreHorizontal className="w-3.5 h-3.5" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent style={{background:'var(--cf-surface)',borderColor:'var(--cf-border)',color:'var(--cf-text)'}}>
-                  <DropdownMenuItem onClick={() => onEdit?.(localItem)} className="text-xs hover:bg-[#2A2D3A]">
+                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit?.(localItem); }} className="text-xs hover:bg-[#2A2D3A]">
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onDelete?.(localItem)} className="text-xs text-red-400 hover:bg-[#2A2D3A]">
+                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDelete?.(localItem); }} className="text-xs text-red-400 hover:bg-[#2A2D3A]">
                     Delete
                   </DropdownMenuItem>
                 </DropdownMenuContent>

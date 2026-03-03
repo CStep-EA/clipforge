@@ -90,14 +90,14 @@ describe('Critical Flow 1 — Login / Authenticated State', () => {
     render(<Dashboard />, { wrapper: makeWrapper() });
     // Dashboard renders placeholder items immediately (placeholderData) and the heading
     await waitFor(() =>
-      expect(screen.getByText(/ClipForge/i)).toBeInTheDocument()
+      expect(screen.getByText(/Klip4ge/i)).toBeInTheDocument()
     );
   });
 
   it('shows welcome message with user first name once auth resolves', async () => {
     render(<Dashboard />, { wrapper: makeWrapper() });
     await waitFor(() =>
-      expect(screen.queryByText(/Colton/i) || screen.getByText(/ClipForge/i)).toBeInTheDocument()
+      expect(screen.queryByText(/Colton/i) || screen.getByText(/Klip4ge/i)).toBeInTheDocument()
     );
   });
 
@@ -207,7 +207,7 @@ describe('Critical Flow 3 — Share Item', () => {
     render(<Dashboard />, { wrapper: makeWrapper() });
     // Dashboard always renders — verify it mounted
     await waitFor(() =>
-      expect(screen.getByText(/ClipForge/i)).toBeInTheDocument()
+      expect(screen.getByText(/Klip4ge/i)).toBeInTheDocument()
     );
     // Find Share button (may be in the header or item cards)
     const shareBtns = screen.queryAllByText(/Share/i);
@@ -221,7 +221,7 @@ describe('Critical Flow 3 — Share Item', () => {
       , { timeout: 2000 }).catch(() => {});
     }
     // Verify no crash
-    expect(screen.queryAllByText(/ClipForge/i).length).toBeGreaterThan(0);
+    expect(screen.queryAllByText(/Klip4ge/i).length).toBeGreaterThan(0);
   });
 
   it('ShareModal renders with item title', async () => {

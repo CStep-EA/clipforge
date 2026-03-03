@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
     }
 
     const connection = connections[0];
-    const message = `📎 ClipForge Save: **${item.title}**${item.url ? `\n${item.url}` : ""}${item.description ? `\n> ${item.description.slice(0, 200)}` : ""}`;
+    const message = `📎 Klip4ge Save: **${item.title}**${item.url ? `\n${item.url}` : ""}${item.description ? `\n> ${item.description.slice(0, 200)}` : ""}`;
 
     if (platform === "discord" && connection.access_token && connection.selected_channel) {
       const res = await fetch(`https://discord.com/api/v10/channels/${connection.selected_channel}/messages`, {

@@ -1,8 +1,8 @@
-# ClipForge Onboarding Video System
+# Klip4ge Onboarding Video System
 
 ## Overview
 
-ClipForge uses short (30–90 s) walkthrough videos to onboard new users on their first visit to each major page.  
+Klip4ge uses short (30–90 s) walkthrough videos to onboard new users on their first visit to each major page.  
 Videos auto-play once per user, are fully escapable (Skip, X, Esc), and honour `prefers-reduced-motion`.  
 Progress is persisted in **localStorage** (instant) and **Base44 `UserOnboardingProgress` entity** (cross-device).
 
@@ -46,7 +46,7 @@ public/videos/onboarding/
 
 | Key            | Title                    | Page       | Target Duration |
 |----------------|--------------------------|------------|-----------------|
-| `dashboard`    | Welcome to ClipForge     | Dashboard  | 75 s            |
+| `dashboard`    | Welcome to Klip4ge     | Dashboard  | 75 s            |
 | `saves`        | Saving Items             | Saves      | 60 s            |
 | `sharing`      | Sharing & Collaboration  | Friends    | 70 s            |
 | `support`      | Getting Support          | Support    | 55 s            |

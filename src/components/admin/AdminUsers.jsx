@@ -79,7 +79,7 @@ export default function AdminUsers({ allSubs = [] }) {
   const handleResolveDataRequest = async (ticket, action) => {
     const response = action === "approved"
       ? `Request approved by admin. ${ticket.subject.includes("Deletion") ? "Account and data deletion has been initiated." : "Data export has been prepared and sent to the user's email."}`
-      : "Request reviewed but could not be processed at this time. Please contact privacy@clipforge.app.";
+      : "Request reviewed but could not be processed at this time. Please contact privacy@klip4ge.app.";
     await base44.entities.SupportTicket.update(ticket.id, {
       status: "resolved",
       response,

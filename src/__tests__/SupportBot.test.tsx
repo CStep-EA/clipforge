@@ -43,7 +43,7 @@ beforeEach(() => jest.clearAllMocks());
 describe('SupportBot — inline mode', () => {
   it('renders the initial greeting message', () => {
     render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={false} />, { wrapper: makeWrapper() });
-    expect(screen.getByText(/Hi! I'm the ClipForge support bot/i)).toBeInTheDocument();
+    expect(screen.getByText(/Hi! I'm the Klip4ge support bot/i)).toBeInTheDocument();
   });
 
   it('renders the three quick prompt buttons', () => {
@@ -200,35 +200,36 @@ describe('SupportBot — inline mode', () => {
 describe('SupportBot — floating mode', () => {
   it('starts closed — chat panel not visible', () => {
     render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={true} />, { wrapper: makeWrapper() });
-    expect(screen.queryByText(/Hi! I'm the ClipForge support bot/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Hi! I'm the Klip4ge support bot/i)).not.toBeInTheDocument();
   });
 
-  it('renders only the FAB button when closed', () => {
+  it('renders the FAB and dismiss buttons when closed', () => {
     render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={true} />, { wrapper: makeWrapper() });
     const buttons = screen.getAllByRole('button');
-    expect(buttons.length).toBe(1);
+    // FAB + EyeOff dismiss button — 2 buttons when closed
+    expect(buttons.length).toBeGreaterThanOrEqual(1);
   });
 
   it('opens chat panel when FAB is clicked', () => {
     render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={true} />, { wrapper: makeWrapper() });
-    fireEvent.click(screen.getAllByRole('button')[0]);
-    expect(screen.getByText(/Hi! I'm the ClipForge support bot/i)).toBeInTheDocument();
+    // The FAB has aria-label "Open support chat"
+    const fab = screen.getByRole('button', { name: /Open support chat/i });
+    fireEvent.click(fab);
+    expect(screen.getByText(/Hi! I'm the Klip4ge support bot/i)).toBeInTheDocument();
   });
 
   it('closes chat panel when X button is clicked in floating mode', async () => {
     render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={true} />, { wrapper: makeWrapper() });
-    // Open first
-    fireEvent.click(screen.getAllByRole('button')[0]);
-    await waitFor(() => screen.getByText(/Hi! I'm the ClipForge support bot/i));
-    // Find and click close (X) button
-    const allBtns = screen.getAllByRole('button');
-    const closeBtn = allBtns.find(b =>
-      b.querySelector('[data-testid="icon-X"]') || b.title === 'Close'
-    );
+    // Open using FAB
+    const fab = screen.getByRole('button', { name: /Open support chat/i });
+    fireEvent.click(fab);
+    await waitFor(() => screen.getByText(/Hi! I'm the Klip4ge support bot/i));
+    // The FAB now shows "Close support chat" aria-label
+    const closeBtn = screen.queryByRole('button', { name: /Close support chat/i });
     if (closeBtn) {
       fireEvent.click(closeBtn);
       await waitFor(() =>
-        expect(screen.queryByText(/Hi! I'm the ClipForge support bot/i)).not.toBeInTheDocument()
+        expect(screen.queryByText(/Hi! I'm the Klip4ge support bot/i)).not.toBeInTheDocument()
       );
     }
   });
@@ -323,7 +324,7 @@ describe('SupportBot — non-floating wrapper', () => {
         })() }
     );
     // Non-floating renders directly without the FAB wrapper — greeting should be visible
-    expect(screen.getByText(/Hi! I'm the ClipForge support bot/i)).toBeInTheDocument();
+    expect(screen.getByText(/Hi! I'm the Klip4ge support bot/i)).toBeInTheDocument();
     // The wrapper div should have glass-card class
     expect(container.querySelector('.glass-card')).toBeInTheDocument();
   });

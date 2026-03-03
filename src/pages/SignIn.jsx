@@ -1,5 +1,5 @@
 /**
- * SignIn.jsx — ClipForge branded sign-in page
+ * SignIn.jsx — Klip4ge branded sign-in page
  *
  * Presents three crystal-clear options:
  *   1. Continue with Google   (OAuth via Base44)
@@ -93,7 +93,7 @@ export default function SignIn() {
       >
         <ClipForgeLogo size={72} showText={false} variant="morph" />
         <h1 className="mt-4 text-3xl font-extrabold gradient-text tracking-tight">
-          ClipForge
+          Klip4ge
         </h1>
         <p className="mt-2 text-base text-[#8B8D97] text-center max-w-xs">
           Save smarter.&nbsp; Share better.&nbsp; Live together.
@@ -111,7 +111,7 @@ export default function SignIn() {
         {!emailSent ? (
           <>
             <h2 className="text-xl font-bold text-center text-[#E8E8ED] mb-6">
-              Sign in to ClipForge
+              Sign in to Klip4ge
             </h2>
 
             {/* ── Error ─────────────────────────────────────────── */}
@@ -226,7 +226,7 @@ export default function SignIn() {
 
       {/* ── Footer ────────────────────────────────────────────── */}
       <p className="mt-8 text-xs text-[#8B8D97]">
-        New to ClipForge?{" "}
+        New to Klip4ge?{" "}
         <span className="text-[#00BFFF]">Signing in creates your free account automatically.</span>
       </p>
     </div>

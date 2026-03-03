@@ -39,7 +39,7 @@ export default function DebugModeToggle() {
     try {
       if (action === "trial") {
         await base44.entities.PremiumTrial.create({
-          user_email: "__debug@clipforge.test",
+          user_email: "__debug@klip4ge.test",
           trial_plan: "premium",
           trial_start: new Date().toISOString(),
           trial_end: new Date(Date.now() + 7 * 86400000).toISOString(),
@@ -49,9 +49,9 @@ export default function DebugModeToggle() {
         toast.success("✅ Test trial record created");
       } else if (action === "referral") {
         await base44.entities.Referral.create({
-          referrer_email: "__debug@clipforge.test",
+          referrer_email: "__debug@klip4ge.test",
           referral_code: "DEBUG-TEST",
-          referred_email: "__referred@clipforge.test",
+          referred_email: "__referred@klip4ge.test",
           status: "signed_up",
           bonus_applied: false,
           bonus_type: "free_month",
@@ -59,8 +59,8 @@ export default function DebugModeToggle() {
         toast.success("✅ Test referral record created");
       } else if (action === "family") {
         await base44.entities.FamilyMember.create({
-          family_owner_email: "__debug@clipforge.test",
-          member_email: "__child@clipforge.test",
+          family_owner_email: "__debug@klip4ge.test",
+          member_email: "__child@klip4ge.test",
           member_name: "Test Child",
           role: "child",
           is_under_13: true,
@@ -79,9 +79,9 @@ export default function DebugModeToggle() {
   const clearDebugData = async () => {
     setLoading(prev => ({ ...prev, clear: true }));
     try {
-      const trials = await base44.entities.PremiumTrial.filter({ user_email: "__debug@clipforge.test" });
-      const referrals = await base44.entities.Referral.filter({ referrer_email: "__debug@clipforge.test" });
-      const family = await base44.entities.FamilyMember.filter({ family_owner_email: "__debug@clipforge.test" });
+      const trials = await base44.entities.PremiumTrial.filter({ user_email: "__debug@klip4ge.test" });
+      const referrals = await base44.entities.Referral.filter({ referrer_email: "__debug@klip4ge.test" });
+      const family = await base44.entities.FamilyMember.filter({ family_owner_email: "__debug@klip4ge.test" });
       await Promise.all([
         ...trials.map(t => base44.entities.PremiumTrial.delete(t.id)),
         ...referrals.map(r => base44.entities.Referral.delete(r.id)),
@@ -178,7 +178,7 @@ export default function DebugModeToggle() {
 
             <div className="p-2 rounded-lg bg-[#0F1117] border border-[#2A2D3A]">
               <p className="text-[10px] text-[#8B8D97]">
-                ⚠️ Debug mode only affects UI rendering and creates <code className="text-amber-300">__debug@clipforge.test</code> records. Real user billing is unaffected.
+                ⚠️ Debug mode only affects UI rendering and creates <code className="text-amber-300">__debug@klip4ge.test</code> records. Real user billing is unaffected.
               </p>
             </div>
           </div>

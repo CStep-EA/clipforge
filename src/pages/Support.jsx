@@ -32,19 +32,19 @@ const statusColors = {
 };
 
 const AI_DOC = `
-## How ClipForge Uses AI – Transparency Whitepaper
+## How Klip4ge Uses AI – Transparency Whitepaper
 
 **AI for Content Saves & Summaries**
-When you save a URL or piece of content, ClipForge uses AI (large language models) to automatically generate a concise summary, suggest relevant tags, and assign a relevance score. This helps you quickly recall why you saved something weeks later. The AI processes only the content you explicitly save—it does not browse your history or monitor unrelated activity.
+When you save a URL or piece of content, Klip4ge uses AI (large language models) to automatically generate a concise summary, suggest relevant tags, and assign a relevance score. This helps you quickly recall why you saved something weeks later. The AI processes only the content you explicitly save—it does not browse your history or monitor unrelated activity.
 
 **AI for Smart Search**
 Our AI-powered search understands natural language queries like "Italian recipes I saved last month" or "deals under $50". We use semantic embeddings to match your intent against your saved items, providing more relevant results than keyword search alone.
 
 **AI for Event Reviews**
-On the Events page, ClipForge uses AI (with optional real-time web context) to generate brief event reviews to help you decide whether to buy tickets. These are clearly labeled as AI-generated and should not replace your own research.
+On the Events page, Klip4ge uses AI (with optional real-time web context) to generate brief event reviews to help you decide whether to buy tickets. These are clearly labeled as AI-generated and should not replace your own research.
 
 **AI Support Bot**
-The in-app support bot is powered by a large language model and is designed to answer questions about ClipForge features. It is NOT a human agent. Responses may be inaccurate—always verify critical information. The bot may suggest creating a support ticket for complex issues, which routes to our human support team.
+The in-app support bot is powered by a large language model and is designed to answer questions about Klip4ge features. It is NOT a human agent. Responses may be inaccurate—always verify critical information. The bot may suggest creating a support ticket for complex issues, which routes to our human support team.
 
 **Data Privacy in AI Processing**
 - Your saved content is processed transiently for AI generation; we do not use it to train AI models
@@ -53,7 +53,7 @@ The in-app support bot is powered by a large language model and is designed to a
 - You can disable AI summaries in Settings at any time
 
 **Disclaimer**
-AI-generated content in ClipForge is for informational purposes only and does not constitute legal, medical, financial, or professional advice.
+AI-generated content in Klip4ge is for informational purposes only and does not constitute legal, medical, financial, or professional advice.
 `;
 
 export default function Support() {
@@ -320,7 +320,7 @@ export default function Support() {
             <div className="p-3 rounded-xl bg-[#9370DB]/5 border border-[#9370DB]/20 flex items-start gap-2.5">
               <Sparkles className="w-4 h-4 text-[#9370DB] shrink-0 mt-0.5" />
               <div className="text-xs text-[#8B8D97] leading-relaxed">
-                <strong className="text-[#E8E8ED]">AI Support Bot</strong> — answers questions about ClipForge instantly. For issues needing human review, click <strong className="text-[#FFB6C1]">Human</strong> in the chat header to escalate and auto-create a ticket with your conversation context. <em>AI responses are for informational purposes only.</em>
+                <strong className="text-[#E8E8ED]">AI Support Bot</strong> — answers questions about Klip4ge instantly. For issues needing human review, click <strong className="text-[#FFB6C1]">Human</strong> in the chat header to escalate and auto-create a ticket with your conversation context. <em>AI responses are for informational purposes only.</em>
               </div>
             </div>
             <SupportBot user={user} floating={false} />
@@ -451,7 +451,7 @@ export default function Support() {
               <span className="ml-auto text-[10px] text-[#8B8D97]">v1.0 · Feb 2026</span>
             </div>
             <div className="p-3 rounded-xl bg-amber-400/5 border border-amber-400/20 text-[11px] text-[#8B8D97] leading-relaxed">
-              ⚠️ <strong className="text-amber-400">Disclaimer:</strong> AI-generated content in ClipForge is for informational purposes only and does not constitute legal, medical, financial, or professional advice. Always verify important information from authoritative sources.
+              ⚠️ <strong className="text-amber-400">Disclaimer:</strong> AI-generated content in Klip4ge is for informational purposes only and does not constitute legal, medical, financial, or professional advice. Always verify important information from authoritative sources.
             </div>
             <div className="prose prose-sm max-w-none text-[#8B8D97] space-y-3">
               {AI_DOC.trim().split("\n\n").map((paragraph, i) => {

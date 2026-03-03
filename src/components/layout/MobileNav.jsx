@@ -1,5 +1,5 @@
 /**
- * MobileNav.jsx — ClipForge grandma-proof bottom navigation
+ * MobileNav.jsx — Klip4ge grandma-proof bottom navigation
  *
  * Changes from original:
  * - 3 primary tabs (Home, Saves, More) — not 4/5

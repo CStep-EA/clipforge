@@ -197,7 +197,7 @@ export default function BetaSystemTour({ userEmail, forceTour = false }: BetaSys
                 <Sparkles className="w-3.5 h-3.5 text-white" />
               </div>
               <DialogTitle className="text-sm font-bold text-[#E8E8ED]">
-                ClipForge Beta Tour
+                Klip4ge Beta Tour
               </DialogTitle>
             </div>
             <div className="flex items-center gap-3">
@@ -214,10 +214,18 @@ export default function BetaSystemTour({ userEmail, forceTour = false }: BetaSys
                 <SkipForward className="w-3 h-3" />
                 Skip all
               </Button>
+              {/* Explicit close (X) button — clearly dismisses the tour dialog */}
+              <button
+                onClick={handleClose}
+                aria-label="Close tour"
+                className="flex items-center justify-center w-7 h-7 rounded-full text-[#8B8D97] hover:text-[#E8E8ED] hover:bg-[#2A2D3A] transition-all"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
           </div>
           <DialogDescription id="tour-desc" className="sr-only">
-            Beta tour walkthrough — {totalSteps} videos covering all major features of ClipForge.
+            Beta tour walkthrough — {totalSteps} videos covering all major features of Klip4ge.
           </DialogDescription>
         </DialogHeader>
 

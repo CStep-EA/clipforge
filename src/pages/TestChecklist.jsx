@@ -75,7 +75,7 @@ export default function TestChecklist() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-[#E8E8ED] mb-2">Alpha Test Checklist</h1>
-          <p className="text-[#8B8D97]">Manual testing workflow for ClipForge features</p>
+          <p className="text-[#8B8D97]">Manual testing workflow for Klip4ge features</p>
         </div>
 
         {/* Stats */}

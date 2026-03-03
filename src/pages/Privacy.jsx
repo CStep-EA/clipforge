@@ -8,7 +8,7 @@ const sections = [
     icon: Eye,
     title: "Data We Collect",
     color: "#00BFFF",
-    content: `ClipForge collects only the minimum data required to provide our service:
+    content: `Klip4ge collects only the minimum data required to provide our service:
 • Account information: email address, display name
 • Content you save: URLs, titles, descriptions, tags, images
 • Usage data: feature interactions, save/share activity (anonymized)
@@ -19,7 +19,7 @@ const sections = [
     icon: UserCheck,
     title: "How We Use Your Data",
     color: "#9370DB",
-    content: `We use your data solely to provide and improve ClipForge:
+    content: `We use your data solely to provide and improve Klip4ge:
 • AI summaries and smart categorization of your saved content
 • Personalized recommendations and smart search
 • Sharing and collaboration features (boards, friends)
@@ -48,13 +48,13 @@ CCPA (California residents — Cal. Civ. Code §1798.100 et seq.):
 • Right to Non-Discrimination: Exercising your rights will not affect your service access
 
 How to exercise your rights:
-You can submit a deletion or export request directly from Settings → Privacy & Data Rights, or email privacy@clipforge.app. We will acknowledge your request within 72 hours and process it within 30 days as required by applicable law.`
+You can submit a deletion or export request directly from Settings → Privacy & Data Rights, or email privacy@klip4ge.app. We will acknowledge your request within 72 hours and process it within 30 days as required by applicable law.`
   },
   {
     icon: Baby,
     title: "COPPA & Children's Privacy",
     color: "#FFB6C1",
-    content: `ClipForge complies with the Children's Online Privacy Protection Act (COPPA):
+    content: `Klip4ge complies with the Children's Online Privacy Protection Act (COPPA):
 • The service is not directed at children under 13
 • Family plan child accounts require verified parental consent before activation
 • Child accounts operate in "Safe Mode" with content filters enabled
@@ -77,7 +77,7 @@ You can submit a deletion or export request directly from Settings → Privacy &
     icon: Globe,
     title: "Cookies & Tracking",
     color: "#F59E0B",
-    content: `ClipForge uses minimal cookies:
+    content: `Klip4ge uses minimal cookies:
 • Essential cookies: Session authentication (required for login)
 • Preference cookies: Theme and layout preferences (local storage)
 • Analytics: We use privacy-respecting analytics with IP anonymization
@@ -91,7 +91,7 @@ We do NOT use:
     icon: Globe,
     title: "Third-Party Services",
     color: "#9370DB",
-    content: `ClipForge integrates with select third-party services to provide functionality:
+    content: `Klip4ge integrates with select third-party services to provide functionality:
 • Stripe — payment processing (their privacy policy applies to payment data)
 • OpenAI — AI-powered summaries (content is processed transiently, not stored by OpenAI for training)
 • Ticketmaster — event discovery (subject to their terms)
@@ -104,9 +104,9 @@ We only share the minimum data necessary with each third party. We do not sell y
     icon: UserCheck,
     title: "No Medical / Legal / Financial Advice",
     color: "#EF4444",
-    content: `ClipForge and its AI features do not provide medical, legal, financial, dietary, or professional advice of any kind.
+    content: `Klip4ge and its AI features do not provide medical, legal, financial, dietary, or professional advice of any kind.
 
-Content saved through ClipForge (articles, recipes, health tips, financial news) is user-curated and presented for personal reference only. Always consult a qualified professional before making health, legal, or financial decisions.
+Content saved through Klip4ge (articles, recipes, health tips, financial news) is user-curated and presented for personal reference only. Always consult a qualified professional before making health, legal, or financial decisions.
 
 AI-generated summaries are informational only and may contain errors or omissions.`
   },
@@ -130,7 +130,7 @@ export default function Privacy() {
         </div>
         <div className="p-4 rounded-xl bg-[#00BFFF]/5 border border-[#00BFFF]/20">
           <p className="text-sm text-[#8B8D97] leading-relaxed">
-            ClipForge ("we", "us", "our") is committed to protecting your privacy. This policy explains how we collect, use, and safeguard your information when you use our service.
+            Klip4ge ("we", "us", "our") is committed to protecting your privacy. This policy explains how we collect, use, and safeguard your information when you use our service.
           </p>
         </div>
       </div>
@@ -167,7 +167,7 @@ export default function Privacy() {
         <span>·</span>
         <Link to={createPageUrl("Support")} className="hover:text-[#00BFFF]">Support</Link>
         <span>·</span>
-        <span>© 2026 ClipForge</span>
+        <span>© 2026 Klip4ge</span>
       </div>
     </div>
   );

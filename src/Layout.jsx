@@ -62,9 +62,17 @@ export default function Layout({ children, currentPageName }) {
         const apiBase = base44.serverUrl || base44._serverUrl || "https://api.base44.com";
         if (token && u?.email && typeof chrome !== "undefined" && chrome?.runtime?.sendMessage) {
           chrome.runtime.sendMessage(
-            // Replace with your published extension ID from the Chrome Web Store
-            // or use a well-known shared secret during development
-            undefined, // undefined = any extension that listens on this origin
+            // ─────────────────────────────────────────────────────────────────
+            // CHROME EXTENSION ID — replace the placeholder below with the
+            // actual Extension ID once the Klip4ge MV3 extension is published
+            // on the Chrome Web Store (Dashboard → Extensions → Extension ID).
+            //
+            // Format: 32-character lowercase string, e.g. "abcdefghijklmnopabcdefghijklmnop"
+            //
+            // Until published, `undefined` means "any extension on this origin",
+            // which is safe for development but MUST be set before production.
+            // ─────────────────────────────────────────────────────────────────
+            "REPLACE_WITH_PUBLISHED_EXTENSION_ID", // TODO: set after Chrome Web Store submission
             {
               type:  "SET_AUTH",
               token,
@@ -282,7 +290,7 @@ export default function Layout({ children, currentPageName }) {
           <Link to={createPageUrl("LaunchRoadmap")} className="hover:text-[#00BFFF] transition-colors">Roadmap</Link>
           <Link to={createPageUrl("Pricing")} className="hover:text-[#9370DB] transition-colors font-medium">Pricing</Link>
           <Link to={createPageUrl("Readme")} className="hover:text-[#FFB6C1] transition-colors">README</Link>
-          <span>© 2026 ClipForge</span>
+          <span>© 2026 Klip4ge</span>
         </div>
       </div>
     </div>

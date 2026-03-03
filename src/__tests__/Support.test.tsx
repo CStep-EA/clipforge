@@ -138,7 +138,7 @@ describe('Support page', () => {
     // SupportBot should mount (check for its greeting or input)
     await waitFor(() =>
       expect(
-        screen.queryByText(/Hi! I'm the ClipForge support bot/i) ||
+        screen.queryByText(/Hi! I'm the Klip4ge support bot/i) ||
         screen.queryByRole('textbox')
       ).not.toBeNull()
     );
@@ -458,7 +458,7 @@ describe('Support page', () => {
     if (tryAiBtn) {
       fireEvent.click(tryAiBtn);
       await waitFor(() =>
-        expect(screen.queryByText(/ClipForge support bot/i) || screen.queryByText(/Ask anything/i)).not.toBeNull()
+        expect(screen.queryByText(/Klip4ge support bot/i) || screen.queryByText(/Ask anything/i)).not.toBeNull()
       , { timeout: 2000 });
     }
   });
