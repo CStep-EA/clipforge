@@ -18,7 +18,7 @@ import StatsCard from "@/components/shared/StatsCard";
 import SavedItemCard from "@/components/shared/SavedItemCard";
 import AddItemDialog from "@/components/shared/AddItemDialog";
 import { useSubscription } from "@/components/shared/useSubscription";
-import TrendCharts from "@/components/dashboard/TrendCharts";
+// TrendCharts removed — replaced with inline CategoryBreakdown for lighter bundle
 import SharingModePanel from "@/components/dashboard/SharingModePanel";
 import DashboardSearch from "@/components/dashboard/DashboardSearch";
 import TrialAndReferralBanner from "@/components/subscription/TrialAndReferralBanner";
@@ -26,6 +26,56 @@ import IntegrationQuickBar from "@/components/dashboard/IntegrationQuickBar";
 import OnboardingVideoPlayer from "@/components/onboarding/OnboardingVideoPlayer";
 import { useOnboarding, ONBOARDING_VIDEOS } from "@/hooks/useOnboarding";
 import { useUndoDelete } from "@/hooks/useUndoDelete";
+
+// ── CategoryBreakdown ─────────────────────────────────────────────────────────
+// Lightweight bar-chart replacement for the heavy TrendCharts component.
+// Zero third-party chart dependencies — pure CSS flex bars.
+const CATEGORY_COLORS = {
+  deal:      "#9370DB",
+  recipe:    "#10B981",
+  product:   "#F59E0B",
+  article:   "#00BFFF",
+  event:     "#F472B6",
+  travel:    "#34D399",
+  gift_idea: "#FB7185",
+  other:     "#6B7280",
+};
+const CATEGORY_LABELS = {
+  deal: "Deals", recipe: "Recipes", product: "Products",
+  article: "Articles", event: "Events", travel: "Travel",
+  gift_idea: "Gift Ideas", other: "Other",
+};
+
+function CategoryBreakdown({ items }) {
+  const counts = useMemo(() => {
+    const map = {};
+    items.forEach(({ category }) => {
+      const k = category || "other";
+      map[k] = (map[k] || 0) + 1;
+    });
+    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  }, [items]);
+  const max = counts[0]?.[1] || 1;
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/5 p-4 mb-4">
+      <p className="text-xs font-semibold text-white/50 uppercase tracking-widest mb-3">Save Breakdown</p>
+      <div className="space-y-2">
+        {counts.map(([cat, count]) => (
+          <div key={cat} className="flex items-center gap-3">
+            <span className="text-xs w-20 shrink-0 text-white/60">{CATEGORY_LABELS[cat] || cat}</span>
+            <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{ width: `${(count / max) * 100}%`, background: CATEGORY_COLORS[cat] || "#6B7280" }}
+              />
+            </div>
+            <span className="text-xs w-5 text-right text-white/40">{count}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 // AI-driven priority ranking: deals first, then by rating, then recent
 function rankItems(items) {
@@ -229,8 +279,8 @@ export default function Dashboard() {
       {/* Search */}
       <DashboardSearch items={items} onResults={setSearchResults} />
 
-      {/* Trend Charts */}
-      {items.length > 0 && <TrendCharts items={items} />}
+      {/* Category Breakdown — lightweight alternative to heavy chart library */}
+      {items.length > 0 && <CategoryBreakdown items={items} />}
 
       {/* Recent / Ranked Saves */}
       <div>

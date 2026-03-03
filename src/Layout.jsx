@@ -48,7 +48,28 @@ export default function Layout({ children, currentPageName }) {
   });
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => {});
+    base44.auth.me().then((u) => {
+      setUser(u);
+      // ── Extension auth token relay ──────────────────────────────────────
+      // After sign-in, securely pass the session token to the Klip4ge
+      // Chrome/Edge extension (if installed) so users don't need to sign in
+      // twice. Uses postMessage to the extension's background service worker
+      // via chrome.runtime.sendMessage. Silently ignored when no extension.
+      try {
+        const token = base44.auth.getToken?.();
+        if (token && u?.email && typeof chrome !== "undefined" && chrome?.runtime?.sendMessage) {
+          chrome.runtime.sendMessage(
+            // Replace with your published extension ID from the Chrome Web Store
+            // or use a well-known shared secret during development
+            undefined, // undefined = any extension that listens on this origin
+            { type: "SET_AUTH", token, email: u.email },
+            () => { /* ignore chrome.runtime.lastError */ }
+          );
+        }
+      } catch {
+        // Extension not installed or blocked — silently ignore
+      }
+    }).catch(() => {});
   }, []);
 
   useEffect(() => {

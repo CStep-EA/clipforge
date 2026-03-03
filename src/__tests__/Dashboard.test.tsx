@@ -155,13 +155,13 @@ describe('Dashboard page', () => {
     );
   });
 
-  it('renders TrendCharts section with Saves Over Time', async () => {
+  it('renders CategoryBreakdown section when items exist', async () => {
     base44.entities.SavedItem.list.mockResolvedValue([
       { id: 'si1', title: 'Test', category: 'deal', created_date: new Date().toISOString() },
     ]);
     render(<Dashboard />, { wrapper: makeWrapper() });
     await waitFor(() =>
-      expect(screen.getByText(/Saves Over Time/i)).toBeInTheDocument()
+      expect(screen.getByText(/Save Breakdown/i)).toBeInTheDocument()
     );
   });
 
@@ -237,6 +237,7 @@ describe('Dashboard page', () => {
   // ── handleDelete ─────────────────────────────────────────────────────────────
 
   it('calls SavedItem.delete when Delete is clicked on a card', async () => {
+    jest.useFakeTimers();
     base44.entities.SavedItem.list.mockResolvedValue([
       { id: 'del1', title: 'Delete Me Item', category: 'deal', source: 'web', tags: [], created_date: new Date().toISOString() },
     ]);
@@ -247,9 +248,12 @@ describe('Dashboard page', () => {
     await waitFor(() => expect(capturedOnDelete).not.toBeNull());
     // Invoke it directly — simulates user clicking Delete in the dropdown
     capturedOnDelete!({ id: 'del1', title: 'Delete Me Item' });
+    // Advance timer past the 5-second undo window to trigger the actual delete
+    jest.runAllTimers();
     await waitFor(() =>
       expect(base44.entities.SavedItem.delete).toHaveBeenCalledWith('del1')
     );
+    jest.useRealTimers();
   });
 
   it('handles SavedItem.update error gracefully (toast.error called)', async () => {
@@ -291,6 +295,7 @@ describe('Dashboard page', () => {
   // ── handleDelete error path (line 90) ────────────────────────────────────
 
   it('shows toast.error when SavedItem.delete throws', async () => {
+    jest.useFakeTimers();
     base44.entities.SavedItem.list.mockResolvedValue([
       { id: 'del2', title: 'Delete Fail Item', category: 'deal', source: 'web', tags: [], created_date: new Date().toISOString() },
     ]);
@@ -299,11 +304,14 @@ describe('Dashboard page', () => {
     render(<Dashboard />, { wrapper: makeWrapper() });
     await waitFor(() => screen.getByText(/Delete Fail Item/i));
     await waitFor(() => expect(capturedOnDelete).not.toBeNull());
-    // Trigger delete — will throw and call toast.error
+    // Trigger delete — the undo timer runs, then delete throws, then toast.error
     capturedOnDelete!({ id: 'del2', title: 'Delete Fail Item' });
+    // Advance past undo window so the async delete fires
+    jest.runAllTimers();
     await waitFor(() =>
       expect(base44.entities.SavedItem.delete).toHaveBeenCalledWith('del2')
     );
+    jest.useRealTimers();
   });
 
   // ── "Add Your First Save" empty vault button (line 252) ──────────────────
