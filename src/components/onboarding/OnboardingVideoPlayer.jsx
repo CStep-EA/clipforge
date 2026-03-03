@@ -187,9 +187,11 @@ export default function OnboardingVideoPlayer({
           tabIndex={0}
           onKeyDown={(e) => {
             const vid = videoRef.current;
-            if (!vid || !isFinite(vid.duration)) return;
-            if (e.key === "ArrowRight") vid.currentTime = Math.min(vid.duration, vid.currentTime + 5);
-            if (e.key === "ArrowLeft")  vid.currentTime = Math.max(0, vid.currentTime - 5);
+            if (!vid || !isFinite(vid.duration) || vid.duration === 0) return;
+            const next = e.key === "ArrowRight" ? Math.min(vid.duration, vid.currentTime + 5)
+                       : e.key === "ArrowLeft"  ? Math.max(0, vid.currentTime - 5)
+                       : null;
+            if (next !== null && isFinite(next)) vid.currentTime = next;
           }}
         >
           <div
