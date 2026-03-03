@@ -80,15 +80,15 @@ export default function MobileNav({ currentPage, userRole }) {
         aria-hidden={!open}
         aria-label="All pages"
       >
-        <div className="mx-3 mb-2 bg-[#1A1D27]/98 backdrop-blur-xl border border-[#2A2D3A] rounded-2xl p-4 shadow-2xl">
+        <div className="mx-3 mb-2 backdrop-blur-xl border rounded-2xl p-4 shadow-2xl" style={{background:'var(--cf-surface)',borderColor:'var(--cf-border)'}}>
           {/* Drawer header */}
           <div className="flex items-center justify-between mb-4">
-            <span className="text-sm font-bold text-[#8B8D97] uppercase tracking-widest">
+            <span className="text-sm font-bold uppercase tracking-widest" style={{color:'var(--cf-muted)'}}>
               All Pages
             </span>
             <button
               onClick={() => setOpen(false)}
-              className="p-2 rounded-xl text-[#8B8D97] hover:text-[#E8E8ED] min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]"
+              className="p-2 rounded-xl min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]" style={{color:'var(--cf-muted)'}}      
               aria-label="Close navigation menu"
             >
               <X className="w-5 h-5" />
@@ -131,7 +131,7 @@ export default function MobileNav({ currentPage, userRole }) {
 
       {/* ── Bottom tab bar ────────────────────────────────────── */}
       <nav
-        className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#0F1117]/97 backdrop-blur-xl border-t border-[#2A2D3A] px-2 pb-[env(safe-area-inset-bottom,8px)]"
+        className="fixed bottom-0 left-0 right-0 z-50 md:hidden backdrop-blur-xl border-t px-2 pb-[env(safe-area-inset-bottom,8px)]" style={{background:'var(--cf-overlay)',borderColor:'var(--cf-border)'}}
         role="navigation"
         aria-label="Mobile navigation"
       >

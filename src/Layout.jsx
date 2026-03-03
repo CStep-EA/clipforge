@@ -57,12 +57,22 @@ export default function Layout({ children, currentPageName }) {
       // via chrome.runtime.sendMessage. Silently ignored when no extension.
       try {
         const token = base44.auth.getToken?.();
+        // Also grab app config so the extension can call Base44 REST directly
+        const appId   = base44.appId   || base44._appId   || base44?.config?.appId;
+        const apiBase = base44.serverUrl || base44._serverUrl || "https://api.base44.com";
         if (token && u?.email && typeof chrome !== "undefined" && chrome?.runtime?.sendMessage) {
           chrome.runtime.sendMessage(
             // Replace with your published extension ID from the Chrome Web Store
             // or use a well-known shared secret during development
             undefined, // undefined = any extension that listens on this origin
-            { type: "SET_AUTH", token, email: u.email },
+            {
+              type:  "SET_AUTH",
+              token,
+              email: u.email,
+              // Extras for Base44 REST direct calls
+              appId:       appId   || null,
+              base44Url:   apiBase || null,
+            },
             () => { /* ignore chrome.runtime.lastError */ }
           );
         }

@@ -226,7 +226,7 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
                     <MoreHorizontal className="w-3.5 h-3.5" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED]">
+                <DropdownMenuContent style={{background:'var(--cf-surface)',borderColor:'var(--cf-border)',color:'var(--cf-text)'}}>
                   <DropdownMenuItem onClick={() => onEdit?.(localItem)} className="text-xs hover:bg-[#2A2D3A]">
                     Edit
                   </DropdownMenuItem>

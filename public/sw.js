@@ -398,6 +398,14 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // ── 1b. Extension save relay (/api/extension/save POST) ──────────────────
+  // The Chrome extension calls this URL. The SW relays the payload directly
+  // to Base44's SavedItem entity REST endpoint using the bearer token.
+  if (url.pathname === "/api/extension/save" && req.method === "POST") {
+    event.respondWith(handleExtensionSave(req));
+    return;
+  }
+
   // ── 2. Non-GET requests — pass through (don't cache POST/PUT/DELETE) ─────
   if (req.method !== "GET") return;
 
@@ -488,6 +496,64 @@ async function networkFirstWithFallback(request) {
 async function fallback() {
   const cache = await caches.open(CACHE_NAME);
   return (await cache.match("/index.html")) || new Response("Offline", { status: 503 });
+}
+
+// ── Extension Save relay ──────────────────────────────────────────────────────
+// Called when the Chrome/Edge extension POSTs to /api/extension/save.
+// The SW reads the Authorization header, then proxies the payload to the
+// Base44 REST API. This keeps the extension from needing to know the
+// Base44 server URL at build time.
+async function handleExtensionSave(req) {
+  const corsHeaders = {
+    "Access-Control-Allow-Origin":  "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-App-Id, X-Klip4ge-Extension",
+    "Content-Type": "application/json",
+  };
+
+  try {
+    const body  = await req.json();
+    const auth  = req.headers.get("Authorization") || "";
+    const appId = req.headers.get("X-App-Id") || "";
+
+    if (!auth.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: corsHeaders });
+    }
+
+    // Relay to Base44 entities REST endpoint
+    const b44Base   = "https://api.base44.com";
+    const entityUrl = appId
+      ? `${b44Base}/apps/${appId}/entities/SavedItem/`
+      : null;
+
+    if (!entityUrl) {
+      return new Response(
+        JSON.stringify({ error: "missing_app_id", hint: "Re-sign-in to sync app config" }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    const upstream = await fetch(entityUrl, {
+      method:  "POST",
+      headers: {
+        "Content-Type":  "application/json",
+        "Authorization": auth,
+        ...(appId ? { "X-App-Id": appId } : {}),
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await upstream.json().catch(() => ({}));
+    return new Response(JSON.stringify(data), {
+      status:  upstream.status,
+      headers: corsHeaders,
+    });
+  } catch (err) {
+    return new Response(
+      JSON.stringify({ error: "relay_error", message: err.message }),
+      { status: 500, headers: corsHeaders }
+    );
+  }
 }
 
 // ── Web Share Target handler ──────────────────────────────────────────────────

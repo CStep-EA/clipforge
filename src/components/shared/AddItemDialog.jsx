@@ -108,7 +108,7 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED] max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto" style={{background:'var(--cf-surface)',borderColor:'var(--cf-border)',color:'var(--cf-text)'}}>
         <DialogHeader>
           <DialogTitle className="gradient-text text-lg">
             {editItem ? "Edit Save" : "Add New Save"}

@@ -57,19 +57,19 @@ function CategoryBreakdown({ items }) {
   }, [items]);
   const max = counts[0]?.[1] || 1;
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-4 mb-4">
-      <p className="text-xs font-semibold text-white/50 uppercase tracking-widest mb-3">Save Breakdown</p>
+    <div className="glass-card p-4 mb-4">
+      <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{color:'var(--cf-muted)'}}>Save Breakdown</p>
       <div className="space-y-2">
         {counts.map(([cat, count]) => (
           <div key={cat} className="flex items-center gap-3">
-            <span className="text-xs w-20 shrink-0 text-white/60">{CATEGORY_LABELS[cat] || cat}</span>
-            <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
+            <span className="text-xs w-20 shrink-0" style={{color:'var(--cf-muted)'}}>{CATEGORY_LABELS[cat] || cat}</span>
+            <div className="flex-1 h-2 rounded-full overflow-hidden" style={{background:'var(--cf-border)'}}>
               <div
                 className="h-full rounded-full transition-all duration-500"
                 style={{ width: `${(count / max) * 100}%`, background: CATEGORY_COLORS[cat] || "#6B7280" }}
               />
             </div>
-            <span className="text-xs w-5 text-right text-white/40">{count}</span>
+            <span className="text-xs w-5 text-right" style={{color:'var(--cf-muted)'}}>{count}</span>
           </div>
         ))}
       </div>

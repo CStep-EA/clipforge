@@ -86,3 +86,86 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Klip4ge brand design tokens
+ * Usage: var(--cf-surface), var(--cf-surface-raised), var(--cf-border),
+ *        var(--cf-text), var(--cf-muted), var(--cf-accent-cyan), var(--cf-accent-purple)
+ *
+ * These map the hardcoded dark hex values (#0F1117, #1A1D27, #2A2D3A, #E8E8ED, #8B8D97)
+ * to semantic CSS vars that automatically flip in light mode.
+ * ─────────────────────────────────────────────────────────────────────────────*/
+
+/* ── Dark mode (default / .dark) ─────────────────────────────────────── */
+:root, .dark {
+  --cf-bg:           #0F1117;   /* page background        */
+  --cf-surface:      #1A1D27;   /* card / panel surface   */
+  --cf-surface-raised: #20243A; /* elevated card          */
+  --cf-border:       #2A2D3A;   /* default border         */
+  --cf-border-subtle: rgba(255,255,255,0.07);
+  --cf-text:         #E8E8ED;   /* primary text           */
+  --cf-muted:        #8B8D97;   /* secondary / muted text */
+  --cf-overlay:      rgba(15,17,23,0.95);
+
+  /* Brand accent colours (unchanged in both modes) */
+  --cf-accent-cyan:   #00BFFF;
+  --cf-accent-purple: #9370DB;
+  --cf-accent-pink:   #FFB6C1;
+  --cf-accent-green:  #10B981;
+
+  /* Semantic shadow */
+  --cf-shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+  --cf-shadow-glow: 0 0 24px rgba(0,191,255,0.15);
+}
+
+/* ── Light mode (.light) ─────────────────────────────────────────────── */
+.light {
+  --cf-bg:           #F5F5F7;
+  --cf-surface:      #FFFFFF;
+  --cf-surface-raised: #F0F2F7;
+  --cf-border:       #E2E4EC;
+  --cf-border-subtle: rgba(0,0,0,0.06);
+  --cf-text:         #1A1D27;
+  --cf-muted:        #6B7280;
+  --cf-overlay:      rgba(245,245,247,0.95);
+
+  --cf-shadow-card: 0 2px 16px rgba(0,0,0,0.08);
+  --cf-shadow-glow: 0 0 24px rgba(0,191,255,0.08);
+}
+
+/* ── Utility helpers (use in className via arbitrary values) ─────────── */
+
+/* Glass card — adapts to both modes */
+.glass-card {
+  background: var(--cf-surface);
+  border: 1px solid var(--cf-border);
+  border-radius: 0.875rem;
+  box-shadow: var(--cf-shadow-card);
+}
+
+/* Scrollbar polish */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--cf-border);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--cf-muted); }
+
+/* Focus ring using brand cyan */
+.focus-cf:focus-visible {
+  outline: 2px solid var(--cf-accent-cyan);
+  outline-offset: 2px;
+}
+
+/* Pulse glow animations */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 rgba(0,191,255,0); }
+  50%       { box-shadow: 0 0 18px rgba(0,191,255,0.35); }
+}
+@keyframes pulse-glow-pink {
+  0%, 100% { box-shadow: 0 0 0 rgba(255,182,193,0); }
+  50%       { box-shadow: 0 0 18px rgba(255,182,193,0.35); }
+}
+.animate-pulse-glow      { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-pulse-glow-pink { animation: pulse-glow-pink 3s ease-in-out infinite; }

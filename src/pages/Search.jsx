@@ -10,7 +10,7 @@
  * saved page content. This implementation adds server-side search so users find
  * items even when the client cache is stale or partial.
  */
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Search as SearchIcon, Sparkles, Loader2, X,
-  Database, Cpu, Globe, BookOpen,
+  Database, Cpu, Globe, BookOpen, Clock,
 } from "lucide-react";
 import SavedItemCard from "@/components/shared/SavedItemCard";
 import { useSubscription } from "@/components/shared/useSubscription";
@@ -38,6 +38,41 @@ const SUGGESTIONS = [
   "gift ideas", "travel plans", "tech products",
 ];
 
+// ── Highlight utility ─────────────────────────────────────────────────────────
+// Wraps matching substring in a <mark> span for search result highlighting
+function Highlight({ text = "", query = "" }) {
+  if (!query.trim() || !text) return <>{text}</>;
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const parts = text.split(new RegExp(`(${escaped})`, "gi"));
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === query.toLowerCase() ? (
+          <mark key={i} className="bg-[#00BFFF]/20 text-[#00BFFF] rounded px-0.5">{part}</mark>
+        ) : (
+          part
+        )
+      )}
+    </>
+  );
+}
+
+// ── Skeleton result card ──────────────────────────────────────────────────────
+function SkeletonCard() {
+  return (
+    <div className="rounded-xl border border-white/8 bg-white/5 p-4 animate-pulse">
+      <div className="flex gap-3">
+        <div className="w-16 h-16 rounded-lg bg-white/10 flex-shrink-0" />
+        <div className="flex-1 space-y-2 py-1">
+          <div className="h-3.5 bg-white/10 rounded w-3/4" />
+          <div className="h-3 bg-white/10 rounded w-1/2" />
+          <div className="h-3 bg-white/10 rounded w-2/3" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Search() {
   const [query, setQuery]               = useState("");
   const [draftQuery, setDraftQuery]     = useState("");
@@ -48,7 +83,8 @@ export default function Search() {
   const [serverResults, setServerResults] = useState(null);
   const [activeTab, setActiveTab]       = useState("combined"); // "combined" | "ai"
 
-  const abortRef = useRef(null);
+  const abortRef   = useRef(null);
+  const debounceRef = useRef(null);
   const queryClient = useQueryClient();
   const { isPro } = useSubscription();
   const { deleteWithUndo } = useUndoDelete();
@@ -59,6 +95,20 @@ export default function Search() {
     queryFn: () => base44.entities.SavedItem.list("-created_date"),
     staleTime: 30_000,
   });
+
+  // ── Debounced as-you-type client search (300ms) ──────────────────────────
+  useEffect(() => {
+    clearTimeout(debounceRef.current);
+    if (!draftQuery.trim()) {
+      setClientResults(null);
+      return;
+    }
+    debounceRef.current = setTimeout(() => {
+      runClientSearch(draftQuery.trim());
+    }, 300);
+    return () => clearTimeout(debounceRef.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draftQuery, items]);
 
   // ── 1. Client-side instant search ─────────────────────────────────────────
   const runClientSearch = useCallback((q) => {
@@ -316,38 +366,73 @@ Be specific, actionable, and reference their personal data where relevant.`,
       )}
 
       {/* Vault results */}
-      {activeTab === "combined" && query && (
+      {activeTab === "combined" && (query || draftQuery) && (
         <div>
-          {combinedResults.length === 0 && !serverLoading ? (
+          {/* ── Status bar ── */}
+          <div className="flex items-center justify-between mb-3 min-h-[22px]">
+            <p className="text-xs text-[#8B8D97] flex items-center gap-1.5">
+              {serverLoading && <Loader2 className="w-3 h-3 animate-spin text-[#9370DB]" />}
+              {serverLoading
+                ? "Searching server…"
+                : query
+                  ? `${combinedResults.length} result${combinedResults.length !== 1 ? "s" : ""} for "${query}"`
+                  : draftQuery
+                    ? `${(clientResults || []).length} local matches`
+                    : ""}
+            </p>
+            <div className="flex items-center gap-2">
+              {serverResults !== null && serverResults.length > 0 && (
+                <Badge variant="outline" className="text-[10px] border-[#9370DB]/30 text-[#9370DB]">
+                  <Cpu className="w-2.5 h-2.5 mr-1" />
+                  Server results included
+                </Badge>
+              )}
+              {clientResults !== null && (
+                <Badge variant="outline" className="text-[10px] border-[#8B8D97]/20 text-[#8B8D97]">
+                  <Database className="w-2.5 h-2.5 mr-1" />
+                  Local
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          {/* ── Skeleton while server is loading ── */}
+          {serverLoading && combinedResults.length === 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[0, 1, 2, 3].map((i) => <SkeletonCard key={i} />)}
+            </div>
+          )}
+
+          {/* ── No results state ── */}
+          {!serverLoading && combinedResults.length === 0 && (query || draftQuery.trim()) && (
             <div className="text-center py-10">
-              <p className="text-[#8B8D97] text-sm">No saved items match "<strong>{query}</strong>"</p>
+              <p className="text-[#8B8D97] text-sm">
+                No saved items match "<strong><Highlight text={query || draftQuery} query={query || draftQuery} /></strong>"
+              </p>
               <p className="text-xs text-[#8B8D97]/60 mt-1">Try the AI tab for web research on this topic.</p>
             </div>
-          ) : (
-            <>
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-xs text-[#8B8D97]">
-                  {serverLoading ? "Searching server…" : `${combinedResults.length} result${combinedResults.length !== 1 ? "s" : ""} found`}
-                </p>
-                {serverResults !== null && serverResults.length > 0 && (
-                  <Badge variant="outline" className="text-[10px] border-[#9370DB]/30 text-[#9370DB]">
-                    <Cpu className="w-2.5 h-2.5 mr-1" />
-                    Server results included
-                  </Badge>
-                )}
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {combinedResults.map((item) => (
+          )}
+
+          {/* ── Results grid ── */}
+          {combinedResults.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {combinedResults.map((item) => (
+                <div key={item.id} className="group">
+                  {/* Highlight match snippet above card */}
+                  {(query || draftQuery) && item.title && (
+                    <p className="text-xs text-[#8B8D97] mb-1 truncate px-1">
+                      <Highlight text={item.title} query={query || draftQuery} />
+                    </p>
+                  )}
                   <SavedItemCard
-                    key={item.id}
                     item={item}
                     onToggleFavorite={handleToggleFavorite}
                     onDelete={handleDelete}
                     isPro={isPro}
                   />
-                ))}
-              </div>
-            </>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       )}
