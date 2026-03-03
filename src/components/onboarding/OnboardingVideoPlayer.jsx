@@ -1,53 +1,7 @@
-/**
- * OnboardingVideoPlayer.tsx
- * ─────────────────────────────────────────────────────────────────────────────
- * Reusable, fully-accessible onboarding video component for ClipForge.
- *
- * Features:
- * - Auto-plays on first visit to the host page (controlled by useOnboarding)
- * - Big "Skip" + "X" close button + Esc key support
- * - "Don't show again" checkbox (persisted per page)
- * - Reduced-motion: shows static poster + play button instead of autoplay
- * - Keyboard-navigable controls (Space = play/pause, M = mute, Esc = close)
- * - Progress bar with time remaining
- * - Fully styled to ClipForge dark-glass aesthetic
- * ─────────────────────────────────────────────────────────────────────────────
- */
-
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-  KeyboardEvent,
-} from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { X, Play, Pause, Volume2, VolumeX, SkipForward, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-
-// ── Props ────────────────────────────────────────────────────────────────────
-
-interface OnboardingVideoPlayerProps {
-  /** Video metadata from the registry */
-  video: VideoConfig;
-  /** Called when the user dismisses (X, Esc, Skip) */
-  onClose: () => void;
-  /** Called when "Don't show again" is toggled */
-  onDontShowAgain?: (checked: boolean) => void;
-  /** Whether "Don't show again" is currently checked */
-  dontShowAgain?: boolean;
-  /** Show a "Watch full walkthrough" link (used inside FAQ) */
-  showWalkthroughLink?: boolean;
-  /** When true the player auto-plays on mount */
-  autoPlay?: boolean;
-  /** Extra tailwind classes on the outer container */
-  className?: string;
-  /** Compact mode: smaller player for FAQ embeds */
-  compact?: boolean;
-}
-
-// ── Component ────────────────────────────────────────────────────────────────
 
 export default function OnboardingVideoPlayer({
   video,
@@ -58,55 +12,38 @@ export default function OnboardingVideoPlayer({
   autoPlay = false,
   className,
   compact = false,
-}: OnboardingVideoPlayerProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+}) {
+  const videoRef = useRef(null);
+  const containerRef = useRef(null);
 
   const [playing, setPlaying]     = useState(false);
-  const [muted, setMuted]         = useState(true);   // start muted for autoplay policy
-  const [progress, setProgress]   = useState(0);      // 0–100
+  const [muted, setMuted]         = useState(true);
+  const [progress, setProgress]   = useState(0);
   const [timeLeft, setTimeLeft]   = useState(video.duration);
   const [showControls, setShowControls] = useState(true);
   const [userInteracted, setUserInteracted] = useState(false);
   const [hasEnded, setHasEnded]   = useState(false);
 
-  // Detect reduced-motion preference
   const prefersReduced =
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  // ── Auto-play on mount ────────────────────────────────────────────────────
 
   useEffect(() => {
     if (!videoRef.current || !autoPlay || prefersReduced) return;
     const vid = videoRef.current;
     vid.muted = true;
-    vid
-      .play()
-      .then(() => setPlaying(true))
-      .catch(() => {}); // browser may block; user can click play
+    vid.play().then(() => setPlaying(true)).catch(() => {});
   }, [autoPlay, prefersReduced]);
 
-  // ── Keyboard handler (Esc, Space, M) ─────────────────────────────────────
-
   useEffect(() => {
-    const handler = (e: Event) => {
-      const ke = e as globalThis.KeyboardEvent;
-      if (ke.key === "Escape") { onClose(); return; }
-      if (ke.key === " " || ke.key === "Spacebar") {
-        e.preventDefault();
-        togglePlay();
-        return;
-      }
-      if (ke.key === "m" || ke.key === "M") {
-        toggleMute();
-      }
+    const handler = (e) => {
+      if (e.key === "Escape") { onClose(); return; }
+      if (e.key === " " || e.key === "Spacebar") { e.preventDefault(); togglePlay(); return; }
+      if (e.key === "m" || e.key === "M") toggleMute();
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, [onClose]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // ── Auto-hide controls ────────────────────────────────────────────────────
 
   useEffect(() => {
     if (!playing) { setShowControls(true); return; }
@@ -115,8 +52,6 @@ export default function OnboardingVideoPlayer({
     }, 3000);
     return () => clearTimeout(t);
   }, [playing, progress]);
-
-  // ── Video event handlers ──────────────────────────────────────────────────
 
   const handleTimeUpdate = useCallback(() => {
     const vid = videoRef.current;
@@ -136,12 +71,7 @@ export default function OnboardingVideoPlayer({
     const vid = videoRef.current;
     if (!vid) return;
     if (vid.paused) {
-      // Unmute on first manual interaction
-      if (!userInteracted) {
-        vid.muted = false;
-        setMuted(false);
-        setUserInteracted(true);
-      }
+      if (!userInteracted) { vid.muted = false; setMuted(false); setUserInteracted(true); }
       vid.play().then(() => setPlaying(true)).catch(() => {});
     } else {
       vid.pause();
@@ -156,7 +86,7 @@ export default function OnboardingVideoPlayer({
     setMuted(vid.muted);
   }, []);
 
-  const handleSeek = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+  const handleSeek = useCallback((e) => {
     const vid = videoRef.current;
     if (!vid || !isFinite(vid.duration) || vid.duration === 0) return;
     const rect = e.currentTarget.getBoundingClientRect();
@@ -164,8 +94,6 @@ export default function OnboardingVideoPlayer({
     const newTime = ratio * vid.duration;
     if (isFinite(newTime)) vid.currentTime = newTime;
   }, []);
-
-  // ── Render ────────────────────────────────────────────────────────────────
 
   const wrapperClass = cn(
     "relative rounded-2xl overflow-hidden bg-[#0F1117]",
@@ -184,7 +112,6 @@ export default function OnboardingVideoPlayer({
       onMouseMove={() => setShowControls(true)}
       onFocus={() => setShowControls(true)}
     >
-      {/* ── Video element ─────────────────────────────────────── */}
       <video
         ref={videoRef}
         src={video.src}
@@ -201,17 +128,12 @@ export default function OnboardingVideoPlayer({
         aria-label={video.title}
       />
 
-      {/* ── Gradient overlays ─────────────────────────────────── */}
       <div className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%, rgba(0,0,0,0.3) 100%)"
-        }}
+        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%, rgba(0,0,0,0.3) 100%)" }}
       />
 
-      {/* ── Top bar: title + close ────────────────────────────── */}
       <div className={cn(
-        "absolute top-0 left-0 right-0 flex items-start justify-between p-4",
-        "transition-opacity duration-300",
+        "absolute top-0 left-0 right-0 flex items-start justify-between p-4 transition-opacity duration-300",
         showControls ? "opacity-100" : "opacity-0"
       )}>
         <div>
@@ -220,7 +142,6 @@ export default function OnboardingVideoPlayer({
           </p>
           <h3 className="text-sm font-bold text-white leading-tight">{video.title}</h3>
         </div>
-
         <button
           onClick={onClose}
           aria-label="Close video"
@@ -230,7 +151,6 @@ export default function OnboardingVideoPlayer({
         </button>
       </div>
 
-      {/* ── Play button overlay (when paused / ended) ─────────── */}
       {(!playing || hasEnded) && (
         <div
           className="absolute inset-0 flex items-center justify-center cursor-pointer"
@@ -238,9 +158,7 @@ export default function OnboardingVideoPlayer({
           role="button"
           aria-label={hasEnded ? "Replay video" : "Play video"}
           tabIndex={0}
-          onKeyDown={(e: KeyboardEvent) => {
-            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePlay(); }
-          }}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePlay(); } }}
         >
           <div className="w-16 h-16 rounded-full bg-[#00BFFF]/20 border-2 border-[#00BFFF]/60 flex items-center justify-center backdrop-blur-sm hover:bg-[#00BFFF]/30 transition-colors">
             {hasEnded ? (
@@ -254,13 +172,10 @@ export default function OnboardingVideoPlayer({
         </div>
       )}
 
-      {/* ── Bottom controls bar ───────────────────────────────── */}
       <div className={cn(
-        "absolute bottom-0 left-0 right-0 px-4 pb-4 pt-8",
-        "transition-opacity duration-300",
+        "absolute bottom-0 left-0 right-0 px-4 pb-4 pt-8 transition-opacity duration-300",
         showControls ? "opacity-100" : "opacity-0"
       )}>
-        {/* Progress bar */}
         <div
           className="w-full h-1.5 bg-white/20 rounded-full cursor-pointer mb-3 group"
           onClick={handleSeek}
@@ -270,7 +185,7 @@ export default function OnboardingVideoPlayer({
           aria-valuemin={0}
           aria-valuemax={100}
           tabIndex={0}
-          onKeyDown={(e: KeyboardEvent) => {
+          onKeyDown={(e) => {
             const vid = videoRef.current;
             if (!vid || !isFinite(vid.duration)) return;
             if (e.key === "ArrowRight") vid.currentTime = Math.min(vid.duration, vid.currentTime + 5);
@@ -284,66 +199,29 @@ export default function OnboardingVideoPlayer({
         </div>
 
         <div className="flex items-center justify-between gap-3">
-          {/* Left: play/pause + mute + time */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={togglePlay}
-              aria-label={playing ? "Pause" : "Play"}
-              className="text-white/90 hover:text-white transition-colors"
-            >
-              {playing ? (
-                <Pause className="w-4 h-4" fill="currentColor" />
-              ) : (
-                <Play className="w-4 h-4" fill="currentColor" />
-              )}
+            <button onClick={togglePlay} aria-label={playing ? "Pause" : "Play"} className="text-white/90 hover:text-white transition-colors">
+              {playing ? <Pause className="w-4 h-4" fill="currentColor" /> : <Play className="w-4 h-4" fill="currentColor" />}
             </button>
-
-            <button
-              onClick={toggleMute}
-              aria-label={muted ? "Unmute" : "Mute"}
-              className="text-white/80 hover:text-white transition-colors"
-            >
-              {muted ? (
-                <VolumeX className="w-4 h-4" />
-              ) : (
-                <Volume2 className="w-4 h-4" />
-              )}
+            <button onClick={toggleMute} aria-label={muted ? "Unmute" : "Mute"} className="text-white/80 hover:text-white transition-colors">
+              {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </button>
-
             {timeLeft > 0 && (
-              <span className="text-[11px] text-white/60 tabular-nums">
-                {timeLeft}s left
-              </span>
+              <span className="text-[11px] text-white/60 tabular-nums">{timeLeft}s left</span>
             )}
           </div>
-
-          {/* Right: Skip + watchthrough link */}
           <div className="flex items-center gap-2">
             {showWalkthroughLink && (
-              <a
-                href="/Support"
-                className="flex items-center gap-1 text-[11px] text-[#9370DB] hover:text-[#a78bfa] transition-colors"
-                aria-label="Watch full walkthrough"
-              >
-                <BookOpen className="w-3 h-3" />
-                Walkthrough
+              <a href="/Support" className="flex items-center gap-1 text-[11px] text-[#9370DB] hover:text-[#a78bfa] transition-colors" aria-label="Watch full walkthrough">
+                <BookOpen className="w-3 h-3" /> Walkthrough
               </a>
             )}
-
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={onClose}
-              aria-label="Skip video"
-              className="h-7 px-3 text-[11px] text-white/70 hover:text-white hover:bg-white/10 gap-1"
-            >
-              <SkipForward className="w-3 h-3" />
-              Skip
+            <Button size="sm" variant="ghost" onClick={onClose} aria-label="Skip video" className="h-7 px-3 text-[11px] text-white/70 hover:text-white hover:bg-white/10 gap-1">
+              <SkipForward className="w-3 h-3" /> Skip
             </Button>
           </div>
         </div>
 
-        {/* "Don't show again" checkbox */}
         {onDontShowAgain && (
           <div className="flex items-center gap-2 mt-3 pt-3 border-t border-white/10">
             <input
@@ -353,34 +231,22 @@ export default function OnboardingVideoPlayer({
               onChange={(e) => onDontShowAgain(e.target.checked)}
               className="w-3.5 h-3.5 rounded border-white/30 bg-transparent accent-[#00BFFF] cursor-pointer"
             />
-            <label
-              htmlFor="dont-show-again"
-              className="text-[11px] text-white/60 cursor-pointer hover:text-white/80 transition-colors select-none"
-            >
+            <label htmlFor="dont-show-again" className="text-[11px] text-white/60 cursor-pointer hover:text-white/80 transition-colors select-none">
               Don't show this again for this page
             </label>
           </div>
         )}
       </div>
 
-      {/* ── Reduced-motion overlay ────────────────────────────── */}
       {prefersReduced && !userInteracted && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm gap-3 p-4 text-center">
           <p className="text-sm text-white/80 max-w-xs">
             Animations are reduced. Click play to watch this walkthrough video at your own pace.
           </p>
-          <Button
-            onClick={() => { setUserInteracted(true); togglePlay(); }}
-            className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white"
-            size="sm"
-          >
-            <Play className="w-4 h-4 mr-2" fill="white" />
-            Watch walkthrough
+          <Button onClick={() => { setUserInteracted(true); togglePlay(); }} className="bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white" size="sm">
+            <Play className="w-4 h-4 mr-2" fill="white" /> Watch walkthrough
           </Button>
-          <button
-            onClick={onClose}
-            className="text-xs text-white/50 hover:text-white/80 underline"
-          >
+          <button onClick={onClose} className="text-xs text-white/50 hover:text-white/80 underline">
             Skip for now
           </button>
         </div>
