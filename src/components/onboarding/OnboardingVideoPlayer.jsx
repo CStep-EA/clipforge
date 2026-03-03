@@ -24,7 +24,7 @@ import React, {
 import { X, Play, Pause, Volume2, VolumeX, SkipForward, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { VideoConfig } from "@/hooks/useOnboarding";
+
 
 // ── Props ────────────────────────────────────────────────────────────────────
 
