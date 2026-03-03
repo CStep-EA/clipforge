@@ -139,9 +139,9 @@ export default function BetaFeedbackWidget({ user }) {
 
   return (
     <>
-      {/* Floating trigger button */}
+      {/* Floating trigger button — positioned LEFT side, above support bot */}
       <div
-        className="fixed bottom-24 right-4 md:bottom-6 md:right-6 z-[60] flex flex-col items-end gap-1"
+        className="fixed bottom-24 left-4 md:bottom-8 md:left-6 z-[60] flex flex-col items-start gap-1"
         aria-label="Open beta feedback form"
       >
         <button
@@ -169,7 +169,7 @@ export default function BetaFeedbackWidget({ user }) {
               <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-[#F59E0B] text-[#0F1117] leading-none tracking-wide">BETA</span>
             </div>
             <DialogDescription id="beta-feedback-desc" className="text-[#8B8D97] text-sm">
-              Help us improve ClipForge — your input goes directly to the team. Takes about 2 minutes.
+              Help us improve Klip4ge — your input goes directly to the team. Takes about 2 minutes.
             </DialogDescription>
           </DialogHeader>
 

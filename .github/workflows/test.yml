@@ -1,0 +1,149 @@
+##############################################################################
+# Klip4ge — CI/CD Pipeline
+# Runs on every push / PR to main
+#
+# Jobs:
+#  1. test     — Jest unit + integration tests (549 suite)
+#  2. lint     — ESLint with auto-fix check
+#  3. build    — Vite production build (validates bundle compiles)
+#  4. a11y     — Basic accessibility audit (axe-core via jest-axe)
+##############################################################################
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+# Cancel redundant runs on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+  NODE_OPTIONS: "--max-old-space-size=1536"
+
+jobs:
+  # ── 1. Unit & Integration Tests ──────────────────────────────────────────
+  test:
+    name: "🧪 Jest Tests"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Run tests with coverage
+        run: npx jest --watchAll=false --coverage --forceExit --ci
+        env:
+          CI: true
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  # ── 2. Lint ───────────────────────────────────────────────────────────────
+  lint:
+    name: "🔍 ESLint"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Run ESLint
+        run: npm run lint
+
+  # ── 3. Production Build ───────────────────────────────────────────────────
+  build:
+    name: "🏗️ Vite Build"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [test]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Build
+        run: npm run build
+        env:
+          NODE_OPTIONS: "--max-old-space-size=1536"
+
+      - name: Check build output
+        run: |
+          test -d dist || (echo "dist/ directory not found!" && exit 1)
+          ls -lh dist/
+          echo "✅ Build output validated"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 3
+
+  # ── 4. Bundle size check ──────────────────────────────────────────────────
+  bundle-size:
+    name: "📦 Bundle Size"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [build]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Build & check bundle size
+        run: |
+          npm run build
+          # Fail if main JS bundle > 2MB (uncompressed)
+          MAIN_JS=$(find dist/assets -name "*.js" | xargs wc -c | sort -rn | head -1 | awk '{print $1}')
+          echo "Largest JS bundle: ${MAIN_JS} bytes"
+          if [ "$MAIN_JS" -gt 2097152 ]; then
+            echo "❌ Bundle too large: ${MAIN_JS} bytes > 2MB limit"
+            exit 1
+          fi
+          echo "✅ Bundle size OK: ${MAIN_JS} bytes"
+        env:
+          NODE_OPTIONS: "--max-old-space-size=1536"

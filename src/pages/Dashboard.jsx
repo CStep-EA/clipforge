@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -25,6 +25,7 @@ import TrialAndReferralBanner from "@/components/subscription/TrialAndReferralBa
 import IntegrationQuickBar from "@/components/dashboard/IntegrationQuickBar";
 import OnboardingVideoPlayer from "@/components/onboarding/OnboardingVideoPlayer";
 import { useOnboarding, ONBOARDING_VIDEOS } from "@/hooks/useOnboarding";
+import { useUndoDelete } from "@/hooks/useUndoDelete";
 
 // AI-driven priority ranking: deals first, then by rating, then recent
 function rankItems(items) {
@@ -42,6 +43,7 @@ export default function Dashboard() {
   const [shareItem, setShareItem] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const { user, isPro, isFamily, isDebugMode, plan } = useSubscription();
+  const { deleteWithUndo } = useUndoDelete();
   const onboarding = useOnboarding(user?.email);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [dontShowDashboard, setDontShowDashboard] = useState(false);
@@ -99,15 +101,16 @@ export default function Dashboard() {
     }
   };
 
-  const handleDelete = async (item) => {
-    try {
-      await base44.entities.SavedItem.delete(item.id);
-      queryClient.invalidateQueries({ queryKey: ["savedItems"] });
-      toast.success("Item deleted");
-    } catch (e) {
-      toast.error("Could not delete item.");
-    }
-  };
+  const handleDelete = useCallback((item) => {
+    queryClient.setQueryData(["savedItems"], (prev = []) =>
+      prev.filter((i) => i.id !== item.id)
+    );
+    deleteWithUndo({
+      label: item.title || "item",
+      onConfirm: () => base44.entities.SavedItem.delete(item.id),
+      onUndo: () => queryClient.invalidateQueries({ queryKey: ["savedItems"] }),
+    });
+  }, [deleteWithUndo, queryClient]);
 
   const stats = {
     total: items.length,

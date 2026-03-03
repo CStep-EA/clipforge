@@ -1,7 +1,7 @@
 /**
  * useOnboarding.ts
  * ─────────────────────────────────────────────────────────────────────────────
- * Central hook for ClipForge's onboarding video system.
+ * Central hook for Klip4ge's onboarding video system.
  *
  * Persistence strategy (dual-layer):
  *   1. localStorage  – instant, offline-safe, per-browser
@@ -10,6 +10,18 @@
  * When the user is signed in, Base44 is the source of truth.
  * localStorage is the fallback for anonymous/offline states and is reconciled
  * on every successful Base44 read.
+ *
+ * Video sources: Each entry can specify:
+ *   - src:       local /videos/onboarding/*.mp4  (hosted in /public/videos/)
+ *   - youtubeId: YouTube video ID fallback (used when src file is unavailable)
+ *
+ * PRODUCTION SETUP:
+ *   Upload your screen recordings to /public/videos/onboarding/ (or a CDN).
+ *   Each video should be ~60–90s, 1080p, exported as H.264 MP4 + WebM.
+ *   Poster images (JPEG thumbnails) go alongside: dashboard-poster.jpg etc.
+ *
+ *   Quick YouTube workaround: set youtubeId to a public Loom/YouTube recording
+ *   and the player will embed it as a fallback when the local file 404s.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -21,10 +33,12 @@ import { base44 } from "@/api/base44Client";
 export const ONBOARDING_VIDEOS = {
   dashboard: {
     id: "dashboard",
-    title: "Welcome to ClipForge",
+    title: "Welcome to Klip4ge",
     description: "Save, organise, and share your favourite content",
     src: "/videos/onboarding/dashboard.mp4",
     poster: "/videos/onboarding/dashboard-poster.jpg",
+    // Replace with your Loom embed ID or YouTube video ID for fallback
+    youtubeId: "", // e.g. "dQw4w9WgXcQ"
     duration: 75, // seconds (for progress ring)
     page: "Dashboard",
   },
@@ -34,6 +48,7 @@ export const ONBOARDING_VIDEOS = {
     description: "Quick-save anything from the web in seconds",
     src: "/videos/onboarding/saves.mp4",
     poster: "/videos/onboarding/saves-poster.jpg",
+    youtubeId: "",
     duration: 60,
     page: "Saves",
   },
@@ -43,6 +58,7 @@ export const ONBOARDING_VIDEOS = {
     description: "Share boards with family, friends, or your partner",
     src: "/videos/onboarding/sharing.mp4",
     poster: "/videos/onboarding/sharing-poster.jpg",
+    youtubeId: "",
     duration: 70,
     page: "Friends",
   },
@@ -52,6 +68,7 @@ export const ONBOARDING_VIDEOS = {
     description: "AI support bot, ticket system, and documentation",
     src: "/videos/onboarding/support.mp4",
     poster: "/videos/onboarding/support-poster.jpg",
+    youtubeId: "",
     duration: 55,
     page: "Support",
   },
@@ -61,6 +78,7 @@ export const ONBOARDING_VIDEOS = {
     description: "Free 7-day trial, Pro features, and family plans",
     src: "/videos/onboarding/subscription.mp4",
     poster: "/videos/onboarding/subscription-poster.jpg",
+    youtubeId: "",
     duration: 50,
     page: "Pricing",
   },
@@ -70,6 +88,7 @@ export const ONBOARDING_VIDEOS = {
     description: "Discover, save, and add events to your calendar",
     src: "/videos/onboarding/events.mp4",
     poster: "/videos/onboarding/events-poster.jpg",
+    youtubeId: "",
     duration: 60,
     page: "Events",
   },

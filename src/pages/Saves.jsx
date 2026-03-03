@@ -21,6 +21,7 @@ import TrialBanner from "@/components/subscription/TrialBanner";
 import OnboardingVideoPlayer from "@/components/onboarding/OnboardingVideoPlayer";
 import { useOnboarding, ONBOARDING_VIDEOS } from "@/hooks/useOnboarding";
 import { toast } from "sonner";
+import { useUndoDelete } from "@/hooks/useUndoDelete";
 
 export default function Saves() {
   const [addOpen, setAddOpen] = useState(false);
@@ -38,6 +39,7 @@ export default function Saves() {
   const [bulkDeleting, setBulkDeleting] = useState(false);
 
   const queryClient = useQueryClient();
+  const { deleteWithUndo } = useUndoDelete();
 
   // Onboarding video for the Saves page
   const onboarding = useOnboarding(user?.email);
@@ -93,10 +95,18 @@ export default function Saves() {
     queryClient.invalidateQueries({ queryKey: ["savedItems"] });
   };
 
-  const handleDelete = async (item) => {
-    await base44.entities.SavedItem.delete(item.id);
-    queryClient.invalidateQueries({ queryKey: ["savedItems"] });
-  };
+  const handleDelete = useCallback((item) => {
+    // Optimistically remove from cache immediately for snappy UX
+    queryClient.setQueryData(["savedItems"], (prev = []) =>
+      prev.filter((i) => i.id !== item.id)
+    );
+    deleteWithUndo({
+      label: item.title || "item",
+      onConfirm: () => base44.entities.SavedItem.delete(item.id),
+      onUndo: () =>
+        queryClient.invalidateQueries({ queryKey: ["savedItems"] }),
+    });
+  }, [deleteWithUndo, queryClient]);
 
   const handleEdit = (item) => {
     setEditItem(item);
@@ -120,22 +130,28 @@ export default function Saves() {
   const selectAll = () => setSelectedIds(new Set(filtered.map(i => i.id)));
   const clearSelection = () => { setSelectedIds(new Set()); setBulkMode(false); };
 
-  const handleBulkDelete = async () => {
+  const handleBulkDelete = useCallback(() => {
     if (selectedIds.size === 0) return;
-    const confirmed = window.confirm(`Delete ${selectedIds.size} item${selectedIds.size > 1 ? "s" : ""}? This cannot be undone.`);
-    if (!confirmed) return;
-    setBulkDeleting(true);
-    try {
-      await Promise.all([...selectedIds].map(id => base44.entities.SavedItem.delete(id)));
-      queryClient.invalidateQueries({ queryKey: ["savedItems"] });
-      toast.success(`Deleted ${selectedIds.size} item${selectedIds.size > 1 ? "s" : ""}`);
-      clearSelection();
-    } catch {
-      toast.error("Some items could not be deleted.");
-    } finally {
-      setBulkDeleting(false);
-    }
-  };
+    const ids = [...selectedIds];
+    const count = ids.length;
+    // Optimistic removal
+    queryClient.setQueryData(["savedItems"], (prev = []) =>
+      prev.filter((i) => !selectedIds.has(i.id))
+    );
+    clearSelection();
+    deleteWithUndo({
+      label: `${count} item${count > 1 ? "s" : ""}`,
+      onConfirm: async () => {
+        setBulkDeleting(true);
+        try {
+          await Promise.all(ids.map(id => base44.entities.SavedItem.delete(id)));
+        } finally {
+          setBulkDeleting(false);
+        }
+      },
+      onUndo: () => queryClient.invalidateQueries({ queryKey: ["savedItems"] }),
+    });
+  }, [selectedIds, deleteWithUndo, queryClient, clearSelection]);
 
   return (
     <div className="max-w-7xl mx-auto space-y-0">
