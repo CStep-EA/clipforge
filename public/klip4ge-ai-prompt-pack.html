@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Klip4ge — AI Generation Prompt Pack · Steps 1 & 2</title>
+<style>
+  :root {
+    --bg:#0F1117; --s1:#1A1D27; --s2:#22253A; --bd:#2A2D3A;
+    --cy:#00BFFF; --pu:#9370DB; --pk:#FFB6C1; --gr:#10B981;
+    --am:#F59E0B; --rd:#EF4444;
+    --tx:#E8E8ED; --mu:#8B8D97;
+    --r:12px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);line-height:1.65;padding-bottom:80px;}
+
+  /* ── header ── */
+  .hdr{background:linear-gradient(135deg,#0a0c13 0%,#12103a 50%,#0a0c13 100%);border-bottom:1px solid var(--bd);padding:52px 32px 44px;text-align:center;}
+  .logo{display:inline-flex;align-items:center;gap:12px;margin-bottom:18px;}
+  .logo-icon{width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,var(--cy),var(--pu));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#fff;box-shadow:0 0 32px rgba(0,191,255,.4);}
+  .logo-text{font-size:34px;font-weight:900;background:linear-gradient(90deg,var(--cy),var(--pu));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .hdr h1{font-size:20px;font-weight:700;margin-bottom:8px;}
+  .hdr p{font-size:13px;color:var(--mu);max-width:560px;margin:0 auto;}
+  .badge{display:inline-block;margin-top:14px;padding:4px 14px;border-radius:20px;background:rgba(0,191,255,.1);border:1px solid rgba(0,191,255,.3);font-size:11px;color:var(--cy);font-weight:700;letter-spacing:.5px;}
+
+  /* ── layout ── */
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px;}
+
+  /* ── brand box ── */
+  .brand-box{margin:32px auto;background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:28px 32px;}
+  .brand-box h2{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:16px;}
+  .swatch-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;}
+  .sw{display:flex;align-items:center;gap:8px;font-size:12px;}
+  .sw-dot{width:22px;height:22px;border-radius:6px;flex-shrink:0;border:1px solid rgba(255,255,255,.1);}
+  .sw code{font-size:11px;color:var(--mu);}
+  .brand-note{font-size:12px;color:var(--mu);line-height:1.7;}
+
+  /* ── toc ── */
+  .toc{margin:28px auto;background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:22px 28px;}
+  .toc h2{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
+  .toc ol{padding-left:20px;}
+  .toc li{margin:7px 0;}
+  .toc a{color:var(--cy);text-decoration:none;font-size:13px;font-weight:500;}
+  .toc a:hover{text-decoration:underline;}
+
+  /* ── section divider ── */
+  .section-hdr{margin:44px 0 20px;display:flex;align-items:center;gap:14px;}
+  .section-num{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0;}
+  .n-cy{background:linear-gradient(135deg,var(--cy),#006699);box-shadow:0 0 18px rgba(0,191,255,.4);}
+  .n-pu{background:linear-gradient(135deg,var(--pu),#5533aa);box-shadow:0 0 18px rgba(147,112,219,.4);}
+  .section-hdr h2{font-size:20px;font-weight:800;}
+  .section-hdr p{font-size:12px;color:var(--mu);margin-top:2px;}
+
+  /* ── prompt card ── */
+  .pcard{background:var(--s1);border:1px solid var(--bd);border-radius:14px;margin:0 0 24px;overflow:hidden;}
+  .pcard-head{display:flex;align-items:flex-start;gap:16px;padding:18px 24px;border-bottom:1px solid var(--bd);background:var(--s2);}
+  .pcard-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;margin-top:2px;}
+  .ic-cy{background:rgba(0,191,255,.15);border:1px solid rgba(0,191,255,.3);}
+  .ic-pu{background:rgba(147,112,219,.15);border:1px solid rgba(147,112,219,.3);}
+  .ic-pk{background:rgba(255,182,193,.15);border:1px solid rgba(255,182,193,.3);}
+  .ic-gr{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);}
+  .ic-am{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);}
+  .pcard-meta{flex:1;}
+  .pcard-meta h3{font-size:15px;font-weight:800;margin-bottom:4px;}
+  .pcard-meta p{font-size:12px;color:var(--mu);}
+  .pcard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+  .tag{padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.4px;}
+  .tag-cy{background:rgba(0,191,255,.1);color:var(--cy);border:1px solid rgba(0,191,255,.25);}
+  .tag-pu{background:rgba(147,112,219,.1);color:var(--pu);border:1px solid rgba(147,112,219,.25);}
+  .tag-gr{background:rgba(16,185,129,.1);color:var(--gr);border:1px solid rgba(16,185,129,.25);}
+  .tag-am{background:rgba(245,158,11,.1);color:var(--am);border:1px solid rgba(245,158,11,.25);}
+  .pcard-body{padding:22px 24px;}
+
+  /* ── spec row ── */
+  .spec-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .spec{padding:5px 12px;border-radius:8px;background:var(--s2);border:1px solid var(--bd);font-size:11px;font-weight:600;}
+  .spec strong{color:var(--cy);}
+
+  /* ── prompt text ── */
+  .prompt-label{font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+  .prompt-text{background:#090b12;border:1px solid var(--bd);border-radius:10px;padding:18px 20px;font-size:12.5px;line-height:1.75;color:#c9d1d9;white-space:pre-wrap;word-break:break-word;position:relative;}
+  .copy-btn{position:absolute;top:10px;right:10px;padding:5px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;color:var(--mu);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
+  .copy-btn:hover{background:rgba(0,191,255,.1);color:var(--cy);border-color:rgba(0,191,255,.3);}
+
+  /* ── overlay note ── */
+  .overlay-note{margin-top:14px;padding:12px 16px;background:rgba(147,112,219,.08);border:1px solid rgba(147,112,219,.2);border-radius:8px;font-size:12px;color:var(--mu);}
+  .overlay-note strong{color:var(--pu);}
+
+  /* ── file grid ── */
+  .file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:10px;}
+  .file-pill{padding:10px 14px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;font-size:12px;}
+  .file-pill .name{font-weight:700;color:var(--tx);font-family:monospace;font-size:11px;}
+  .file-pill .dim{color:var(--mu);font-size:10px;margin-top:2px;}
+
+  /* ── code block ── */
+  pre.code{background:#090b12;border:1px solid var(--bd);border-radius:10px;padding:16px 20px;font-size:12px;line-height:1.7;color:#c9d1d9;overflow-x:auto;margin-top:10px;}
+
+  /* ── checklist ── */
+  .checklist{list-style:none;padding:0;margin-top:12px;}
+  .checklist li{padding:7px 12px;font-size:13px;display:flex;align-items:center;gap:10px;border-radius:8px;margin:3px 0;}
+  .checklist li:hover{background:var(--s2);}
+  .ch{width:18px;height:18px;border:2px solid var(--bd);border-radius:4px;flex-shrink:0;}
+
+  /* ── info box ── */
+  .info{padding:14px 18px;background:rgba(0,191,255,.06);border:1px solid rgba(0,191,255,.2);border-radius:10px;font-size:12.5px;color:var(--mu);margin-bottom:20px;}
+  .info strong{color:var(--cy);}
+
+  /* ── responsive ── */
+  @media(max-width:600px){
+    .pcard-head{flex-direction:column;}
+    .section-hdr h2{font-size:17px;}
+    .hdr{padding:36px 20px 30px;}
+    .brand-box,.toc,.pcard-body{padding:18px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════════════════════ -->
+<div class="hdr">
+  <div class="logo">
+    <div class="logo-icon">K</div>
+    <span class="logo-text">Klip4ge</span>
+  </div>
+  <h1>AI Generation Prompt Pack — Steps 1 &amp; 2</h1>
+  <p>Complete copy-paste prompts for an AI image/video tool to generate all onboarding poster frames and app store screenshots.</p>
+  <span class="badge">6 Poster Frames · 4 Screenshots · 10 Assets Total</span>
+</div>
+
+<div class="wrap">
+
+<!-- ══ BRAND REFERENCE ══════════════════════════════════════════════════════ -->
+<div class="brand-box" id="brand">
+  <h2>🎨 Brand Reference — paste into any AI tool as system context</h2>
+  <div class="swatch-row">
+    <div class="sw"><div class="sw-dot" style="background:#0F1117;"></div><span>Background</span><code>#0F1117</code></div>
+    <div class="sw"><div class="sw-dot" style="background:#1A1D27;"></div><span>Surface</span><code>#1A1D27</code></div>
+    <div class="sw"><div class="sw-dot" style="background:#2A2D3A;"></div><span>Border</span><code>#2A2D3A</code></div>
+    <div class="sw"><div class="sw-dot" style="background:#00BFFF;"></div><span>Cyan</span><code>#00BFFF</code></div>
+    <div class="sw"><div class="sw-dot" style="background:#9370DB;"></div><span>Purple</span><code>#9370DB</code></div>
+    <div class="sw"><div class="sw-dot" style="background:#FFB6C1;"></div><span>Pink</span><code>#FFB6C1</code></div>
+    <div class="sw"><div class="sw-dot" style="background:#10B981;"></div><span>Emerald</span><code>#10B981</code></div>
+    <div class="sw"><div class="sw-dot" style="background:#8B8D97;"></div><span>Muted</span><code>#8B8D97</code></div>
+    <div class="sw"><div class="sw-dot" style="background:#E8E8ED;"></div><span>Text</span><code>#E8E8ED</code></div>
+  </div>
+  <p class="brand-note">
+    <strong>UI style:</strong> Dark glassmorphism — frosted dark cards (#1A1D27) with hairline borders (#2A2D3A), neon glow halos on interactive elements (cyan/purple box-shadow), border-radius ~16px, gradient text on headings using linear-gradient(90deg, #00BFFF, #9370DB).<br><br>
+    <strong>Vibe:</strong> Premium consumer SaaS. Think Notion × Linear × a modern consumer social app. Dark, futuristic, but friendly and approachable.<br><br>
+    <strong>App name spelling:</strong> Always <strong>Klip4ge</strong> — capital K, lowercase "lip", number 4, lowercase "ge". Never "ClipForge", never "Klip4Age".
+  </p>
+</div>
+
+<!-- ══ TOC ══════════════════════════════════════════════════════════════════ -->
+<div class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#step1">Step 1 — Onboarding Video Poster Frames (6 assets, 1280×720 JPEG)</a></li>
+    <li><a href="#p1">Poster 1: dashboard-poster.jpg — "Welcome to Klip4ge"</a></li>
+    <li><a href="#p2">Poster 2: saves-poster.jpg — "Saving Items"</a></li>
+    <li><a href="#p3">Poster 3: sharing-poster.jpg — "Sharing &amp; Collaboration"</a></li>
+    <li><a href="#p4">Poster 4: support-poster.jpg — "Getting Support"</a></li>
+    <li><a href="#p5">Poster 5: subscription-poster.jpg — "Plans &amp; Upgrades"</a></li>
+    <li><a href="#p6">Poster 6: events-poster.jpg — "Events &amp; Calendar"</a></li>
+    <li><a href="#step2">Step 2 — App Store Screenshots (4 assets)</a></li>
+    <li><a href="#s1">Screenshot A: dashboard.png — 1280×720</a></li>
+    <li><a href="#s2">Screenshot B: saves.png — 1280×720</a></li>
+    <li><a href="#s3">Screenshot C: search.png — 1280×720</a></li>
+    <li><a href="#s4">Screenshot D: saves-mobile.png — 390×844</a></li>
+    <li><a href="#delivery">Delivery Checklist &amp; File Paths</a></li>
+  </ol>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     STEP 1 — POSTER FRAMES
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="section-hdr" id="step1">
+  <div class="section-num n-cy">1</div>
+  <div>
+    <h2>Onboarding Video Poster Frames</h2>
+    <p>6 JPEG images · 1280 × 720 px each · shown as video thumbnail before playback</p>
+  </div>
+</div>
+
+<div class="info">
+  <strong>What these are:</strong> Each onboarding video has a <code>.jpg</code> poster image shown before the video starts playing. They're shown inside the in-app video player dialog on first visit to each page. They need to look like a real frozen frame of the app with a play button overlay.
+</div>
+
+<!-- ── Poster 1 ── -->
+<div class="pcard" id="p1">
+  <div class="pcard-head">
+    <div class="pcard-icon ic-cy">🏠</div>
+    <div class="pcard-meta">
+      <h3>Poster 1 — <code>dashboard-poster.jpg</code></h3>
+      <p>Video title shown to user: <strong>"Welcome to Klip4ge"</strong> · "Save, organise, and share your favourite content"</p>
+      <div class="pcard-tags">
+        <span class="tag tag-cy">1280 × 720 px</span>
+        <span class="tag tag-cy">JPEG</span>
+        <span class="tag tag-gr">75 sec video</span>
+        <span class="tag tag-pu">Triggers on: Dashboard</span>
+      </div>
+    </div>
+  </div>
+  <div class="pcard-body">
+    <div class="spec-row">
+      <div class="spec"><strong>Size:</strong> 1280 × 720 px</div>
+      <div class="spec"><strong>Format:</strong> JPEG</div>
+      <div class="spec"><strong>File:</strong> dashboard-poster.jpg</div>
+      <div class="spec"><strong>Dest:</strong> public/videos/onboarding/</div>
+    </div>
+    <div class="prompt-label">Full Prompt — copy &amp; paste into your AI tool</div>
+    <div style="position:relative;">
+      <pre class="prompt-text" id="prompt-p1">Generate a 1280×720 JPEG image that looks like a frozen frame of a real dark web app, with a video play button overlay in the bottom-left corner.
+
+BACKGROUND SCENE — Klip4ge Dashboard page:
+Dark background color #0F1117 (near-black). The UI is dark glassmorphism style.
+
+LEFT SIDEBAR (240px wide, background #1A1D27):
+- Top: a small gradient diamond logo icon (cyan #00BFFF to purple #9370DB) + "Klip4ge" text in gradient. Below it a vertical nav list: Dashboard (selected — cyan left-border glow + cyan text), Saves, Search, Boards, Events, Friends, Settings (all white icons + labels). Bottom: user avatar circle "CS", name "Colton Stephenson", "Pro" badge in cyan.
+
+MAIN CONTENT (right of sidebar, dark #0F1117):
+- Greeting: "Welcome back, Colton" in large (28px) white bold text, left-aligned.
+- 4 stat cards in a row (glass cards, dark #1A1D27, border #2A2D3A, rounded-2xl, subtle cyan glow on first card):
+  "Total Saves" → number 47 in cyan, Bookmark icon. "Active Deals" → 12 in purple, TrendingUp icon. "Favorites" → 8 in #FFB6C1 pink, Sparkles icon. "Boards" → 3 in emerald #10B981, Users icon.
+- A "Quick Save +" button — full cyan-to-purple gradient fill, white text, glowing.
+- Getting Started checklist card (glass-card style): 2 items checked (emerald checkmarks), 1 unchecked (grey circle). Labels: "Install browser extension ✓", "Save your first item ✓", "Set up event reminders".
+- Section heading "Top Picks" in white semibold.
+- Grid of 3 saved item cards (dark glass cards with rounded corners):
+  Card 1: product image of white AirPods Pro in box, small bestbuy.com favicon overlay, title "AirPods Pro 2 — 30% off", purple "Deals" pill badge, "9/10" rating chip in yellow.
+  Card 2: food photo of pasta carbonara, pink heart icon (filled), title "Homemade Pasta Carbonara", orange "Recipes" pill badge.
+  Card 3: mountain landscape photo, title "Weekend Hiking Trip — Zion NP", teal "Travel" pill badge, "7/10" rating chip.
+- Bottom row: 4 quick-action tiles (glass cards): "AI Search" cyan Sparkles, "Shared Boards" purple Users, "Events" purple Calendar, "Friends" cyan UserPlus.
+
+PLAY BUTTON OVERLAY (bottom-left of image):
+- Semi-transparent dark gradient across bottom 28% of image (rgba(0,0,0,0.65)).
+- White circle play button (58px, filled white triangle inside) in bottom-left, ~60px from left edge, ~40px from bottom.
+- Next to play button: title "Welcome to Klip4ge" in white bold 22px. Below that: "Save, organise, and share your favourite content" in #8B8D97 grey 13px.
+
+Output: 1280×720 px, JPEG, sRGB color space, no browser chrome, no device frame.</pre>
+      <button class="copy-btn" onclick="copyPrompt('prompt-p1',this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Poster 2 ── -->
+<div class="pcard" id="p2">
+  <div class="pcard-head">
+    <div class="pcard-icon ic-cy">🔖</div>
+    <div class="pcard-meta">
+      <h3>Poster 2 — <code>saves-poster.jpg</code></h3>
+      <p>Video title shown to user: <strong>"Saving Items"</strong> · "Quick-save anything from the web in seconds"</p>
+      <div class="pcard-tags">
+        <span class="tag tag-cy">1280 × 720 px</span>
+        <span class="tag tag-cy">JPEG</span>
+        <span class="tag tag-gr">60 sec video</span>
+        <span class="tag tag-pu">Triggers on: Saves page</span>
+      </div>
+    </div>
+  </div>
+  <div class="pcard-body">
+    <div class="spec-row">
+      <div class="spec"><strong>Size:</strong> 1280 × 720 px</div>
+      <div class="spec"><strong>Format:</strong> JPEG</div>
+      <div class="spec"><strong>File:</strong> saves-poster.jpg</div>
+      <div class="spec"><strong>Dest:</strong> public/videos/onboarding/</div>
+    </div>
+    <div class="prompt-label">Full Prompt</div>
+    <div style="position:relative;">
+      <pre class="prompt-text" id="prompt-p2">Generate a 1280×720 JPEG image that looks like a frozen frame of a real dark web app, with a video play button overlay in the bottom-left corner.
+
+BACKGROUND SCENE — Klip4ge "My Saves" page:
+Dark background #0F1117. Dark glassmorphism UI style.
+
+LEFT SIDEBAR (240px, background #1A1D27): Same sidebar as Dashboard — Klip4ge gradient logo at top, vertical nav list. "Saves" item is selected (cyan left border + cyan text). User avatar "CS" at bottom.
+
+MAIN CONTENT:
+- Page title "My Saves" bold 24px white, subtitle "47 items in your vault" in muted grey #8B8D97.
+- Top-right button row: "Select" outline button (dark border), "Share" outline button with Share2 icon, "+ Add Save" gradient button (cyan #00BFFF to purple #9370DB, white text).
+- Search bar: full-width dark rounded-2xl input field (#1A1D27 background, #2A2D3A border), magnifier icon on left, placeholder text "Search your saves..." in grey.
+- Category filter chips in a horizontal row: "All (47)" selected (cyan #00BFFF background, white text), "Deals (12)" unselected dark pill, "Recipes (8)" unselected, "Articles (15)" unselected, "Travel (5)" unselected — rounded pill shape.
+- 3-column grid of SavedItem cards (dark glass cards, #1A1D27, rounded-2xl border #2A2D3A):
+  Card 1: Hero image top (AirPods Pro product photo), below image: small bestbuy.com favicon + "bestbuy.com" in grey, title "AirPods Pro 2 — 30% off at Best Buy" white bold, purple "Deals" badge, "9/10" yellow rating chip. Bottom row: edit pencil icon, share icon, delete trash icon (muted grey, small).
+  Card 2: Hero image top (pasta carbonara dish photo), title "Homemade Pasta Carbonara — Serious Eats", orange "Recipes" badge, pink heart icon filled (favorited), no rating shown.
+  Card 3: No hero image — instead a grey banner strip showing YouTube favicon (red/white) circle + "youtube.com" domain text. Title "Top 10 Travel Documentaries 2025", cyan "Articles" badge.
+  Card 4: Hero image (Zion canyon red rock landscape), title "Weekend Hiking Trip — Zion NP", teal "Travel" badge, "7/10" rating chip.
+  Card 5: Hero image (Breville coffee machine silver), title "Breville Barista Pro — On Sale", purple "Products" badge.
+  Card 6 (partial, bottom of grid): blurred/faded to show the page scrolls.
+- Small dark toast/snackbar at very bottom: "Item deleted · Undo" in dark glass style with Undo button in cyan text.
+
+PLAY BUTTON OVERLAY (bottom-left):
+- Semi-transparent dark gradient across bottom 28% (rgba(0,0,0,0.65)).
+- White circle play button (58px) bottom-left ~60px from edge.
+- Title "Saving Items" white bold 22px. Below: "Quick-save anything from the web in seconds" in #8B8D97 grey 13px.
+
+Output: 1280×720 px, JPEG, sRGB, no browser chrome, no device frame.</pre>
+      <button class="copy-btn" onclick="copyPrompt('prompt-p2',this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Poster 3 ── -->
+<div class="pcard" id="p3">
+  <div class="pcard-head">
+    <div class="pcard-icon ic-pu">👥</div>
+    <div class="pcard-meta">
+      <h3>Poster 3 — <code>sharing-poster.jpg</code></h3>
+      <p>Video title shown to user: <strong>"Sharing &amp; Collaboration"</strong> · "Share boards with family, friends, or your partner"</p>
+      <div class="pcard-tags">
+        <span class="tag tag-cy">1280 × 720 px</span>
+        <span class="tag tag-cy">JPEG</span>
+        <span class="tag tag-gr">70 sec video</span>
+        <span class="tag tag-pu">Triggers on: Friends page</span>
+      </div>
+    </div>
+  </div>
+  <div class="pcard-body">
+    <div class="spec-row">
+      <div class="spec"><strong>Size:</strong> 1280 × 720 px</div>
+      <div class="spec"><strong>Format:</strong> JPEG</div>
+      <div class="spec"><strong>File:</strong> sharing-poster.jpg</div>
+      <div class="spec"><strong>Dest:</strong> public/videos/onboarding/</div>
+    </div>
+    <div class="prompt-label">Full Prompt</div>
+    <div style="position:relative;">
+      <pre class="prompt-text" id="prompt-p3">Generate a 1280×720 JPEG image that looks like a frozen frame of a real dark web app, with a video play button overlay in the bottom-left corner.
+
+BACKGROUND SCENE — Klip4ge "Shared Boards &amp; Friends" page:
+Dark background #0F1117. Dark glassmorphism UI style.
+
+LEFT SIDEBAR (240px, #1A1D27): Same Klip4ge sidebar. "Friends" (or Boards) nav item selected with purple left-border glow.
+
+MAIN CONTENT:
+- Page header: "Friends &amp; Boards" title with a purple Users icon, bold white.
+- LEFT SUB-PANEL (friends list, ~280px wide, glass card):
+  "Your Friends" heading in muted grey uppercase. List of 4 friends:
+  Each row: coloured initial avatar circle (e.g. "OL" in pink, "JS" in cyan, "MR" in purple, "AK" in emerald), name text white, small "Pro" badge in cyan or "Free" badge in grey, green dot (connected status). A "Find Friends" button below the list (small, outline, cyan border).
+- MAIN CONTENT AREA (right of friends list):
+  "Shared Boards" section heading white semibold.
+  2 large board cards (glass cards, dark #1A1D27, border #2A2D3A, rounded-2xl):
+    Board 1 "Family Wishlist": 4 mini thumbnail images in a 2×2 grid (product photos — a toy, a book, a kitchen gadget, shoes), "12 saves" chip in emerald, 3 small avatar circles overlapping (member count), Edit button small outline teal, Share button small outline.
+    Board 2 "Date Night Ideas": restaurant photo + movie poster thumbnails in grid, "8 saves" chip, 2 member avatars overlapping.
+  A "+ New Board" button below (outline, purple border, small).
+- FLOATING SHARE MODAL (centred overlay on top of content, dark glass panel ~380px wide, #1A1D27 with border and shadow):
+  Header: "Share this save" white bold, X close button top-right.
+  Sub: "AirPods Pro 2 — 30% off" in grey (the item being shared).
+  "Share with friends" section: search input "Search friends...", list of 3 friends with purple toggle switches (2 toggled on, 1 off). 
+  Big "Send" button (cyan-to-purple gradient, full width inside modal).
+
+PLAY BUTTON OVERLAY (bottom-left):
+- Semi-transparent dark gradient across bottom 28%.
+- White circle play button (58px) + title "Sharing &amp; Collaboration" white bold 22px + subtitle "Share boards with family, friends, or your partner" #8B8D97 13px.
+
+Output: 1280×720 px, JPEG, sRGB, no browser chrome.</pre>
+      <button class="copy-btn" onclick="copyPrompt('prompt-p3',this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Poster 4 ── -->
+<div class="pcard" id="p4">
+  <div class="pcard-head">
+    <div class="pcard-icon ic-cy">💬</div>
+    <div class="pcard-meta">
+      <h3>Poster 4 — <code>support-poster.jpg</code></h3>
+      <p>Video title shown to user: <strong>"Getting Support"</strong> · "AI support bot, ticket system, and documentation"</p>
+      <div class="pcard-tags">
+        <span class="tag tag-cy">1280 × 720 px</span>
+        <span class="tag tag-cy">JPEG</span>
+        <span class="tag tag-gr">55 sec video</span>
+        <span class="tag tag-pu">Triggers on: Support page</span>
+      </div>
+    </div>
+  </div>
+  <div class="pcard-body">
+    <div class="spec-row">
+      <div class="spec"><strong>Size:</strong> 1280 × 720 px</div>
+      <div class="spec"><strong>Format:</strong> JPEG</div>
+      <div class="spec"><strong>File:</strong> support-poster.jpg</div>
+      <div class="spec"><strong>Dest:</strong> public/videos/onboarding/</div>
+    </div>
+    <div class="prompt-label">Full Prompt</div>
+    <div style="position:relative;">
+      <pre class="prompt-text" id="prompt-p4">Generate a 1280×720 JPEG image that looks like a frozen frame of a real dark web app, with a video play button overlay in the bottom-left corner.
+
+BACKGROUND SCENE — Klip4ge "Support" page with AI chat panel open:
+Dark background #0F1117. Dark glassmorphism UI style.
+
+LEFT SIDEBAR (240px, #1A1D27): Same Klip4ge sidebar. "Support" nav item selected with cyan glow.
+
+MAIN BACKGROUND CONTENT (slightly dimmed because modal is open):
+- Page header: "Support" with MessageCircle icon in cyan.
+- 3 support category cards in a row (glass cards):
+  "Documentation" — Book icon cyan, title, "Browse guides and FAQs" subtitle.
+  "Submit a Ticket" — Ticket/Tag icon purple, title, "Report a bug or request a feature" subtitle.
+  "System Status" — Activity icon emerald, "All systems operational" subtitle with green dot.
+- Support ticket list (2 rows, dark table style): 
+  Row 1: "Extension not saving", "Open" badge orange, "High" dot red, date "Mar 5, 2026".
+  Row 2: "Export feature question", "Resolved" badge green, "Low" dot grey, date "Mar 1, 2026".
+
+RIGHT-SIDE CHAT PANEL (floating, fixed right side, ~380px wide, full height):
+Dark glass panel #1A1D27, left border 1px rgba(0,191,255,0.3), box-shadow on left.
+- Header (top of panel): "Klip4ge Support" bold white left, right side: UserCheck icon button (purple, "Escalate to human") and X close button (grey).
+- Chat messages area (scrollable, dark background):
+  Message 1 (BOT, left): Dark rounded card, robot/bot icon avatar. Text: "👋 Hi! I'm the Klip4ge support bot. Ask me anything about the app, or describe an issue and I'll help resolve it or escalate to our team!"
+  Message 2 (USER, right): Cyan gradient bubble, right-aligned. Text: "How do I share a board with my family?"
+  Message 3 (BOT, left): Dark card. Text: "To share a board: open the Board → tap the Share icon → add family members by email. Family Premium members can join automatically. 🎉"
+- Below messages: 3 quick-prompt chips (small dark pills): "How do I save from Chrome?", "Cancel my plan", "Report a bug".
+- Input area at bottom: dark input field "Ask a question..." placeholder, Send button (cyan circle arrow icon).
+- Floating gradient chat button (bottom-right corner of WHOLE PAGE): cyan-to-purple gradient circle button with MessageCircle icon.
+
+PLAY BUTTON OVERLAY (bottom-left, on top of dimmed sidebar area):
+- Dark gradient bottom strip (rgba(0,0,0,0.65)) across bottom 28%.
+- White circle play button (58px) + title "Getting Support" white bold 22px + subtitle "AI support bot, ticket system, and documentation" #8B8D97 13px.
+
+Output: 1280×720 px, JPEG, sRGB, no browser chrome.</pre>
+      <button class="copy-btn" onclick="copyPrompt('prompt-p4',this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Poster 5 ── -->
+<div class="pcard" id="p5">
+  <div class="pcard-head">
+    <div class="pcard-icon ic-am">💎</div>
+    <div class="pcard-meta">
+      <h3>Poster 5 — <code>subscription-poster.jpg</code></h3>
+      <p>Video title shown to user: <strong>"Plans &amp; Upgrades"</strong> · "Free 7-day trial, Pro features, and family plans"</p>
+      <div class="pcard-tags">
+        <span class="tag tag-cy">1280 × 720 px</span>
+        <span class="tag tag-cy">JPEG</span>
+        <span class="tag tag-gr">50 sec video</span>
+        <span class="tag tag-pu">Triggers on: Pricing page</span>
+      </div>
+    </div>
+  </div>
+  <div class="pcard-body">
+    <div class="spec-row">
+      <div class="spec"><strong>Size:</strong> 1280 × 720 px</div>
+      <div class="spec"><strong>Format:</strong> JPEG</div>
+      <div class="spec"><strong>File:</strong> subscription-poster.jpg</div>
+      <div class="spec"><strong>Dest:</strong> public/videos/onboarding/</div>
+    </div>
+    <div class="prompt-label">Full Prompt</div>
+    <div style="position:relative;">
+      <pre class="prompt-text" id="prompt-p5">Generate a 1280×720 JPEG image that looks like a frozen frame of a real dark web app, with a video play button overlay in the bottom-left corner.
+
+BACKGROUND SCENE — Klip4ge "Pricing / Plans" page:
+Dark background #0F1117. Dark glassmorphism UI style.
+
+LEFT SIDEBAR (240px, #1A1D27): Same Klip4ge sidebar. No specific nav item highlighted (Pricing is a standalone page).
+
+MAIN CONTENT:
+- Page heading "Choose Your Plan" in large gradient text (cyan #00BFFF to purple #9370DB), centred, 32px bold.
+- Billing toggle pill below heading: "Monthly | Annual (Save 20%)" — "Annual" side is selected/highlighted in cyan.
+- 3 pricing cards side by side (equal width, ~260px each, glass card style):
+
+  LEFT CARD — "Free":
+  Border #2A2D3A, standard height.
+  "Free" plan name in white bold 18px.
+  "$0 / month" price in large white 30px.
+  Feature list (5 items, grey checkmarks ✓): "50 saves limit", "1 board", "Browser extension", "Basic search", "Community support".
+  CTA button: "Current Plan" — grey outline, disabled appearance.
+
+  CENTRE CARD — "Pro" (FEATURED, taller by ~30px, glowing cyan border, slight scale):
+  "MOST POPULAR" badge pill at top (small, cyan background, white text).
+  "Pro" plan name in gradient text cyan→purple, bold 20px.
+  "$9.99 / month" price in large white 34px bold + grey "/month" label.
+  Feature list (7 items, cyan checkmarks ✓, glowing): "Unlimited saves", "AI-powered search", "Up to 10 boards", "Priority support", "Data export &amp; analytics", "7-day FREE trial", "Early feature access".
+  CTA button: "Start Free Trial" — full width, large, cyan-to-purple gradient fill, white bold text, glowing box-shadow.
+
+  RIGHT CARD — "Family Premium":
+  Border with purple #9370DB glow.
+  "Family Premium" name in purple gradient text bold 18px.
+  "$19.99 / month" price large white 30px bold.
+  Feature list (6 items, purple checkmarks ✓): "Everything in Pro", "Up to 6 family members", "Shared family vault", "Parental controls", "Family shared boards", "Child-safe filters".
+  CTA button: "Upgrade to Family" — purple gradient fill, white text.
+
+- Trust row below cards (centred, small icons): "🔒 Cancel anytime" · "No credit card for trial" · "✅ GDPR compliant".
+
+PLAY BUTTON OVERLAY (bottom-left):
+- Dark gradient bottom 28% (rgba(0,0,0,0.65)).
+- White circle play button (58px) + title "Plans &amp; Upgrades" white bold 22px + subtitle "Free 7-day trial, Pro features, and family plans" #8B8D97 13px.
+
+Output: 1280×720 px, JPEG, sRGB, no browser chrome.</pre>
+      <button class="copy-btn" onclick="copyPrompt('prompt-p5',this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Poster 6 ── -->
+<div class="pcard" id="p6">
+  <div class="pcard-head">
+    <div class="pcard-icon ic-pu">📅</div>
+    <div class="pcard-meta">
+      <h3>Poster 6 — <code>events-poster.jpg</code></h3>
+      <p>Video title shown to user: <strong>"Events &amp; Calendar"</strong> · "Discover, save, and add events to your calendar"</p>
+      <div class="pcard-tags">
+        <span class="tag tag-cy">1280 × 720 px</span>
+        <span class="tag tag-cy">JPEG</span>
+        <span class="tag tag-gr">60 sec video</span>
+        <span class="tag tag-pu">Triggers on: Events page</span>
+      </div>
+    </div>
+  </div>
+  <div class="pcard-body">
+    <div class="spec-row">
+      <div class="spec"><strong>Size:</strong> 1280 × 720 px</div>
+      <div class="spec"><strong>Format:</strong> JPEG</div>
+      <div class="spec"><strong>File:</strong> events-poster.jpg</div>
+      <div class="spec"><strong>Dest:</strong> public/videos/onboarding/</div>
+    </div>
+    <div class="prompt-label">Full Prompt</div>
+    <div style="position:relative;">
+      <pre class="prompt-text" id="prompt-p6">Generate a 1280×720 JPEG image that looks like a frozen frame of a real dark web app, with a video play button overlay in the bottom-left corner.
+
+BACKGROUND SCENE — Klip4ge "Events &amp; Calendar" page:
+Dark background #0F1117. Dark glassmorphism UI style.
+
+LEFT SIDEBAR (240px, #1A1D27): Same Klip4ge sidebar. "Events" nav item selected with purple glow.
+
+MAIN CONTENT:
+- Page header: "Events" with a Calendar icon in purple, bold white 24px.
+- Filter bar below header: pill buttons in a row — "All Events" (selected, purple background), "Saved", "This Week", "Free" (outline pills), + a small location input "Denver, CO" with map pin icon.
+- 2-column event card grid:
+  Card 1 (full concert banner image — outdoor amphitheatre stage, crowd, warm lights): 
+    Title "Lumineers — Red Rocks Amphitheatre" bold white. Date "Sat, Mar 15, 2026" with calendar icon cyan. "🎵 Music" purple badge. "🎟️ From $45" chip in amber. Row of action buttons: "Add to Calendar" small teal button, bookmark save icon (cyan, filled = saved), share icon grey.
+  Card 2 (food festival banner image — colourful food stalls, people):
+    Title "Denver Food + Wine Festival". Date "Sun, Mar 22, 2026". "🍽️ Food &amp; Drink" orange badge. "Free Admission" green chip.
+  Card 3 (tech conference image — dark auditorium with projected slides):
+    Title "Rocky Mountain Dev Summit". Date "Fri, Apr 3, 2026". "💻 Tech" cyan badge. "Register →" link text in cyan.
+  Card 4 (outdoor running event image — trail in forest):
+    Title "Colorado Trail 10K Run". Date "Sun, Apr 12, 2026". "🏃 Fitness" emerald badge.
+- RIGHT MINI-CALENDAR SIDEBAR (~200px, dark glass card):
+  Month label "March 2026" centred. Calendar grid (7 columns Mon–Sun). Today's date "6" highlighted with a cyan circle. Days 15, 22 have small purple event dots below them.
+- Toast notification (top-right of content area, dark glass pill): "🔔 Reminder set for Lumineers — 1 day before · Dismiss".
+
+PLAY BUTTON OVERLAY (bottom-left):
+- Dark gradient bottom 28% (rgba(0,0,0,0.65)).
+- White circle play button (58px) + title "Events &amp; Calendar" white bold 22px + subtitle "Discover, save, and add events to your calendar" #8B8D97 13px.
+
+Output: 1280×720 px, JPEG, sRGB, no browser chrome.</pre>
+      <button class="copy-btn" onclick="copyPrompt('prompt-p6',this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     STEP 2 — SCREENSHOTS
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="section-hdr" id="step2">
+  <div class="section-num n-pu">2</div>
+  <div>
+    <h2>App Store &amp; PWA Screenshots</h2>
+    <p>4 PNG images · used in PWA install carousel, Google Play &amp; Apple App Store listings</p>
+  </div>
+</div>
+
+<div class="info">
+  <strong>What these are:</strong> These screenshots appear in the Android Chrome "Add to Home Screen" install dialog, the Google Play store listing, and the Apple App Store. They must look like the real running app — clean, sharp, no overlays.
+</div>
+
+<!-- ── Screenshot A ── -->
+<div class="pcard" id="s1">
+  <div class="pcard-head">
+    <div class="pcard-icon ic-cy">🖥️</div>
+    <div class="pcard-meta">
+      <h3>Screenshot A — <code>dashboard.png</code></h3>
+      <p>Manifest label: <strong>"Klip4ge Dashboard — Your save vault at a glance"</strong></p>
+      <div class="pcard-tags">
+        <span class="tag tag-am">1280 × 720 px</span>
+        <span class="tag tag-am">PNG</span>
+        <span class="tag tag-gr">Wide / Desktop</span>
+        <span class="tag tag-cy">No overlays</span>
+      </div>
+    </div>
+  </div>
+  <div class="pcard-body">
+    <div class="spec-row">
+      <div class="spec"><strong>Size:</strong> 1280 × 720 px EXACT</div>
+      <div class="spec"><strong>Format:</strong> PNG</div>
+      <div class="spec"><strong>File:</strong> dashboard.png</div>
+      <div class="spec"><strong>Dest:</strong> public/screenshots/</div>
+    </div>
+    <div class="overlay-note"><strong>⚠️ No poster overlay on screenshots.</strong> These are clean store screenshots — no play button, no video title text, no gradient overlay.</div>
+    <br>
+    <div class="prompt-label">Full Prompt</div>
+    <div style="position:relative;">
+      <pre class="prompt-text" id="prompt-s1">Generate a pristine, high-fidelity 1280×720 PNG marketing screenshot of a dark web application called Klip4ge. This image will be submitted to Google Play Store and Apple App Store. It must look exactly like a real running application in a browser — photorealistic UI, no mockup frames, no device bezels, no watermarks.
+
+APP: Klip4ge — a personal content save organizer
+STYLE: Dark glassmorphism — dark #0F1117 background, glass cards #1A1D27 with border #2A2D3A, electric cyan #00BFFF and purple #9370DB accents, modern sans-serif font.
+
+FULL LAYOUT (1280×720, full-bleed, no chrome):
+
+LEFT SIDEBAR (240px wide, background #1A1D27, right border 1px #2A2D3A):
+- Top 24px padding. Logo row: gradient diamond icon (cyan #00BFFF to purple #9370DB, 32px, rounded-lg) + "Klip4ge" text in gradient (cyan→purple), bold 18px.
+- Navigation list (vertical, 40px row height each): 
+  🏠 Dashboard — SELECTED: left 3px cyan border, cyan text #00BFFF, cyan glow
+  🔖 Saves — white text, no selection
+  🔍 Search — white text
+  📋 Boards — white text
+  📅 Events — white text
+  👥 Friends — white text
+  ⚙️ Settings — white text
+- Bottom of sidebar: avatar circle "CS" (initials, gradient bg cyan→purple, 36px), "Colton Stephenson" white 13px, "Pro" badge (cyan background, white text, small pill).
+
+MAIN CONTENT AREA (background #0F1117, padding 32px):
+ROW 1 — Greeting + Quick Save button:
+  "Welcome back, Colton" in white bold 28px, left. Right side: "+ Quick Save" button (cyan #00BFFF to purple #9370DB gradient, white text bold, rounded-xl, with soft cyan glow box-shadow).
+
+ROW 2 — 4 Stat Cards (equal width, ~220px each, glass card #1A1D27, border #2A2D3A, rounded-2xl, 16px padding):
+  Card 1: Bookmark icon in cyan, "Total Saves" label grey 11px, "47" number cyan 28px bold, "+12% this week" in emerald green 11px below.
+  Card 2: TrendingUp icon in purple #9370DB, "Active Deals" label grey, "12" number purple 28px bold.
+  Card 3: Sparkles icon in pink #FFB6C1, "Favorites" label grey, "8" number pink 28px bold.
+  Card 4: Users icon in emerald #10B981, "Boards" label grey, "3" number emerald 28px bold.
+
+ROW 3 — Getting Started checklist card (glass card, full width):
+  "Getting Started" heading cyan 11px uppercase, CheckCircle icon. Below: 3 steps in a row — step 1 "Install extension" emerald checkmark ✓, step 2 "Save first item" emerald checkmark ✓, step 3 "Set up reminders" grey circle (unchecked).
+
+ROW 4 — Section heading "Top Picks" white semibold 15px.
+
+ROW 5 — 3-column Saved Item Card grid:
+  Card 1 (with hero image): Hero image = white AirPods Pro product photography on grey gradient bg (top 35% of card). Below: bestbuy.com small favicon + "bestbuy.com" grey 10px. Title "AirPods Pro 2 — 30% off" white bold 13px. Purple "Deals" pill badge. "9/10" amber chip. Edit/share/trash icons row (grey, 14px, bottom).
+  Card 2 (with hero image): Hero image = bowl of pasta carbonara (food photography). Pink heart icon (favorited, filled pink). Title "Homemade Pasta Carbonara" white bold 13px. Orange "Recipes" badge. No rating.
+  Card 3 (with hero image): Hero image = red rock canyon landscape. Title "Weekend Hiking Trip — Zion NP" white bold 13px. Teal "Travel" badge. "7/10" amber chip.
+
+ROW 6 — Quick Actions (4 tiles, ~200px each, glass cards rounded-2xl):
+  Tile 1: Sparkles icon cyan, "AI Search" white 13px bold, "Smart vault search" grey 11px.
+  Tile 2: Users icon purple, "Shared Boards" white, "Collaborate" grey.
+  Tile 3: Calendar icon purple, "Events" white, "Discover &amp; save" grey.
+  Tile 4: UserPlus icon cyan, "Friends" white, "Share &amp; connect" grey.
+
+Output: Exactly 1280×720 px, PNG format, sRGB color space. No browser toolbar. No device frame. No watermark. No play button. No gradient bottom overlay.</pre>
+      <button class="copy-btn" onclick="copyPrompt('prompt-s1',this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Screenshot B ── -->
+<div class="pcard" id="s2">
+  <div class="pcard-head">
+    <div class="pcard-icon ic-cy">🔖</div>
+    <div class="pcard-meta">
+      <h3>Screenshot B — <code>saves.png</code></h3>
+      <p>Manifest label: <strong>"Saves — Browse and manage all your saved items"</strong></p>
+      <div class="pcard-tags">
+        <span class="tag tag-am">1280 × 720 px</span>
+        <span class="tag tag-am">PNG</span>
+        <span class="tag tag-gr">Wide / Desktop</span>
+        <span class="tag tag-cy">No overlays</span>
+      </div>
+    </div>
+  </div>
+  <div class="pcard-body">
+    <div class="spec-row">
+      <div class="spec"><strong>Size:</strong> 1280 × 720 px EXACT</div>
+      <div class="spec"><strong>Format:</strong> PNG</div>
+      <div class="spec"><strong>File:</strong> saves.png</div>
+      <div class="spec"><strong>Dest:</strong> public/screenshots/</div>
+    </div>
+    <div class="overlay-note"><strong>⚠️ No poster overlay.</strong> Clean store screenshot — no play button, no text overlay.</div>
+    <br>
+    <div class="prompt-label">Full Prompt</div>
+    <div style="position:relative;">
+      <pre class="prompt-text" id="prompt-s2">Generate a pristine 1280×720 PNG marketing screenshot of the Klip4ge "My Saves" page. Same dark glassmorphism style as the Dashboard. App store quality. No browser chrome, no device frame, no watermark.
+
+LEFT SIDEBAR (240px, #1A1D27): Same Klip4ge sidebar as described above. "Saves" (🔖) nav item SELECTED — cyan left border glow + cyan #00BFFF text.
+
+MAIN CONTENT (background #0F1117, padding 32px):
+
+ROW 1 — Header:
+  Left: "My Saves" bold white 24px. Below: "47 items in your vault" in grey #8B8D97 13px.
+  Right: 3 buttons in a row:
+    "Select" — outline button, dark border #2A2D3A, white text, CheckSquare icon, small.
+    "Share" — outline button, Share2 icon, white text.
+    "+ Add Save" — cyan #00BFFF to purple #9370DB gradient fill, white bold text, Plus icon, rounded-xl.
+
+ROW 2 — Search bar:
+  Full-width input (#1A1D27 background, #2A2D3A border, rounded-2xl, 44px height). Magnifier icon left (grey). Placeholder "Search your saves..." in grey. SlidersHorizontal filter icon right.
+
+ROW 3 — Category filter chips (horizontal):
+  "All (47)" — SELECTED: cyan #00BFFF background, white bold text, rounded-full pill.
+  "Deals (12)" — dark #1A1D27, grey text, #2A2D3A border.
+  "Recipes (8)" — same dark style.
+  "Articles (15)" — same.
+  "Travel (5)" — same.
+  "Products (7)" — same.
+  (All are pill/rounded-full shape, horizontal row with 8px gap.)
+
+ROW 4 — Sort row: right-aligned dropdown "Newest first" (dark, grey text, chevron icon), and grid/list view toggle icons (LayoutGrid + List icons).
+
+ROW 5 — 3-column card grid of saved items (6 cards visible):
+  Card 1: Hero image (AirPods Pro product photo, clean white bg). Favicon overlay bottom-left of image (small circle): bestbuy.com red/orange favicon. Title "AirPods Pro 2 — 30% off at Best Buy" white bold 13px. Purple "Deals" rounded pill badge. "9/10" amber yellow chip. Bottom action row: edit pencil, share2, trash2 icons (muted grey, 14px).
+  Card 2: Hero image (pasta carbonara bowl). Pink heart icon (favorited, filled, top-right of image). Title "Homemade Pasta Carbonara — Serious Eats". Orange "Recipes" badge. No rating shown.
+  Card 3: No hero image — instead a dark grey banner strip occupying top 35% of card: YouTube favicon red/white circle + "youtube.com" in grey text, centred. Title "Top 10 Travel Documentaries 2025". Cyan "Articles" badge.
+  Card 4: Hero image (Zion National Park red canyon). Title "Weekend Hiking Trip — Zion NP". Teal "Travel" badge. "7/10" chip.
+  Card 5: Hero image (Breville silver espresso machine). Title "Breville Barista Pro — On Sale". Purple "Products" badge.
+  Card 6: Partially visible at bottom of grid (blurred/faded to indicate scrollable content). Shows just the top of a card.
+
+Output: Exactly 1280×720 px, PNG, sRGB. No browser chrome, no device frame, no watermark, no overlay text.</pre>
+      <button class="copy-btn" onclick="copyPrompt('prompt-s2',this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Screenshot C ── -->
+<div class="pcard" id="s3">
+  <div class="pcard-head">
+    <div class="pcard-icon ic-cy">✨</div>
+    <div class="pcard-meta">
+      <h3>Screenshot C — <code>search.png</code></h3>
+      <p>Manifest label: <strong>"AI Search — Find anything instantly"</strong></p>
+      <div class="pcard-tags">
+        <span class="tag tag-am">1280 × 720 px</span>
+        <span class="tag tag-am">PNG</span>
+        <span class="tag tag-gr">Wide / Desktop</span>
+        <span class="tag tag-cy">No overlays</span>
+      </div>
+    </div>
+  </div>
+  <div class="pcard-body">
+    <div class="spec-row">
+      <div class="spec"><strong>Size:</strong> 1280 × 720 px EXACT</div>
+      <div class="spec"><strong>Format:</strong> PNG</div>
+      <div class="spec"><strong>File:</strong> search.png</div>
+      <div class="spec"><strong>Dest:</strong> public/screenshots/</div>
+    </div>
+    <div class="overlay-note"><strong>⚠️ No poster overlay.</strong> Capture mid-search to show AI in action — this is the most exciting screenshot for store listings.</div>
+    <br>
+    <div class="prompt-label">Full Prompt</div>
+    <div style="position:relative;">
+      <pre class="prompt-text" id="prompt-s3">Generate a pristine 1280×720 PNG marketing screenshot of the Klip4ge "AI Search" page, captured while an active search is returning results. Dark glassmorphism style. App store quality. No browser chrome, no device frame, no watermark.
+
+LEFT SIDEBAR (240px, #1A1D27): Same Klip4ge sidebar. "Search" (🔍) nav item SELECTED — cyan left border glow + cyan text.
+
+MAIN CONTENT (background #0F1117, padding 32px):
+
+ROW 1 — Page heading:
+  Sparkles icon (cyan #00BFFF, 24px) + "AI Search" text bold white 24px.
+  Below: "Full-text vault search + AI deep research with web context" in grey #8B8D97 13px.
+
+ROW 2 — Search bar (ACTIVE STATE, showing a query):
+  Large rounded-2xl input (#1A1D27 bg, #2A2D3A border, 52px height). Magnifier icon left grey. 
+  INPUT IS FILLED WITH: "pasta recipes under 30 minutes" (white text, 16px).
+  X clear button right edge (grey circle icon).
+  Right of input: "Search" button — cyan #00BFFF to purple #9370DB gradient, white bold text, Sparkles icon left (button is ACTIVE/enabled state with glow).
+
+ROW 3 — Search tier status row (small, horizontal):
+  🗃️ grey text "Local cache (47 items)" · ⚙️ purple animated spinner icon + "Server full-text" purple text · 🌐 cyan animated spinner icon + "AI + Web" cyan text.
+  (Indicates all 3 search tiers are running simultaneously.)
+
+ROW 4 — Tab row (showing results exist):
+  Two tab buttons side by side in a dark rounded-xl pill container:
+  "📖 Saves (2)" — unselected, grey text.
+  "✨ AI Results" — SELECTED: cyan background #00BFFF/10, cyan text, cyan underline.
+
+ROW 5 — AI Results panel (main content, glass card #1A1D27, border rgba(0,191,255,0.2), rounded-2xl, full width):
+  Header: Sparkles icon cyan + "AI Analysis" text cyan bold 13px uppercase, right: "Powered by AI + Web" grey badge.
+  Content (white text 13px, line-height 1.7):
+  
+  "Based on your 47 saved items, here are your best pasta matches:
+
+  📌 [SAVED] "Homemade Pasta Carbonara — Serious Eats"
+  📌 [SAVED] "30-Minute Pasta Primavera" — NYT Cooking
+
+  💡 Tips from the web:
+  • Use guanciale (not bacon) for authentic carbonara
+  • Reserve pasta water — it's the secret to the silky sauce
+  • Cook pasta al dente: 1–2 min less than the package says
+
+  🔗 Suggested saves:
+  • bonappetit.com/pasta-recipes
+  • seriouseats.com/quick-pasta-guide"
+  
+  (Style: "[SAVED]" tags rendered in cyan; bullet points in grey; header line is white bold. The card has a subtle cyan left-border accent 3px.)
+
+ROW 6 (below AI card) — 2 matching SavedItem cards in a row (smaller version of the cards from Saves page):
+  Card 1: pasta image, "Homemade Pasta Carbonara", orange "Recipes" badge.
+  Card 2: smaller card, no image, NYT favicon, "30-Minute Pasta Primavera", orange "Recipes" badge.
+
+Output: Exactly 1280×720 px, PNG, sRGB. No browser chrome, no device frame, no watermark.</pre>
+      <button class="copy-btn" onclick="copyPrompt('prompt-s3',this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Screenshot D ── -->
+<div class="pcard" id="s4">
+  <div class="pcard-head">
+    <div class="pcard-icon ic-pk">📱</div>
+    <div class="pcard-meta">
+      <h3>Screenshot D — <code>saves-mobile.png</code></h3>
+      <p>Manifest label: <strong>"My Saves on mobile"</strong></p>
+      <div class="pcard-tags">
+        <span class="tag tag-am">390 × 844 px</span>
+        <span class="tag tag-am">PNG</span>
+        <span class="tag tag-gr">Portrait / Mobile</span>
+        <span class="tag tag-cy">No device frame</span>
+      </div>
+    </div>
+  </div>
+  <div class="pcard-body">
+    <div class="spec-row">
+      <div class="spec"><strong>Size:</strong> 390 × 844 px EXACT</div>
+      <div class="spec"><strong>Format:</strong> PNG</div>
+      <div class="spec"><strong>File:</strong> saves-mobile.png</div>
+      <div class="spec"><strong>Dest:</strong> public/screenshots/</div>
+    </div>
+    <div class="overlay-note"><strong>⚠️ Portrait orientation, 390×844 only.</strong> No iPhone bezel/device frame. Just the app UI filling the canvas edge to edge.</div>
+    <br>
+    <div class="prompt-label">Full Prompt</div>
+    <div style="position:relative;">
+      <pre class="prompt-text" id="prompt-s4">Generate a pristine 390×844 PNG portrait screenshot of the Klip4ge mobile app on the "My Saves" page. This is a Google Play store screenshot — it must look exactly like the actual app running on a phone screen, filling the entire 390×844 canvas edge to edge. NO device bezel, NO iPhone frame, NO status bar — just pure app UI. Dark background #0F1117. Dark glassmorphism style.
+
+LAYOUT (top to bottom, 390px wide, 844px tall):
+
+TOP BAR (44px height, #0F1117 background):
+  Left: hamburger menu icon (3 lines, white, 20px).
+  Centre: "Klip4ge" in gradient text (cyan #00BFFF to purple #9370DB, 18px bold).
+  Right: user avatar circle "CS" (gradient background cyan→purple, 32px, white bold initials).
+
+PAGE HEADER (padding 16px, below top bar):
+  "My Saves" bold white 22px.
+  "47 items in your vault" grey #8B8D97 13px.
+  Full-width "+ Add Save" button (44px height, rounded-xl, cyan #00BFFF to purple #9370DB gradient, white bold text, Plus icon left). Width: 100% minus 32px horizontal padding.
+
+SEARCH BAR (full width, 44px height, 16px horizontal padding):
+  Dark rounded-xl input (#1A1D27 bg, #2A2D3A border). Magnifier icon grey left. Placeholder "Search your saves..." grey. Height 44px, rounded-xl.
+
+CATEGORY FILTER CHIPS (horizontal scroll row, 44px height, 16px left padding, 8px gap between chips):
+  "All (47)" — SELECTED: cyan #00BFFF background pill, white bold 12px text.
+  "Deals (12)" — dark pill, grey text, #2A2D3A border.
+  "Recipes (8)" — dark pill.
+  "Articles (15)" — dark pill.
+  "Travel (5)" — dark pill.
+  (Pills overflow to right, indicating horizontal scroll.)
+
+SAVES LIST (single column, 16px horizontal padding, 8px gap between cards):
+  Each card is a horizontal list item style (not a tall grid card):
+  
+  Item 1: Left square thumbnail image 72×72px (AirPods Pro product photo, rounded-lg). Right of image: "AirPods Pro 2 — 30% off" white bold 13px, "bestbuy.com" grey 11px below title, purple "Deals" pill badge (small), "9/10" amber chip. Far right: vertical 3-dot menu icon (grey).
+  
+  Item 2: Left thumbnail 72×72px (pasta dish photo). Right: "Homemade Pasta Carbonara" white bold 13px, "seriouseats.com" grey 11px, orange "Recipes" pill, pink heart icon (filled, 16px) top-right of item. 3-dot menu right.
+  
+  Item 3: Left = circle icon (YouTube red/white favicon, 48px) on dark background 72×72 dark square. Right: "Top 10 Travel Documentaries 2025" white bold 13px, "youtube.com" grey 11px, cyan "Articles" pill. 3-dot menu right.
+  
+  Item 4 (partial, faded at bottom): title only partially visible — "Weekend Hiking Trip..." — showing the list continues below.
+
+BOTTOM NAV BAR (56px height, #1A1D27 background, top border 1px #2A2D3A, fixed at bottom of canvas):
+  5 icons evenly spaced:
+  🏠 "Home" — grey icon + label 10px.
+  🔖 "Saves" — SELECTED: cyan #00BFFF icon + label, small cyan dot indicator below.
+  🔍 "Search" — grey.
+  📅 "Events" — grey.
+  👤 "Profile" — grey.
+
+Output: Exactly 390×844 px, PNG, sRGB. No iPhone device frame, no status bar, no notch, no browser chrome, no watermark. Pure app UI edge to edge.</pre>
+      <button class="copy-btn" onclick="copyPrompt('prompt-s4',this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ DELIVERY CHECKLIST ══════════════════════════════════════════════════ -->
+<div class="section-hdr" id="delivery" style="margin-top:48px;">
+  <div class="section-num" style="background:linear-gradient(135deg,#10B981,#0d7a5a);box-shadow:0 0 18px rgba(16,185,129,.4);">✓</div>
+  <div>
+    <h2>Delivery Checklist &amp; File Paths</h2>
+    <p>Where to put each file once generated</p>
+  </div>
+</div>
+
+<div class="pcard">
+  <div class="pcard-body">
+    <p style="font-size:13px;color:var(--mu);margin-bottom:16px;">Generate all 10 assets, then drop them into the correct folders in the <code>CStep-EA/clipforge</code> repo and push to main.</p>
+    
+    <div style="margin-bottom:20px;">
+      <div class="prompt-label">Poster frames → <code>public/videos/onboarding/</code></div>
+      <div class="file-grid">
+        <div class="file-pill"><div class="name">dashboard-poster.jpg</div><div class="dim">1280 × 720 · JPEG</div></div>
+        <div class="file-pill"><div class="name">saves-poster.jpg</div><div class="dim">1280 × 720 · JPEG</div></div>
+        <div class="file-pill"><div class="name">sharing-poster.jpg</div><div class="dim">1280 × 720 · JPEG</div></div>
+        <div class="file-pill"><div class="name">support-poster.jpg</div><div class="dim">1280 × 720 · JPEG</div></div>
+        <div class="file-pill"><div class="name">subscription-poster.jpg</div><div class="dim">1280 × 720 · JPEG</div></div>
+        <div class="file-pill"><div class="name">events-poster.jpg</div><div class="dim">1280 × 720 · JPEG</div></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div class="prompt-label">Screenshots → <code>public/screenshots/</code></div>
+      <div class="file-grid">
+        <div class="file-pill"><div class="name">dashboard.png</div><div class="dim">1280 × 720 · PNG · Wide</div></div>
+        <div class="file-pill"><div class="name">saves.png</div><div class="dim">1280 × 720 · PNG · Wide</div></div>
+        <div class="file-pill"><div class="name">search.png</div><div class="dim">1280 × 720 · PNG · Wide</div></div>
+        <div class="file-pill"><div class="name">saves-mobile.png</div><div class="dim">390 × 844 · PNG · Portrait</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="prompt-label">Git commit commands</div>
+      <pre class="code">git add public/videos/onboarding/*.jpg
+git add public/screenshots/*.png
+git commit -m "feat(assets): add AI-generated poster frames and app store screenshots"
+git push origin main</pre>
+    </div>
+
+    <div style="margin-top:20px;">
+      <div class="prompt-label">Verification checklist</div>
+      <ul class="checklist">
+        <li><div class="ch"></div>All 6 poster JPEGs are exactly 1280×720 px</li>
+        <li><div class="ch"></div>3 desktop PNGs are exactly 1280×720 px</li>
+        <li><div class="ch"></div>Mobile PNG is exactly 390×844 px</li>
+        <li><div class="ch"></div>All files are sRGB color profile</li>
+        <li><div class="ch"></div>No white backgrounds — all dark (#0F1117)</li>
+        <li><div class="ch"></div>App name spelled "Klip4ge" in all assets</li>
+        <li><div class="ch"></div>No browser chrome, device frames, or watermarks</li>
+        <li><div class="ch"></div>Poster frames have the play button + title overlay in bottom-left</li>
+        <li><div class="ch"></div>Screenshots (Step 2) have NO overlay</li>
+        <li><div class="ch"></div>Files pushed to main branch and Base44 redeploys</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+function copyPrompt(id, btn) {
+  const el = document.getElementById(id);
+  const text = el.innerText.replace(/^Copy\n?/, '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied ✓';
+    btn.style.color = '#10B981';
+    btn.style.borderColor = 'rgba(16,185,129,0.4)';
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>
