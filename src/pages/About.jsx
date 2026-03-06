@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import Klip4geLogo from "@/components/shared/Klip4geLogo";
+import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
 import {
   Globe, Download, Shield, Zap, Users, Heart,
   ArrowRight, Apple, Play
@@ -53,7 +53,7 @@ export default function About() {
         className="text-center pt-8 space-y-5"
       >
         <div className="flex justify-center">
-          <Klip4geLogo size={72} variant="morph" showText={false} />
+          <ClipForgeLogo size={72} variant="morph" showText={false} />
         </div>
         <h1 className="text-4xl md:text-5xl font-black tracking-tight">
           <span className="gradient-text">Klip4ge</span>

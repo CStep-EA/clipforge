@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Klip4ge — Manual Setup Guide</title>
+<style>
+  :root {
+    --bg:        #0F1117;
+    --surface:   #1A1D27;
+    --surface2:  #22253A;
+    --border:    #2A2D3A;
+    --cyan:      #00BFFF;
+    --purple:    #9370DB;
+    --pink:      #FFB6C1;
+    --green:     #10B981;
+    --amber:     #F59E0B;
+    --red:       #EF4444;
+    --text:      #E8E8ED;
+    --muted:     #8B8D97;
+    --radius:    10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    padding: 0 0 80px 0;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #0F1117 0%, #1a1535 50%, #0F1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 40px 40px;
+    text-align: center;
+  }
+  .header .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .logo-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 900; color: #fff;
+    box-shadow: 0 0 30px rgba(0,191,255,0.35);
+  }
+  .logo-text { font-size: 32px; font-weight: 900; background: linear-gradient(90deg,var(--cyan),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .header h1 { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .header p  { font-size: 14px; color: var(--muted); max-width: 560px; margin: 0 auto; }
+  .header .badge {
+    display: inline-block; margin-top: 16px;
+    padding: 4px 14px; border-radius: 20px;
+    background: rgba(0,191,255,0.12); border: 1px solid rgba(0,191,255,0.3);
+    font-size: 12px; color: var(--cyan); font-weight: 600; letter-spacing: 0.5px;
+  }
+
+  /* ── Layout ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── TOC ── */
+  .toc {
+    margin: 36px auto 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    max-width: 900px;
+  }
+  .toc h2 { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin: 8px 0; }
+  .toc a  { color: var(--cyan); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* ── Step cards ── */
+  .step {
+    margin: 36px 0;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .step-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .step-num {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: #fff;
+  }
+  .step-num.cyan   { background: linear-gradient(135deg,var(--cyan),#0080cc); box-shadow: 0 0 16px rgba(0,191,255,0.4); }
+  .step-num.purple { background: linear-gradient(135deg,var(--purple),#6040bb); box-shadow: 0 0 16px rgba(147,112,219,0.4); }
+  .step-num.green  { background: linear-gradient(135deg,var(--green),#0d7a5a); box-shadow: 0 0 16px rgba(16,185,129,0.4); }
+  .step-num.amber  { background: linear-gradient(135deg,var(--amber),#d97706); box-shadow: 0 0 16px rgba(245,158,11,0.4); }
+  .step-num.pink   { background: linear-gradient(135deg,var(--pink),#f472b6); box-shadow: 0 0 16px rgba(255,182,193,0.4); }
+  .step-title { flex: 1; }
+  .step-title h2 { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+  .step-title p  { font-size: 12px; color: var(--muted); }
+  .step-time {
+    font-size: 11px; color: var(--muted);
+    background: var(--surface2); border: 1px solid var(--border);
+    padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+  }
+  .step-body { padding: 24px 28px; background: var(--surface); }
+
+  /* ── Sub-steps ── */
+  .substep {
+    display: flex; gap: 14px;
+    margin: 0 0 20px 0;
+    padding: 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .substep:last-child { margin-bottom: 0; }
+  .substep-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--border); color: var(--muted);
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .substep-content h3 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .substep-content p  { font-size: 13px; color: var(--muted); margin: 4px 0; }
+
+  /* ── Code blocks ── */
+  pre, code {
+    font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+  }
+  pre {
+    background: #0a0c13;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    overflow-x: auto;
+    font-size: 12.5px;
+    line-height: 1.7;
+    margin: 10px 0;
+    color: #c9d1d9;
+    position: relative;
+  }
+  code {
+    background: rgba(0,191,255,0.1);
+    color: var(--cyan);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+  }
+  pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+  .comment { color: #6a737d; }
+  .keyword { color: var(--purple); }
+  .string  { color: var(--green); }
+  .hl      { background: rgba(0,191,255,0.08); display: block; margin: 0 -18px; padding: 0 18px; border-left: 3px solid var(--cyan); }
+
+  /* ── Alerts ── */
+  .alert {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 14px 16px; border-radius: 8px;
+    margin: 14px 0; font-size: 13px;
+  }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .alert.info    { background: rgba(0,191,255,0.08); border: 1px solid rgba(0,191,255,0.25); color: #a8d8f0; }
+  .alert.warn    { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3);  color: #fcd34d; }
+  .alert.danger  { background: rgba(239,68,68,0.08);  border: 1px solid rgba(239,68,68,0.3);   color: #fca5a5; }
+  .alert.success { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3);  color: #6ee7b7; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  th { background: var(--surface2); color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 9px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 14px; border-bottom: 1px solid rgba(42,45,58,0.6); vertical-align: top; color: var(--text); }
+  tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .tag.req  { background: rgba(239,68,68,0.15);  color: #fca5a5; }
+  .tag.opt  { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+  .tag.key  { background: rgba(0,191,255,0.15);  color: var(--cyan); }
+
+  /* ── Checklist ── */
+  .checklist { list-style: none; padding: 0; margin: 12px 0; }
+  .checklist li { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; font-size: 13px; color: var(--text); border-bottom: 1px solid rgba(42,45,58,0.4); }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist .box { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── File path pill ── */
+  .filepath {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(147,112,219,0.12); border: 1px solid rgba(147,112,219,0.3);
+    color: #c4b5fd; padding: 3px 10px; border-radius: 5px;
+    font-family: monospace; font-size: 12px;
+  }
+
+  /* ── Section divider ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+
+  /* ── Summary table ── */
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin: 24px 0;
+  }
+  .summary-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; text-align: center;
+  }
+  .summary-card .val { font-size: 26px; font-weight: 900; background: linear-gradient(90deg,var(--cyan),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .summary-card .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* ── Footer ── */
+  .footer { text-align: center; padding: 40px 24px 24px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 60px; }
+  .footer a { color: var(--cyan); text-decoration: none; }
+
+  @media(max-width:600px){
+    .step-header { flex-wrap: wrap; }
+    .step-body, .toc { padding: 18px; }
+    pre { font-size: 11px; }
+  }
+  @media print {
+    body { background: #fff; color: #000; }
+    .step { break-inside: avoid; }
+    pre  { background: #f4f4f8; color: #000; border-color: #ccc; }
+    .header { background: #fff; color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════ HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">K</div>
+    <span class="logo-text">Klip4ge</span>
+  </div>
+  <h1>Manual Setup Guide</h1>
+  <p>Step-by-step instructions for completing the five production-readiness tasks that require real credentials or recorded assets.</p>
+  <span class="badge">Repo: github.com/CStep-EA/clipforge · Branch: main</span>
+</div>
+
+<div class="container">
+
+  <!-- ══ TOC -->
+  <div class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#step1">Replace onboarding MP4 placeholder videos with real screen recordings</a></li>
+      <li><a href="#step2">Replace screenshot placeholder PNGs with actual app screenshots</a></li>
+      <li><a href="#step3">Set the published Chrome Extension ID in Layout.jsx</a></li>
+      <li><a href="#step4">Replace the APK signing fingerprint in assetlinks.json</a></li>
+      <li><a href="#step5">Rename the Base44 agent and update Assistant.jsx</a></li>
+    </ol>
+  </div>
+
+  <!-- ══ OVERVIEW STATS -->
+  <div class="summary-grid" style="margin-top:32px;">
+    <div class="summary-card"><div class="val">~30m</div><div class="lbl">Step 1 — Videos</div></div>
+    <div class="summary-card"><div class="val">~10m</div><div class="lbl">Step 2 — Screenshots</div></div>
+    <div class="summary-card"><div class="val">~5m</div><div class="lbl">Step 3 — Extension ID</div></div>
+    <div class="summary-card"><div class="val">~15m</div><div class="lbl">Step 4 — Android TWA</div></div>
+    <div class="summary-card"><div class="val">~5m</div><div class="lbl">Step 5 — Base44 Agent</div></div>
+  </div>
+
+  <div class="alert warn">
+    <span class="alert-icon">⚠️</span>
+    <div><strong>Prerequisites before starting:</strong> You need access to the GitHub repo <code>CStep-EA/clipforge</code>, the live Klip4ge app at <code>klip4ge.app</code>, your Base44 dashboard, and (for Step 4) a Google Play developer account and Android signing keystore. Steps 1–3 and 5 only need a computer with a browser and a text editor.</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ STEP 1 -->
+  <div class="step" id="step1">
+    <div class="step-header">
+      <div class="step-num cyan">1</div>
+      <div class="step-title">
+        <h2>Replace onboarding MP4 placeholders with real screen recordings</h2>
+        <p>6 videos · Each ~60–90 seconds · 1080p H.264 MP4</p>
+      </div>
+      <span class="step-time">⏱ ~30 min</span>
+    </div>
+    <div class="step-body">
+
+      <div class="alert info">
+        <span class="alert-icon">ℹ️</span>
+        <div><strong>Why this matters:</strong> The onboarding video player auto-plays a short walkthrough the first time a user visits each page. Right now it silently fails because the MP4 files are 40-byte stubs. Replacing them makes the onboarding tour actually play.</div>
+      </div>
+
+      <h3 style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:18px 0 12px;">Videos to record (in order)</h3>
+      <table>
+        <tr><th>Filename</th><th>Title shown to user</th><th>Page triggered on</th><th>Target length</th></tr>
+        <tr><td><code>dashboard.mp4</code></td><td>Welcome to Klip4ge</td><td>Dashboard</td><td>75 s</td></tr>
+        <tr><td><code>saves.mp4</code></td><td>Saving Items</td><td>Saves</td><td>60 s</td></tr>
+        <tr><td><code>sharing.mp4</code></td><td>Sharing &amp; Collaboration</td><td>Friends</td><td>70 s</td></tr>
+        <tr><td><code>support.mp4</code></td><td>Getting Support</td><td>Support</td><td>55 s</td></tr>
+        <tr><td><code>subscription.mp4</code></td><td>Plans &amp; Upgrades</td><td>Pricing</td><td>50 s</td></tr>
+        <tr><td><code>events.mp4</code></td><td>Events &amp; Calendar</td><td>Events</td><td>60 s</td></tr>
+      </table>
+
+      <div class="substep">
+        <div class="substep-num">1</div>
+        <div class="substep-content">
+          <h3>Record each screen</h3>
+          <p>Open <strong>klip4ge.app</strong> (or your staging URL) in a browser. Use one of these free tools to record your screen:</p>
+          <table>
+            <tr><th>Tool</th><th>Platform</th><th>How to open</th></tr>
+            <tr><td><strong>Loom</strong> (recommended)</td><td>Browser extension / Mac / Win</td><td>loom.com → "New Recording"</td></tr>
+            <tr><td><strong>QuickTime Player</strong></td><td>Mac only</td><td>File → New Screen Recording</td></tr>
+            <tr><td><strong>Xbox Game Bar</strong></td><td>Windows 10/11</td><td>Win + G → "Capture"</td></tr>
+            <tr><td><strong>OBS Studio</strong></td><td>Mac / Win / Linux (free)</td><td>obsproject.com</td></tr>
+          </table>
+          <p style="margin-top:8px;">Record at <strong>1920×1080</strong>. Show your cursor. Narrate what you're doing (or add a voiceover later — the player has a mute button so silent works too).</p>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">2</div>
+        <div class="substep-content">
+          <h3>Export as H.264 MP4</h3>
+          <p>Save each recording as <code>.mp4</code> with H.264 video codec. Most tools default to this. In Loom: download → "Original quality". In OBS: Settings → Output → Recording Format = <strong>mp4</strong>. Target file size: under 20 MB each (compress with HandBrake if needed — RF 23, web-optimised preset).</p>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">3</div>
+        <div class="substep-content">
+          <h3>Create a poster thumbnail (JPEG) for each video</h3>
+          <p>Take a screenshot of the first frame (or a good mid-point). Save as <code>.jpg</code> at <strong>1280×720</strong>. Name it to match the video: <code>dashboard-poster.jpg</code>, <code>saves-poster.jpg</code>, etc.</p>
+          <p>Quick method — open the MP4 in VLC → pause at 0:01 → Video → "Take Snapshot".</p>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">4</div>
+        <div class="substep-content">
+          <h3>Replace the placeholder files in the repo</h3>
+          <p>The files live at: <span class="filepath">public/videos/onboarding/</span></p>
+          <p>Clone the repo locally if you haven't already:</p>
+          <pre><code>git clone https://github.com/CStep-EA/clipforge.git
+cd clipforge</code></pre>
+          <p>Copy your new recordings into place (replace every file — do NOT rename them):</p>
+          <pre><code><span class="comment"># Mac / Linux</span>
+cp ~/Downloads/dashboard-recording.mp4   public/videos/onboarding/dashboard.mp4
+cp ~/Downloads/saves-recording.mp4       public/videos/onboarding/saves.mp4
+cp ~/Downloads/sharing-recording.mp4     public/videos/onboarding/sharing.mp4
+cp ~/Downloads/support-recording.mp4     public/videos/onboarding/support.mp4
+cp ~/Downloads/subscription-recording.mp4 public/videos/onboarding/subscription.mp4
+cp ~/Downloads/events-recording.mp4      public/videos/onboarding/events.mp4
+
+<span class="comment"># And the poster images</span>
+cp ~/Downloads/dashboard-poster.jpg      public/videos/onboarding/dashboard-poster.jpg
+<span class="comment"># ... repeat for all 6 posters</span></code></pre>
+
+          <div class="alert warn">
+            <span class="alert-icon">⚠️</span>
+            <div>Also delete the <code>.placeholder</code> stub files: <code>rm public/videos/onboarding/*.placeholder</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">5</div>
+        <div class="substep-content">
+          <h3>Commit and push</h3>
+          <pre><code>git add public/videos/onboarding/
+git commit -m "feat(onboarding): replace placeholder MP4s with real screen recordings"
+git push origin main</code></pre>
+          <div class="alert success">
+            <span class="alert-icon">✅</span>
+            <div><strong>Verify:</strong> Open your deployed app → visit the Dashboard as a new user (or clear localStorage key <code>klip4ge_seen_videos</code> in DevTools → Application → Local Storage) → the video player should auto-appear and play your recording.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert info">
+        <span class="alert-icon">💡</span>
+        <div><strong>YouTube fallback shortcut:</strong> If you'd rather host videos on YouTube/Loom instead of bundling MP4s, open <span class="filepath">src/hooks/useOnboarding.ts</span> and fill in the <code>youtubeId</code> field for each entry (e.g. <code>youtubeId: "dQw4w9WgXcQ"</code>). The video player automatically embeds YouTube when a local MP4 fails to load.</div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════ STEP 2 -->
+  <div class="step" id="step2">
+    <div class="step-header">
+      <div class="step-num purple">2</div>
+      <div class="step-title">
+        <h2>Replace screenshot placeholders with actual app screenshots</h2>
+        <p>4 images · Used in PWA install prompt &amp; app store listings</p>
+      </div>
+      <span class="step-time">⏱ ~10 min</span>
+    </div>
+    <div class="step-body">
+
+      <div class="alert info">
+        <span class="alert-icon">ℹ️</span>
+        <div><strong>Why this matters:</strong> The <code>manifest.json</code> <code>screenshots</code> array powers the "Add to Home Screen" rich install dialog on Android Chrome. Without real screenshots it shows a blank dark box. Google Play / Apple App Store also pull from these paths.</div>
+      </div>
+
+      <h3 style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:0 0 12px;">Required screenshots</h3>
+      <table>
+        <tr><th>Filename</th><th>Exact size</th><th>Form factor</th><th>Label in manifest</th></tr>
+        <tr><td><code>dashboard.png</code></td><td>1280 × 720 px</td><td>Desktop / wide</td><td>Klip4ge Dashboard — Your save vault at a glance</td></tr>
+        <tr><td><code>saves.png</code></td><td>1280 × 720 px</td><td>Desktop / wide</td><td>Saves — Browse and manage all your saved items</td></tr>
+        <tr><td><code>search.png</code></td><td>1280 × 720 px</td><td>Desktop / wide</td><td>AI Search — Find anything instantly</td></tr>
+        <tr><td><code>saves-mobile.png</code></td><td>390 × 844 px</td><td>Mobile / narrow</td><td>My Saves on mobile</td></tr>
+      </table>
+
+      <div class="substep">
+        <div class="substep-num">1</div>
+        <div class="substep-content">
+          <h3>Take desktop screenshots (1280 × 720)</h3>
+          <p>Open <strong>klip4ge.app</strong> in Chrome. Press <strong>F12</strong> (DevTools) → click the <strong>Toggle Device Toolbar</strong> icon (📱 top-left of DevTools) → set dimensions to <strong>1280 × 720</strong>.</p>
+          <p>Navigate to each page and press <strong>Ctrl + Shift + P</strong> → type <strong>"Capture screenshot"</strong> → Enter. Save files as: <code>dashboard.png</code>, <code>saves.png</code>, <code>search.png</code>.</p>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">2</div>
+        <div class="substep-content">
+          <h3>Take mobile screenshot (390 × 844)</h3>
+          <p>In the same DevTools Device Toolbar, set dimensions to <strong>390 × 844</strong> (iPhone 14 preset). Navigate to the Saves page → capture screenshot → save as <code>saves-mobile.png</code>.</p>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">3</div>
+        <div class="substep-content">
+          <h3>Replace the placeholder files</h3>
+          <p>The files live at: <span class="filepath">public/screenshots/</span></p>
+          <pre><code>cp ~/Downloads/dashboard.png    public/screenshots/dashboard.png
+cp ~/Downloads/saves.png        public/screenshots/saves.png
+cp ~/Downloads/search.png       public/screenshots/search.png
+cp ~/Downloads/saves-mobile.png public/screenshots/saves-mobile.png</code></pre>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">4</div>
+        <div class="substep-content">
+          <h3>Also update OG image (og-image.png)</h3>
+          <p>The file <span class="filepath">public/icons/og-image.png</span> (1200 × 630) is used when Klip4ge links are shared on Twitter/Slack/iMessage. Design it in Figma, Canva, or capture a nice 1200×630 hero crop of the dashboard. Replace the placeholder:</p>
+          <pre><code>cp ~/Downloads/og-image.png public/icons/og-image.png</code></pre>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">5</div>
+        <div class="substep-content">
+          <h3>Commit and push</h3>
+          <pre><code>git add public/screenshots/ public/icons/og-image.png
+git commit -m "feat(assets): replace placeholder screenshots and OG image with real app screenshots"
+git push origin main</code></pre>
+          <div class="alert success">
+            <span class="alert-icon">✅</span>
+            <div><strong>Verify:</strong> On Android Chrome, open klip4ge.app → tap the ⋮ menu → "Add to Home Screen" → the install dialog should now show your real screenshots in the carousel.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════ STEP 3 -->
+  <div class="step" id="step3">
+    <div class="step-header">
+      <div class="step-num green">3</div>
+      <div class="step-title">
+        <h2>Set the published Chrome Extension ID in Layout.jsx</h2>
+        <p>1-line code edit · Locks the auth token relay to your specific extension</p>
+      </div>
+      <span class="step-time">⏱ ~5 min</span>
+    </div>
+    <div class="step-body">
+
+      <div class="alert warn">
+        <span class="alert-icon">⚠️</span>
+        <div><strong>Do this AFTER publishing the extension</strong> to the Chrome Web Store. Until then, the placeholder string <code>"REPLACE_WITH_PUBLISHED_EXTENSION_ID"</code> causes <code>chrome.runtime.sendMessage</code> to fail silently (which is safe — the app still works, the extension just won't receive the auth token automatically).</div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">1</div>
+        <div class="substep-content">
+          <h3>Publish the Klip4ge MV3 Extension to Chrome Web Store</h3>
+          <p>If you haven't already, submit the extension at:</p>
+          <p><a href="https://chrome.google.com/webstore/developer/dashboard" target="_blank" style="color:var(--cyan);">chrome.google.com/webstore/developer/dashboard</a></p>
+          <p>Required assets (all already in the repo under <span class="filepath">extension/</span>):</p>
+          <ul style="padding-left:18px;font-size:13px;color:var(--muted);line-height:1.9;">
+            <li><code>extension/manifest.json</code> — MV3 manifest</li>
+            <li><code>extension/icons/</code> — 16, 32, 48, 128 px PNGs</li>
+            <li><code>extension/popup/popup.html</code> + <code>popup.js</code></li>
+            <li><code>extension/background.js</code></li>
+            <li><code>extension/content.js</code></li>
+            <li><code>extension/store-promo-1280x800.png</code> — promo image (replace placeholder with real screenshot)</li>
+          </ul>
+          <p style="margin-top:8px;">Zip the extension folder: <code>cd clipforge && zip -r klip4ge-extension.zip extension/</code> then upload on the CWS dashboard.</p>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">2</div>
+        <div class="substep-content">
+          <h3>Find your Extension ID</h3>
+          <p>After the extension is approved (or even while in draft/testing):</p>
+          <ol style="padding-left:18px;font-size:13px;color:var(--muted);line-height:2;">
+            <li>Go to <a href="https://chrome.google.com/webstore/developer/dashboard" target="_blank" style="color:var(--cyan);">Chrome Web Store Developer Dashboard</a></li>
+            <li>Click your Klip4ge extension item</li>
+            <li>The URL will contain the ID: <code>…/detail/<strong>abcdefghijklmnopabcdefghijklmnop</strong></code></li>
+            <li>Or: open Chrome → go to <code>chrome://extensions</code> → enable "Developer mode" (top-right toggle) → the ID appears under your extension name</li>
+          </ol>
+          <p>The ID is always a <strong>32-character lowercase string</strong> like: <code>abcdefghijklmnopabcdefghijklmnop</code></p>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">3</div>
+        <div class="substep-content">
+          <h3>Edit Layout.jsx — line 75</h3>
+          <p>Open <span class="filepath">src/Layout.jsx</span> in your editor. Find this block (around line 75):</p>
+          <pre><code><span class="comment">// BEFORE</span>
+<span class="hl">            "REPLACE_WITH_PUBLISHED_EXTENSION_ID", <span class="comment">// TODO: set after Chrome Web Store submission</span></span></code></pre>
+          <p>Replace it with your actual 32-character extension ID:</p>
+          <pre><code><span class="comment">// AFTER (example ID — use YOUR real one)</span>
+<span class="hl">            "abcdefghijklmnopabcdefghijklmnop", <span class="comment">// Klip4ge MV3 Chrome Extension</span></span></code></pre>
+
+          <div class="alert danger">
+            <span class="alert-icon">🚨</span>
+            <div><strong>Security note:</strong> The Extension ID locks which Chrome extension can receive the auth token. If you leave it as <code>undefined</code> in production, <em>any</em> extension on the klip4ge.app origin could theoretically receive the token. Always set a real ID before going live.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">4</div>
+        <div class="substep-content">
+          <h3>Commit and push</h3>
+          <pre><code>git add src/Layout.jsx
+git commit -m "feat(extension): set published Chrome Web Store extension ID in auth relay"
+git push origin main</code></pre>
+          <div class="alert success">
+            <span class="alert-icon">✅</span>
+            <div><strong>Verify:</strong> Install the published extension from CWS, sign into klip4ge.app, then click the extension icon — it should show you as already signed in without entering credentials again.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════ STEP 4 -->
+  <div class="step" id="step4">
+    <div class="step-header">
+      <div class="step-num amber">4</div>
+      <div class="step-title">
+        <h2>Replace the APK signing fingerprint in assetlinks.json</h2>
+        <p>Required for Android TWA — lets Chrome trust your app as native</p>
+      </div>
+      <span class="step-time">⏱ ~15 min</span>
+    </div>
+    <div class="step-body">
+
+      <div class="alert info">
+        <span class="alert-icon">ℹ️</span>
+        <div><strong>What is this?</strong> A Trusted Web Activity (TWA) is how your PWA gets listed on Google Play as a "native" Android app. The <code>assetlinks.json</code> file tells Android Chrome: "this website is owned by the Android app with this signing key." Without the correct fingerprint, the TWA will open in a browser tab instead of full-screen, and Play Store submission will fail verification.</div>
+      </div>
+
+      <div class="alert warn">
+        <span class="alert-icon">⚠️</span>
+        <div><strong>Prerequisites for this step:</strong> You need a Google Play Developer account ($25 one-time fee) and Java JDK installed on your computer (for <code>keytool</code>). If you're using Google Play App Signing (recommended), the fingerprint comes from the Play Console instead — see Sub-step 2b.</div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">1</div>
+        <div class="substep-content">
+          <h3>Build the TWA APK using PWABuilder (easiest method)</h3>
+          <p>You don't need Android Studio. Use <strong>PWABuilder</strong> — it builds the TWA for you from your manifest URL:</p>
+          <ol style="padding-left:18px;font-size:13px;color:var(--muted);line-height:2;">
+            <li>Go to <a href="https://www.pwabuilder.com" target="_blank" style="color:var(--cyan);">pwabuilder.com</a></li>
+            <li>Enter your URL: <code>https://klip4ge.app</code> → click "Start"</li>
+            <li>PWABuilder scores your manifest and service worker — click <strong>"Package for stores"</strong></li>
+            <li>Select <strong>"Google Play"</strong> → click "Generate Package"</li>
+            <li>Fill in the form:
+              <ul style="padding-left:16px;margin-top:6px;">
+                <li><strong>Package ID:</strong> <code>app.klip4ge.app</code></li>
+                <li><strong>App version:</strong> <code>1</code></li>
+                <li><strong>Version name:</strong> <code>1.0.0</code></li>
+                <li><strong>Signing key:</strong> Choose "New" to let PWABuilder generate a keystore, or "Existing" to upload yours</li>
+              </ul>
+            </li>
+            <li>Download the <code>.zip</code> — it contains your <code>.aab</code> (Android App Bundle), a <code>.keystore</code> file, and a <code>assetlinks.json</code> with the correct fingerprint already filled in</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">2</div>
+        <div class="substep-content">
+          <h3>Get the SHA-256 fingerprint from your keystore</h3>
+          <p><strong>Option A — from the PWABuilder-generated keystore:</strong></p>
+          <p>PWABuilder includes the fingerprint in the downloaded <code>assetlinks.json</code>. Just copy it from there — skip to Sub-step 3.</p>
+          <br/>
+          <p><strong>Option B — from an existing keystore file using keytool:</strong></p>
+          <p>Run this command in your terminal (replace the paths and alias with yours):</p>
+          <pre><code>keytool -list -v \
+  -keystore ~/path/to/klip4ge.keystore \
+  -alias klip4ge \
+  -storepass YOUR_KEYSTORE_PASSWORD</code></pre>
+          <p>Look for the line that starts with <strong>"SHA256:"</strong>. It looks like:</p>
+          <pre><code>SHA256: AB:CD:12:34:EF:56:...:78:90:GH</code></pre>
+          <p>Copy the full hex string <em>without</em> spaces or colons — you'll need it in the next step.</p>
+          <br/>
+          <p><strong>Option C — using Google Play App Signing (recommended for production):</strong></p>
+          <ol style="padding-left:18px;font-size:13px;color:var(--muted);line-height:2;">
+            <li>Upload your AAB to Google Play Console → your app → <strong>Release → Setup → App signing</strong></li>
+            <li>Under <strong>"App signing key certificate"</strong>, copy the <strong>SHA-256 certificate fingerprint</strong></li>
+            <li>This is the one to use in assetlinks.json (Play re-signs your APK, so the original keystore fingerprint won't match)</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">3</div>
+        <div class="substep-content">
+          <h3>Update assetlinks.json in the repo</h3>
+          <p>Open <span class="filepath">public/.well-known/assetlinks.json</span>. It currently looks like:</p>
+          <pre><code>[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.klip4ge.app",
+    "sha256_cert_fingerprints": [
+<span class="hl">      "REPLACE_WITH_YOUR_SIGNING_CERT_SHA256_FINGERPRINT"</span>
+    ]
+  }
+}]</code></pre>
+          <p>Replace the placeholder with your real fingerprint (colons optional — both formats work):</p>
+          <pre><code>[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.klip4ge.app",
+    "sha256_cert_fingerprints": [
+<span class="hl">      "AB:CD:12:34:EF:56:78:90:AB:CD:12:34:EF:56:78:90:AB:CD:12:34:EF:56:78:90:AB:CD:12:34:EF:56:78:90"</span>
+    ]
+  }
+}]</code></pre>
+          <div class="alert info">
+            <span class="alert-icon">💡</span>
+            <div>If you use <strong>both</strong> Play App Signing and a debug keystore, add both fingerprints as a JSON array: <code>"sha256_cert_fingerprints": ["PRODUCTION_FP", "DEBUG_FP"]</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">4</div>
+        <div class="substep-content">
+          <h3>Commit, push, and verify the hosted file</h3>
+          <pre><code>git add public/.well-known/assetlinks.json
+git commit -m "feat(android): set APK signing certificate fingerprint in assetlinks.json"
+git push origin main</code></pre>
+          <p>After deploying, verify the file is publicly accessible:</p>
+          <pre><code>curl https://klip4ge.app/.well-known/assetlinks.json</code></pre>
+          <p>It must return the JSON with your fingerprint. Also check it with Google's tool:</p>
+          <p><a href="https://digitalassetlinks.googleapis.com/v1/statements:list?source.web.site=https://klip4ge.app&relation=delegate_permission/common.handle_all_urls" target="_blank" style="color:var(--cyan);font-size:12px;">Google Digital Asset Links validator ↗</a></p>
+          <div class="alert success">
+            <span class="alert-icon">✅</span>
+            <div><strong>Verify on device:</strong> Install your TWA APK on an Android phone. Open it — the app should launch full-screen with no browser address bar (that's how you know the TWA trust link is working).</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════ STEP 5 -->
+  <div class="step" id="step5">
+    <div class="step-header">
+      <div class="step-num pink">5</div>
+      <div class="step-title">
+        <h2>Rename the Base44 agent and update Assistant.jsx</h2>
+        <p>Dashboard rename + 3-line code edit · Fixes the AI assistant chat</p>
+      </div>
+      <span class="step-time">⏱ ~5 min</span>
+    </div>
+    <div class="step-body">
+
+      <div class="alert info">
+        <span class="alert-icon">ℹ️</span>
+        <div><strong>Why this matters:</strong> The <code>Assistant.jsx</code> page calls <code>base44.agents.listConversations({ agent_name: "clipforge_assistant" })</code>. If your Base44 dashboard has the agent registered under a different name, or if you want to rename it to match the Klip4ge brand, both the dashboard and the code must match exactly. Mismatched names return an empty conversation list and break the AI chat page.</div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">1</div>
+        <div class="substep-content">
+          <h3>Decision: rename or keep?</h3>
+          <p>You have two choices:</p>
+          <table>
+            <tr><th>Option</th><th>What to do</th><th>Best if…</th></tr>
+            <tr>
+              <td><span class="tag key">A</span> Keep <code>clipforge_assistant</code></td>
+              <td>Do nothing — the code already uses this name. No change needed.</td>
+              <td>The agent is already live and working in Base44</td>
+            </tr>
+            <tr>
+              <td><span class="tag req">B</span> Rename to <code>klip4ge_assistant</code></td>
+              <td>Rename in Base44 dashboard first, then update code</td>
+              <td>You want full brand consistency OR the agent doesn't exist yet</td>
+            </tr>
+          </table>
+          <p style="margin-top:8px;font-size:13px;color:var(--muted);">⚠️ <strong>If users have existing conversations under the old name, renaming will lose that history.</strong> Only rename if you're pre-launch or willing to reset chat history.</p>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">2</div>
+        <div class="substep-content">
+          <h3>Rename the agent in your Base44 dashboard</h3>
+          <p><em>(Skip this sub-step if you chose Option A above)</em></p>
+          <ol style="padding-left:18px;font-size:13px;color:var(--muted);line-height:2;">
+            <li>Log in at <a href="https://base44.com" target="_blank" style="color:var(--cyan);">base44.com</a> → your Klip4ge app</li>
+            <li>In the left sidebar, click <strong>"Agents"</strong> (or "AI Agents" depending on your Base44 version)</li>
+            <li>Find the agent named <code>clipforge_assistant</code> → click <strong>"Settings"</strong> or the ✏️ pencil icon</li>
+            <li>Change the <strong>Name / Identifier</strong> field to: <code>klip4ge_assistant</code></li>
+            <li>Click <strong>Save</strong></li>
+          </ol>
+          <div class="alert warn">
+            <span class="alert-icon">⚠️</span>
+            <div>Base44 agent names must be lowercase, no spaces, underscores only. The name is an internal API key — it does not display to end users.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">3</div>
+        <div class="substep-content">
+          <h3>Update Assistant.jsx — 3 lines</h3>
+          <p>Open <span class="filepath">src/pages/Assistant.jsx</span>. Find and replace all three occurrences of <code>"clipforge_assistant"</code> with <code>"klip4ge_assistant"</code>:</p>
+          <pre><code><span class="comment">// Lines 31, 37, and 82 — change all three</span>
+
+<span class="comment">// BEFORE (3 places):</span>
+agent_name: <span class="string">"clipforge_assistant"</span>
+
+<span class="comment">// AFTER (3 places):</span>
+agent_name: <span class="string">"klip4ge_assistant"</span></code></pre>
+          <p>Quick command-line replacement (from repo root):</p>
+          <pre><code>sed -i 's/"clipforge_assistant"/"klip4ge_assistant"/g' src/pages/Assistant.jsx
+
+<span class="comment"># Verify the change:</span>
+grep "agent_name" src/pages/Assistant.jsx</code></pre>
+          <p>Expected output:</p>
+          <pre><code>    const convs = await base44.agents.listConversations({ agent_name: "klip4ge_assistant" });
+      agent_name: "klip4ge_assistant",
+    const conv = activeConv || (await base44.agents.listConversations({ agent_name: "klip4ge_assistant" }))?.[0];</code></pre>
+        </div>
+      </div>
+
+      <div class="substep">
+        <div class="substep-num">4</div>
+        <div class="substep-content">
+          <h3>Run tests and push</h3>
+          <pre><code><span class="comment"># Run the full test suite to make sure nothing broke</span>
+NODE_OPTIONS="--max-old-space-size=1536" npx jest --forceExit
+
+<span class="comment"># Commit and push</span>
+git add src/pages/Assistant.jsx
+git commit -m "feat(rebrand): rename Base44 agent from clipforge_assistant to klip4ge_assistant"
+git push origin main</code></pre>
+          <div class="alert success">
+            <span class="alert-icon">✅</span>
+            <div><strong>Verify:</strong> Open klip4ge.app → navigate to the Assistant page → the AI chat should load your conversation history and respond normally. If the chat is blank/erroring, double-check the agent name in the Base44 dashboard matches exactly.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════ FINAL CHECKLIST -->
+  <hr class="divider" />
+
+  <div style="margin: 0 0 12px;">
+    <h2 style="font-size:17px;font-weight:800;margin-bottom:6px;">✅ Final completion checklist</h2>
+    <p style="font-size:13px;color:var(--muted);">Print or save this — check each box as you complete it.</p>
+  </div>
+
+  <ul class="checklist">
+    <li><span class="box"></span><strong>Step 1a:</strong> Recorded <code>dashboard.mp4</code> (~75 s) and replaced placeholder in <code>public/videos/onboarding/</code></li>
+    <li><span class="box"></span><strong>Step 1b:</strong> Recorded <code>saves.mp4</code> (~60 s) and replaced placeholder</li>
+    <li><span class="box"></span><strong>Step 1c:</strong> Recorded <code>sharing.mp4</code> (~70 s) and replaced placeholder</li>
+    <li><span class="box"></span><strong>Step 1d:</strong> Recorded <code>support.mp4</code> (~55 s) and replaced placeholder</li>
+    <li><span class="box"></span><strong>Step 1e:</strong> Recorded <code>subscription.mp4</code> (~50 s) and replaced placeholder</li>
+    <li><span class="box"></span><strong>Step 1f:</strong> Recorded <code>events.mp4</code> (~60 s) and replaced placeholder</li>
+    <li><span class="box"></span><strong>Step 1g:</strong> Created all 6 poster JPEGs and replaced placeholders</li>
+    <li><span class="box"></span><strong>Step 1h:</strong> Deleted all <code>*.placeholder</code> stub files from <code>public/videos/onboarding/</code></li>
+    <li><span class="box"></span><strong>Step 2a:</strong> Captured <code>dashboard.png</code> at 1280×720 and replaced placeholder</li>
+    <li><span class="box"></span><strong>Step 2b:</strong> Captured <code>saves.png</code> at 1280×720 and replaced placeholder</li>
+    <li><span class="box"></span><strong>Step 2c:</strong> Captured <code>search.png</code> at 1280×720 and replaced placeholder</li>
+    <li><span class="box"></span><strong>Step 2d:</strong> Captured <code>saves-mobile.png</code> at 390×844 and replaced placeholder</li>
+    <li><span class="box"></span><strong>Step 2e:</strong> Designed and replaced <code>public/icons/og-image.png</code> (1200×630)</li>
+    <li><span class="box"></span><strong>Step 3a:</strong> Zipped and submitted extension to Chrome Web Store</li>
+    <li><span class="box"></span><strong>Step 3b:</strong> Copied 32-char Extension ID into <code>src/Layout.jsx</code> line 75</li>
+    <li><span class="box"></span><strong>Step 3c:</strong> Tested auth relay (sign in on web → extension shows logged in)</li>
+    <li><span class="box"></span><strong>Step 4a:</strong> Built TWA APK via PWABuilder (package ID: <code>app.klip4ge.app</code>)</li>
+    <li><span class="box"></span><strong>Step 4b:</strong> Retrieved SHA-256 fingerprint from keystore or Play Console</li>
+    <li><span class="box"></span><strong>Step 4c:</strong> Replaced fingerprint in <code>public/.well-known/assetlinks.json</code></li>
+    <li><span class="box"></span><strong>Step 4d:</strong> Verified <code>https://klip4ge.app/.well-known/assetlinks.json</code> returns correct JSON</li>
+    <li><span class="box"></span><strong>Step 4e:</strong> Tested TWA on Android device — launches full-screen (no browser bar)</li>
+    <li><span class="box"></span><strong>Step 5a:</strong> Decided to keep <code>clipforge_assistant</code> OR renamed in Base44 dashboard</li>
+    <li><span class="box"></span><strong>Step 5b (if renaming):</strong> Updated all 3 lines in <code>src/pages/Assistant.jsx</code></li>
+    <li><span class="box"></span><strong>Step 5c:</strong> Ran full test suite — all 553 tests pass — committed and pushed</li>
+  </ul>
+
+  <hr class="divider" />
+
+  <!-- ═══ QUICK REFERENCE -->
+  <div style="margin-bottom:32px;">
+    <h2 style="font-size:15px;font-weight:800;margin-bottom:14px;">📁 Quick file reference</h2>
+    <table>
+      <tr><th>File</th><th>Step</th><th>Change needed</th></tr>
+      <tr><td><code>public/videos/onboarding/*.mp4</code></td><td><span class="tag key">1</span></td><td>Replace 40-byte stubs with real H.264 recordings</td></tr>
+      <tr><td><code>public/videos/onboarding/*-poster.jpg</code></td><td><span class="tag key">1</span></td><td>Replace placeholder PNGs with JPEG thumbnails</td></tr>
+      <tr><td><code>public/screenshots/dashboard.png</code></td><td><span class="tag key">2</span></td><td>Replace with real 1280×720 app screenshot</td></tr>
+      <tr><td><code>public/screenshots/saves.png</code></td><td><span class="tag key">2</span></td><td>Replace with real 1280×720 app screenshot</td></tr>
+      <tr><td><code>public/screenshots/search.png</code></td><td><span class="tag key">2</span></td><td>Replace with real 1280×720 app screenshot</td></tr>
+      <tr><td><code>public/screenshots/saves-mobile.png</code></td><td><span class="tag key">2</span></td><td>Replace with real 390×844 mobile screenshot</td></tr>
+      <tr><td><code>public/icons/og-image.png</code></td><td><span class="tag key">2</span></td><td>Replace with designed 1200×630 social share image</td></tr>
+      <tr><td><code>src/Layout.jsx</code> — line 75</td><td><span class="tag key">3</span></td><td>Replace <code>"REPLACE_WITH_PUBLISHED_EXTENSION_ID"</code> with 32-char CWS ID</td></tr>
+      <tr><td><code>public/.well-known/assetlinks.json</code></td><td><span class="tag key">4</span></td><td>Replace <code>"REPLACE_WITH_YOUR_SIGNING_CERT_SHA256_FINGERPRINT"</code> with real SHA-256</td></tr>
+      <tr><td><code>src/pages/Assistant.jsx</code> — lines 31, 37, 82</td><td><span class="tag key">5</span></td><td>Change <code>clipforge_assistant</code> → <code>klip4ge_assistant</code> (if renaming)</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- ══ FOOTER -->
+<div class="footer">
+  <p>Klip4ge Manual Setup Guide · Generated 2026-03-06 · Repo: <a href="https://github.com/CStep-EA/clipforge">github.com/CStep-EA/clipforge</a> · Branch: <code>main</code> · Commit: <code>b59df6f</code></p>
+  <p style="margin-top:6px;">Questions? Contact Colton Stephenson · <a href="https://klip4ge.app">klip4ge.app</a></p>
+</div>
+
+</body>
+</html>
