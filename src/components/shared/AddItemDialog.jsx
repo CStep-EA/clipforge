@@ -65,14 +65,53 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
     }
   }, [open, editItem]);
 
+  /**
+   * fetchOgImage — attempts to pull an Open Graph thumbnail for the URL.
+   * Uses the allorigins.win CORS proxy to fetch the raw HTML, then extracts
+   * og:image / twitter:image meta tags client-side.
+   * Returns null if anything fails (graceful — not required for save to work).
+   */
+  const fetchOgImage = async (url) => {
+    if (!url) return null;
+    try {
+      // Validate it's a real URL first
+      new URL(url);
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+      const resp = await fetch(proxyUrl, { signal: AbortSignal.timeout(6000) });
+      if (!resp.ok) return null;
+      const { contents } = await resp.json();
+      if (!contents) return null;
+      // Parse og:image from raw HTML string (no DOM needed)
+      const ogMatch = contents.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+        || contents.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+      const twMatch = contents.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i)
+        || contents.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i);
+      const imageUrl = ogMatch?.[1] || twMatch?.[1];
+      if (!imageUrl) return null;
+      // Resolve relative URLs
+      const resolved = new URL(imageUrl, url).href;
+      return resolved;
+    } catch {
+      return null; // silently fail — thumbnail is a bonus, not blocking
+    }
+  };
+
   const handleAIAnalyze = async () => {
     if (!form.url && !form.title) return;
     setAiLoading(true);
     let res;
     try {
-      res = await base44.functions.invoke('analyzeItem', {
-        title: form.title, url: form.url, description: form.description,
-      });
+      // Run AI analysis and OG image fetch in parallel
+      const [aiRes, ogImage] = await Promise.all([
+        base44.functions.invoke('analyzeItem', {
+          title: form.title, url: form.url, description: form.description,
+        }),
+        form.url && !form.image_url ? fetchOgImage(form.url) : Promise.resolve(null),
+      ]);
+      res = aiRes;
+      if (ogImage) {
+        setForm(prev => ({ ...prev, image_url: prev.image_url || ogImage }));
+      }
     } catch (err) {
       const status = err?.response?.status;
       if (status === 429) {
@@ -95,6 +134,8 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
       tags: res.tags || prev.tags,
       rating: res.rating,
       title: prev.title || res.suggested_title || prev.title,
+      // Use AI-returned image if we didn't already get one from OG fetch
+      image_url: prev.image_url || res.image_url || prev.image_url,
     }));
     setAiLoading(false);
   };
@@ -139,6 +180,13 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
                 placeholder="Paste a link, or just add a title below"
                 value={form.url}
                 onChange={(e) => setForm({ ...form, url: e.target.value })}
+                onBlur={async (e) => {
+                  const url = e.target.value.trim();
+                  if (url && !form.image_url) {
+                    const og = await fetchOgImage(url);
+                    if (og) setForm(prev => ({ ...prev, image_url: prev.image_url || og }));
+                  }
+                }}
                 // font-size 16px prevents iOS auto-zoom
                 style={{ fontSize: "16px" }}
                 className="bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] placeholder:text-[#8B8D97]/50 h-12 text-base"
@@ -154,6 +202,27 @@ export default function AddItemDialog({ open, onOpenChange, onSave, editItem }) 
                 {aiLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
               </Button>
             </div>
+            {/* Thumbnail preview — shows as soon as OG image is found */}
+            {form.image_url && (
+              <div className="mt-2 relative group w-full h-24 rounded-xl overflow-hidden border border-[#2A2D3A]">
+                <img
+                  src={form.image_url}
+                  alt="Link preview"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.parentElement.style.display = "none"; }}
+                />
+                <button
+                  type="button"
+                  className="absolute top-1 right-1 bg-black/60 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={() => setForm(prev => ({ ...prev, image_url: "" }))}
+                  title="Remove thumbnail"
+                  aria-label="Remove thumbnail"
+                >✕</button>
+                <div className="absolute bottom-1 left-2 text-[9px] text-white/60 bg-black/50 px-1.5 py-0.5 rounded">
+                  Preview thumbnail
+                </div>
+              </div>
+            )}
           </div>
 
           <div>

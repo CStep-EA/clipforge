@@ -5,7 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { User, Bell, LogOut, Save, Users, UserPlus, Gift, Lock, ArrowRight, Crown, Plug, Trash2, Download, Shield, X, PlayCircle, Eye, EyeOff, MessageCircle, MessageSquarePlus } from "lucide-react";
+import { User, Bell, LogOut, Save, Users, UserPlus, Gift, Lock, ArrowRight, Crown, Plug, Trash2, Download, Shield, X, PlayCircle, Eye, EyeOff, MessageCircle, MessageSquarePlus, ShoppingBag, MapPin } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import TierGate from "@/components/shared/TierGate";
 import { Badge } from "@/components/ui/badge";
 import { useSubscription } from "@/components/shared/useSubscription";
@@ -36,6 +43,24 @@ export default function Settings() {
     () => localStorage.getItem(BETA_WIDGET_DISMISSED_KEY) === "true"
   );
   const [dataModalOpen, setDataModalOpen] = useState(null); // 'delete' | 'export' | null
+
+  // ── Market Savings preferences ─────────────────────────────────────────────
+  const MARKET_PREFS_KEY = "cf_market_prefs";
+  const defaultMarketPrefs = { enabled: false, types: [], radius: "50", city: "" };
+  const [marketPrefs, setMarketPrefs] = useState(() => {
+    try { return { ...defaultMarketPrefs, ...JSON.parse(localStorage.getItem(MARKET_PREFS_KEY) || "{}") }; }
+    catch { return defaultMarketPrefs; }
+  });
+  const saveMarketPrefs = (updated) => {
+    setMarketPrefs(updated);
+    localStorage.setItem(MARKET_PREFS_KEY, JSON.stringify(updated));
+    toast.success("Market Savings preferences saved");
+  };
+  const toggleMarketType = (type) => {
+    const cur = marketPrefs.types || [];
+    const next = cur.includes(type) ? cur.filter(t => t !== type) : [...cur, type];
+    saveMarketPrefs({ ...marketPrefs, types: next });
+  };
   const [dataReason, setDataReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -150,6 +175,96 @@ export default function Settings() {
             <Label className="text-xs text-[#8B8D97]">Email</Label>
             <Input value={user?.email || ""} disabled className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED]" />
           </div>
+        </div>
+      </Card>
+
+      {/* Market Savings */}
+      <Card className="glass-card p-6">
+        <div className="flex items-center gap-3 mb-5">
+          <ShoppingBag className="w-5 h-5 text-[#10B981]" />
+          <div>
+            <h2 className="font-semibold">Market Savings &amp; Deal Suggestions</h2>
+            <p className="text-[10px] text-[#8B8D97]">Control when and how deal recommendations appear</p>
+          </div>
+        </div>
+        <div className="space-y-4">
+          {/* Master toggle */}
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm">Enable Market Savings suggestions</p>
+              <p className="text-xs text-[#8B8D97]">Show deal &amp; event recommendations in your Integrations page</p>
+            </div>
+            <Switch
+              checked={marketPrefs.enabled}
+              onCheckedChange={(v) => saveMarketPrefs({ ...marketPrefs, enabled: v })}
+            />
+          </div>
+
+          {marketPrefs.enabled && (
+            <div className="space-y-4 border-t border-[#2A2D3A] pt-4">
+              {/* City input */}
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[#8B8D97] shrink-0" />
+                <div className="flex-1">
+                  <Label className="text-xs text-[#8B8D97]">Your City (for local events &amp; deals)</Label>
+                  <Input
+                    placeholder="e.g. Denver, CO"
+                    value={marketPrefs.city}
+                    onChange={(e) => setMarketPrefs(p => ({ ...p, city: e.target.value }))}
+                    onBlur={() => saveMarketPrefs(marketPrefs)}
+                    className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] h-9 text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Radius */}
+              <div>
+                <Label className="text-xs text-[#8B8D97]">Search Radius</Label>
+                <Select
+                  value={marketPrefs.radius}
+                  onValueChange={(v) => saveMarketPrefs({ ...marketPrefs, radius: v })}
+                >
+                  <SelectTrigger className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] h-9 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#1A1D27] border-[#2A2D3A]">
+                    {[["10","Within 10 miles"],["25","Within 25 miles"],["50","Within 50 miles"],["100","Within 100 miles"],["250","Within 250 miles"]].map(([v,l]) => (
+                      <SelectItem key={v} value={v} className="text-[#E8E8ED] hover:bg-[#2A2D3A]">{l}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Content type filter chips */}
+              <div>
+                <Label className="text-xs text-[#8B8D97] block mb-2">Show suggestions for (pick all that apply)</Label>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { id: "deals", label: "🏷️ Deals & Coupons" },
+                    { id: "events", label: "🎟️ Events & Concerts" },
+                    { id: "restaurants", label: "🍽️ Food & Dining" },
+                    { id: "travel", label: "✈️ Travel & Hotels" },
+                    { id: "products", label: "📦 Products" },
+                  ].map(({ id, label }) => (
+                    <button
+                      key={id}
+                      onClick={() => toggleMarketType(id)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                        (marketPrefs.types || []).includes(id)
+                          ? "bg-[#10B981]/15 border-[#10B981]/50 text-[#10B981]"
+                          : "bg-[#1A1D27] border-[#2A2D3A] text-[#8B8D97] hover:border-[#10B981]/30"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                {(marketPrefs.types || []).length === 0 && (
+                  <p className="text-[10px] text-[#8B8D97]/60 mt-1.5">No types selected — all categories will show</p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </Card>
 

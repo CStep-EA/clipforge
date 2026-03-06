@@ -91,6 +91,30 @@ function FaviconImg({ url, className }) {
   );
 }
 
+/**
+ * fetchOgImagePassive — lightweight OG image fetcher for cards that loaded
+ * without a thumbnail.  Uses the allorigins proxy; silently fails.
+ */
+async function fetchOgImagePassive(url) {
+  if (!url) return null;
+  try {
+    new URL(url);
+    const resp = await fetch(
+      `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+      { signal: AbortSignal.timeout(5000) }
+    );
+    if (!resp.ok) return null;
+    const { contents } = await resp.json();
+    if (!contents) return null;
+    const m =
+      contents.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ||
+      contents.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i) ||
+      contents.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i);
+    if (!m) return null;
+    return new URL(m[1], url).href;
+  } catch { return null; }
+}
+
 export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit, onShare, onItemUpdated, isPro = false }) {
   const [showResearch, setShowResearch] = useState(false);
   const [localItem, setLocalItem] = useState(item);
@@ -99,6 +123,19 @@ export default function SavedItemCard({ item, onToggleFavorite, onDelete, onEdit
 
   // Sync if parent changes the item
   React.useEffect(() => { setLocalItem(item); }, [item]);
+
+  // Lazy OG-image fetch: if item has a URL but no image_url, try to grab one
+  React.useEffect(() => {
+    if (localItem.url && !localItem.image_url) {
+      let cancelled = false;
+      fetchOgImagePassive(localItem.url).then((imgUrl) => {
+        if (!cancelled && imgUrl) {
+          setLocalItem(prev => ({ ...prev, image_url: imgUrl }));
+        }
+      });
+      return () => { cancelled = true; };
+    }
+  }, [localItem.url]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Open URL in new tab (used by card click — stops propagation from action buttons)
   const openUrl = useCallback((e) => {
