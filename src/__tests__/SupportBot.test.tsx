@@ -235,6 +235,42 @@ describe('SupportBot — floating mode', () => {
   });
 });
 
+// ─── Dismiss / restore (EyeOff button + localStorage) ────────────────────────
+describe('SupportBot — dismiss & restore', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  it('renders the EyeOff dismiss button when chat is closed (floating)', () => {
+    render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={true} />, { wrapper: makeWrapper() });
+    expect(screen.getByRole('button', { name: /Dismiss support chat/i })).toBeInTheDocument();
+  });
+
+  it('hides the entire FAB after clicking dismiss', () => {
+    render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={true} />, { wrapper: makeWrapper() });
+    const dismissBtn = screen.getByRole('button', { name: /Dismiss support chat/i });
+    fireEvent.click(dismissBtn);
+    // After dismiss the component returns null — no buttons remain
+    expect(screen.queryByRole('button', { name: /Open support chat/i })).not.toBeInTheDocument();
+  });
+
+  it('persists dismissed state in localStorage', () => {
+    render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={true} />, { wrapper: makeWrapper() });
+    const dismissBtn = screen.getByRole('button', { name: /Dismiss support chat/i });
+    fireEvent.click(dismissBtn);
+    expect(localStorage.getItem('klip4ge_supportbot_dismissed')).toBe('true');
+  });
+
+  it('starts dismissed when localStorage key is already set', () => {
+    localStorage.setItem('klip4ge_supportbot_dismissed', 'true');
+    render(<SupportBot user={{ id: 'u1', email: 'x@x.com' }} floating={true} />, { wrapper: makeWrapper() });
+    expect(screen.queryByRole('button', { name: /Open support chat/i })).not.toBeInTheDocument();
+  });
+});
+
 // ─── guessCategory & guessPriority (lines 57-70) ──────────────────────────────
 describe('SupportBot — guessCategory coverage', () => {
   it('routes billing query to billing category', async () => {

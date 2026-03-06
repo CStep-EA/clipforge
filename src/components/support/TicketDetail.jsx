@@ -116,7 +116,7 @@ export default function TicketDetail({ ticket, open, onOpenChange, isAdmin = fal
                 }`}>
                   <p className={`text-[10px] font-semibold mb-1 flex items-center gap-1 ${c.role === "support" ? "text-[#00BFFF]" : "text-[#9370DB]"}`}>
                     {c.role === "support" ? <Headphones className="w-3 h-3" /> : <User className="w-3 h-3" />}
-                    {c.role === "support" ? "ClipForge Support" : "You"}
+                    {c.role === "support" ? "Klip4ge Support" : "You"}
                     {c.ts && <span className="ml-auto text-[#8B8D97] font-normal">{new Date(c.ts).toLocaleString()}</span>}
                   </p>
                   <p className="text-[#E8E8ED] whitespace-pre-wrap">{c.text}</p>

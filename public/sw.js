@@ -323,7 +323,7 @@ self.addEventListener("notificationclick", (event) => {
 // ── Cache versioning ─────────────────────────────────────────────────────────
 // Bump CACHE_VERSION when you deploy breaking changes.
 const CACHE_VERSION = "v2";
-const CACHE_NAME    = `clipforge-shell-${CACHE_VERSION}`;
+const CACHE_NAME    = `klip4ge-shell-${CACHE_VERSION}`;
 
 // App shell — pre-cached on install
 const SHELL_ASSETS = [

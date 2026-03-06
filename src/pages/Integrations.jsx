@@ -75,7 +75,7 @@ export default function Integrations() {
     // Keys are encrypted at rest by Base44 and never exposed to other JS.
     base44.entities.UserPreferences?.upsert?.({ api_keys: updated }).catch(() => {
       // Silent fail — key is in state, will sync on next successful call
-      console.warn("[ClipForge] Could not persist API key server-side");
+      console.warn("[Klip4ge] Could not persist API key server-side");
     });
     // Explicitly ensure no plaintext key lands in localStorage
     localStorage.removeItem("cf_api_keys");
@@ -99,7 +99,7 @@ export default function Integrations() {
           <div className="flex-1">
             <p className="text-xs font-bold uppercase tracking-wider text-[#9370DB] mb-1">🎮 Streaming Platforms</p>
             <h2 className="text-lg font-black gradient-text mb-1">Auto-sync Discord, Twitch, YouTube & Podcasts</h2>
-            <p className="text-xs text-[#8B8D97]">Connect once, sync all your bookmarks, liked videos, followed channels, and podcast episodes directly to your ClipForge vault.</p>
+            <p className="text-xs text-[#8B8D97]">Connect once, sync all your bookmarks, liked videos, followed channels, and podcast episodes directly to your Klip4ge vault.</p>
           </div>
           <div className="flex gap-3 flex-wrap">
             {["🎮", "📺", "▶️", "🎵", "🎧"].map((e, i) => (
@@ -147,7 +147,7 @@ export default function Integrations() {
               <Users2 className="w-5 h-5 text-[#00BFFF]" />
               <div>
                 <h3 className="font-semibold">Find Friends</h3>
-                <p className="text-xs text-[#8B8D97]">Discover followers from your social platforms who are already on ClipForge</p>
+                <p className="text-xs text-[#8B8D97]">Discover followers from your social platforms who are already on Klip4ge</p>
               </div>
             </div>
             <FindFriendsPanel user={user} plan={plan} />

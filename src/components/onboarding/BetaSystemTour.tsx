@@ -144,7 +144,7 @@ export default function BetaSystemTour({ userEmail, forceTour = false }: BetaSys
       <div>
         <h2 className="text-2xl font-bold text-[#E8E8ED] mb-2">You're all set! 🎉</h2>
         <p className="text-sm text-[#8B8D97] max-w-sm">
-          You've completed the ClipForge beta tour. Explore at your own pace —
+          You've completed the Klip4ge beta tour. Explore at your own pace —
           every feature is one click away.
         </p>
       </div>
@@ -155,7 +155,7 @@ export default function BetaSystemTour({ userEmail, forceTour = false }: BetaSys
           className="flex-1 bg-gradient-to-r from-[#00BFFF] to-[#9370DB] text-white font-semibold h-10"
         >
           <Sparkles className="w-4 h-4 mr-2" />
-          Start using ClipForge
+          Start using Klip4ge
         </Button>
         <Button
           variant="outline"

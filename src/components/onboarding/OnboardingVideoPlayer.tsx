@@ -1,7 +1,7 @@
 /**
  * OnboardingVideoPlayer.tsx
  * ─────────────────────────────────────────────────────────────────────────────
- * Reusable, fully-accessible onboarding video component for ClipForge.
+ * Reusable, fully-accessible onboarding video component for Klip4ge.
  *
  * Features:
  * - Auto-plays on first visit to the host page (controlled by useOnboarding)
@@ -10,7 +10,7 @@
  * - Reduced-motion: shows static poster + play button instead of autoplay
  * - Keyboard-navigable controls (Space = play/pause, M = mute, Esc = close)
  * - Progress bar with time remaining
- * - Fully styled to ClipForge dark-glass aesthetic
+ * - Fully styled to Klip4ge dark-glass aesthetic
  * ─────────────────────────────────────────────────────────────────────────────
  */
 

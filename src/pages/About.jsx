@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import ClipForgeLogo from "@/components/shared/ClipForgeLogo";
+import Klip4geLogo from "@/components/shared/Klip4geLogo";
 import {
   Globe, Download, Shield, Zap, Users, Heart,
   ArrowRight, Apple, Play
@@ -53,10 +53,10 @@ export default function About() {
         className="text-center pt-8 space-y-5"
       >
         <div className="flex justify-center">
-          <ClipForgeLogo size={72} variant="morph" showText={false} />
+          <Klip4geLogo size={72} variant="morph" showText={false} />
         </div>
         <h1 className="text-4xl md:text-5xl font-black tracking-tight">
-          <span className="gradient-text">ClipForge</span>
+          <span className="gradient-text">Klip4ge</span>
         </h1>
         <p className="text-[#8B8D97] text-lg max-w-xl mx-auto leading-relaxed">
           The ultimate save organizer — built in a garage, shipped to the world.
@@ -73,7 +73,7 @@ export default function About() {
             </Button>
           ) : installed ? (
             <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm font-semibold">
-              ✓ ClipForge installed!
+              ✓ Klip4ge installed!
             </div>
           ) : (
             <Button
@@ -103,7 +103,7 @@ export default function About() {
       >
         <h2 className="text-2xl font-bold">Our Story</h2>
         <p className="text-[#8B8D97] leading-relaxed">
-          ClipForge started as a personal frustration. We'd save links to 6 different apps, forget where things were,
+          Klip4ge started as a personal frustration. We'd save links to 6 different apps, forget where things were,
           and miss deals, events, and recipes we genuinely cared about. So we built one place for all of it.
         </p>
         <p className="text-[#8B8D97] leading-relaxed">

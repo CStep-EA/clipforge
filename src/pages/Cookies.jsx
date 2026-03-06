@@ -8,13 +8,13 @@ const sections = [
     icon: Cookie,
     color: "#F59E0B",
     title: "What Are Cookies?",
-    content: `Cookies are small text files stored on your device when you visit a website. They help us recognize you between sessions and remember your preferences. ClipForge uses a minimal, privacy-first approach to cookies.`
+    content: `Cookies are small text files stored on your device when you visit a website. They help us recognize you between sessions and remember your preferences. Klip4ge uses a minimal, privacy-first approach to cookies.`
   },
   {
     icon: Lock,
     color: "#00BFFF",
     title: "Essential Cookies (Required)",
-    content: `These cookies are necessary for ClipForge to function. You cannot opt out of them without losing core functionality:
+    content: `These cookies are necessary for Klip4ge to function. You cannot opt out of them without losing core functionality:
 • Session authentication token — keeps you logged in
 • CSRF protection token — prevents cross-site request forgery
 • Load balancing cookies — ensure stable connections
@@ -49,7 +49,7 @@ You can opt out of analytics in Settings → Privacy.`
     icon: Info,
     color: "#FFB6C1",
     title: "What We Do NOT Use",
-    content: `ClipForge explicitly does NOT use:
+    content: `Klip4ge explicitly does NOT use:
 • Third-party advertising cookies
 • Social media tracking pixels (Facebook, Twitter, TikTok)
 • Retargeting or behavioral ad cookies
@@ -78,7 +78,7 @@ export default function Cookies() {
         </div>
         <div className="p-4 rounded-xl bg-[#F59E0B]/5 border border-[#F59E0B]/20">
           <p className="text-sm text-[#8B8D97] leading-relaxed">
-            ClipForge is committed to minimal data collection. This policy explains exactly what cookies and storage mechanisms we use and why.
+            Klip4ge is committed to minimal data collection. This policy explains exactly what cookies and storage mechanisms we use and why.
           </p>
         </div>
       </div>
@@ -115,7 +115,7 @@ export default function Cookies() {
         <span>·</span>
         <Link to={createPageUrl("Support")} className="hover:text-[#00BFFF]">Support</Link>
         <span>·</span>
-        <span>© 2026 ClipForge</span>
+        <span>© 2026 Klip4ge</span>
       </div>
     </div>
   );

@@ -310,7 +310,7 @@ export default function BetaFeedbackWidget({ user }) {
                 className="mt-0.5 border-[#2A2D3A] data-[state=checked]:bg-[#00BFFF] data-[state=checked]:border-[#00BFFF]"
               />
               <Label htmlFor="allow-contact" className="text-xs text-[#8B8D97] cursor-pointer leading-relaxed">
-                I'm okay with the ClipForge team following up with me about this feedback.
+                I'm okay with the Klip4ge team following up with me about this feedback.
               </Label>
             </div>
 

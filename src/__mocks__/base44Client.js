@@ -52,7 +52,7 @@ const entityProxy = new Proxy(entities, {
 const base44 = {
   entities: entityProxy,
   auth: {
-    me:               jest.fn().mockResolvedValue({ id: 'test-user', email: 'test@clipforge.com', full_name: 'Test User' }),
+    me:               jest.fn().mockResolvedValue({ id: 'test-user', email: 'test@klip4ge.app', full_name: 'Test User' }),
     login:            jest.fn().mockResolvedValue({}),
     logout:           jest.fn().mockResolvedValue({}),
     redirectToLogin:  jest.fn().mockResolvedValue({}),

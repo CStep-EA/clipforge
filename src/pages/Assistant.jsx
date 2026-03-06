@@ -118,7 +118,7 @@ export default function Assistant() {
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h2 className="font-semibold text-sm">ClipForge AI</h2>
+            <h2 className="font-semibold text-sm">Klip4ge AI</h2>
             <p className="text-[10px] text-[#8B8D97]">Your smart vault assistant</p>
           </div>
           <div className="ml-auto flex items-center gap-2">
@@ -173,7 +173,7 @@ export default function Assistant() {
         <div className="p-4 border-t border-[#2A2D3A]">
           <div className="flex gap-3 max-w-3xl mx-auto">
             <Input
-              placeholder="Ask ClipForge AI..."
+              placeholder="Ask Klip4ge AI..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}

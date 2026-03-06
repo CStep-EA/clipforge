@@ -41,7 +41,7 @@ if ('serviceWorker' in navigator) {
               navigator.serviceWorker.controller
             ) {
               // A new version is ready — show a non-blocking toast
-              console.log('[ClipForge] New version available — prompting user');
+              console.log('[Klip4ge] New version available — prompting user');
               showUpdateToast(reg);
             }
           });
@@ -64,7 +64,7 @@ if ('serviceWorker' in navigator) {
 /**
  * showUpdateToast
  * Creates a minimal DOM toast (no React dependency) that prompts the user
- * to refresh when a new ClipForge version is available.
+ * to refresh when a new Klip4ge version is available.
  * The toast self-dismisses after 30 s if ignored.
  *
  * @param {ServiceWorkerRegistration} reg
@@ -113,13 +113,13 @@ function showUpdateToast(reg) {
 
   toast.innerHTML = `
     <span style="font-size:18px" aria-hidden="true">✨</span>
-    <span style="flex:1">New version of ClipForge is ready.</span>
+    <span style="flex:1">New version of Klip4ge is ready.</span>
     <button
       id="cf-update-refresh-btn"
       style="background:linear-gradient(135deg,#00BFFF,#9370DB);color:#fff;border:none;
              border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;
              cursor:pointer;white-space:nowrap"
-      aria-label="Refresh to update ClipForge"
+      aria-label="Refresh to update Klip4ge"
     >Refresh</button>
     <button
       id="cf-update-dismiss-btn"

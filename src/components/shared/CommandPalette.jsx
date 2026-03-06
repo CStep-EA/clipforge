@@ -45,7 +45,7 @@ const NAV_ITEMS = [
   { label: "AI Search",      icon: Search,          page: "Search",        group: "Pages" },
   { label: "Support",        icon: MessageCircle,   page: "Support",       group: "Help" },
   { label: "FAQ",            icon: HelpCircle,      page: "FAQ",           group: "Help" },
-  { label: "About ClipForge",icon: Info,            page: "About",         group: "Help" },
+  { label: "About Klip4ge",icon: Info,            page: "About",         group: "Help" },
   { label: "Pricing",        icon: Zap,             page: "Pricing",       group: "Help" },
 ];
 

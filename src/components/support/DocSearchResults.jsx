@@ -41,7 +41,7 @@ const DOC_CATALOG = [
     title: "GDPR Rights",
     page: "Privacy",
     keywords: ["gdpr", "eu", "right to access", "right to erasure", "right to portability", "data subject"],
-    snippet: "EU residents can access, correct, erase, or export their data. Email privacy@clipforge.app."
+    snippet: "EU residents can access, correct, erase, or export their data. Email privacy@klip4ge.app."
   },
   {
     title: "COPPA & Children's Privacy",
@@ -53,7 +53,7 @@ const DOC_CATALOG = [
     title: "No PHI Stored",
     page: "Privacy",
     keywords: ["phi", "health", "hipaa", "medical", "protected health information"],
-    snippet: "ClipForge does not collect or store Protected Health Information (PHI). HIPAA does not apply."
+    snippet: "Klip4ge does not collect or store Protected Health Information (PHI). HIPAA does not apply."
   },
 ];
 
@@ -71,7 +71,7 @@ export default function DocSearchResults({ query, onAskBot }) {
   const handleAiSearch = async () => {
     setLoading(true);
     const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are ClipForge's documentation assistant. Answer this question concisely based on our policies (Privacy Policy, Terms of Service, Cookie Policy, AI Transparency Whitepaper).
+      prompt: `You are Klip4ge's documentation assistant. Answer this question concisely based on our policies (Privacy Policy, Terms of Service, Cookie Policy, AI Transparency Whitepaper).
 
 IMPORTANT DISCLAIMER: Your answer is for informational purposes only and does not constitute legal, medical, or financial advice.
 

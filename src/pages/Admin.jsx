@@ -71,7 +71,7 @@ export default function Admin() {
         <Shield className="w-8 h-8 text-[#8B8D97]" />
       </div>
       <h2 className="text-lg font-semibold">Admin Access Required</h2>
-      <p className="text-sm text-[#8B8D97]">This area is restricted to ClipForge admins only.</p>
+      <p className="text-sm text-[#8B8D97]">This area is restricted to Klip4ge admins only.</p>
     </div>
   );
 
@@ -88,7 +88,7 @@ export default function Admin() {
           </div>
           <div>
             <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            <p className="text-xs text-[#8B8D97]">ClipForge control center</p>
+            <p className="text-xs text-[#8B8D97]">Klip4ge control center</p>
           </div>
         </div>
         <Button
