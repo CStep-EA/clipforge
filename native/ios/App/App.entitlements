@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  App.entitlements — Klip4ge iOS Entitlements
+  ─────────────────────────────────────────────
+  Required capabilities:
+    • Associated Domains — Universal Links (https://klip4ge.app)
+    • App Groups — Shared data between app and Share Extension
+    • Push Notifications
+    • Background Modes (already in Info.plist, confirmed here)
+
+  Steps to activate in Xcode:
+    1. Signing & Capabilities → + Capability
+    2. Add: Associated Domains, App Groups, Push Notifications
+    3. Associated Domains: applinks:klip4ge.app
+    4. App Groups: group.app.klip4ge.app
+-->
+<plist version="1.0">
+<dict>
+
+  <!-- ── Universal Links ──────────────────────────────────────────────────── -->
+  <!--
+    Allows https://klip4ge.app links to open the native app directly.
+    Requires /.well-known/apple-app-site-association hosted on klip4ge.app.
+  -->
+  <key>com.apple.developer.associated-domains</key>
+  <array>
+    <string>applinks:klip4ge.app</string>
+    <string>applinks:www.klip4ge.app</string>
+    <string>webcredentials:klip4ge.app</string>
+  </array>
+
+  <!-- ── App Groups ────────────────────────────────────────────────────────── -->
+  <!--
+    Shared UserDefaults between main app and Share Extension.
+    The Share Extension stores pending saves in the group container;
+    the main app reads them on next launch/foreground.
+  -->
+  <key>com.apple.security.application-groups</key>
+  <array>
+    <string>group.app.klip4ge.app</string>
+  </array>
+
+  <!-- ── Push Notifications ────────────────────────────────────────────────── -->
+  <key>aps-environment</key>
+  <string>production</string>
+  <!-- Use "development" for debug builds:
+  <string>development</string>
+  -->
+
+</dict>
+</plist>

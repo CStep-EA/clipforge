@@ -1,0 +1,21 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["TEAMID.app.klip4ge.app"],
+        "components": [
+          { "/": "/share-target*",  "comment": "Share target route" },
+          { "/": "/saves*",          "comment": "Vault page" },
+          { "/": "/save*",           "comment": "Save flow" },
+          { "/": "/*"               }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["TEAMID.app.klip4ge.app"]
+  },
+  "activitycontinuation": {
+    "apps": ["TEAMID.app.klip4ge.app"]
+  }
+}

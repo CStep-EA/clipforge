@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  ShareExtension/Info.plist — Klip4ge iOS Share Extension
+  ─────────────────────────────────────────────────────────
+  This extension appears in the iOS Share Sheet.
+  The principal class handles the incoming share, stores it in the
+  App Group container, then opens the main app via klip4ge:// URL.
+
+  NSExtensionActivationRule limits when the extension appears:
+    • kUTTypeURL — any URL (links from Safari, Chrome, apps)
+    • NSExtensionActivationDictionaryVersion 2 — modern activation
+-->
+<plist version="1.0">
+<dict>
+  <key>CFBundleDisplayName</key>
+  <string>Save to Klip4ge</string>
+
+  <key>CFBundleIdentifier</key>
+  <string>app.klip4ge.app.ShareExtension</string>
+
+  <key>CFBundleVersion</key>
+  <string>11</string>
+
+  <key>CFBundleShortVersionString</key>
+  <string>1.1.0</string>
+
+  <key>NSExtension</key>
+  <dict>
+    <key>NSExtensionPointIdentifier</key>
+    <string>com.apple.share-services</string>
+
+    <key>NSExtensionPrincipalClass</key>
+    <string>$(PRODUCT_MODULE_NAME).ShareViewController</string>
+
+    <key>NSExtensionAttributes</key>
+    <dict>
+      <!-- Activation rule: show only when a URL is available -->
+      <key>NSExtensionActivationRule</key>
+      <dict>
+        <key>NSExtensionActivationDictionaryVersion</key>
+        <integer>2</integer>
+        <key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
+        <integer>1</integer>
+        <key>NSExtensionActivationSupportsWebPageWithMaxCount</key>
+        <integer>1</integer>
+        <key>NSExtensionActivationSupportsText</key>
+        <true/>
+      </dict>
+    </dict>
+  </dict>
+</dict>
+</plist>

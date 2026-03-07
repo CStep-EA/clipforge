@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  AndroidManifest.xml — Klip4ge Android Native Shell
+  ───────────────────────────────────────────────────
+  Key configurations:
+    • Share intent filters so Klip4ge appears in every app's share sheet
+    • Deep link handling for klip4ge:// scheme
+    • Permissions for network, camera, notifications
+    • Capacitor plugins declared
+
+  After "npx cap add android", Capacitor merges this into the real
+  android/app/src/main/AndroidManifest.xml automatically.
+  This file serves as a reference / merge source.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="app.klip4ge.app">
+
+  <!-- ── Permissions ──────────────────────────────────────────────────────── -->
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.VIBRATE" />
+  <!-- Camera for QR code scanning (optional, future feature) -->
+  <uses-permission android:name="android.permission.CAMERA" />
+
+  <application
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:label="@string/app_name"
+    android:supportsRtl="true"
+    android:theme="@style/AppTheme"
+    android:networkSecurityConfig="@xml/network_security_config"
+    tools:targetApi="31">
+
+    <!-- ── Main Activity ──────────────────────────────────────────────────── -->
+    <activity
+      android:name=".MainActivity"
+      android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
+      android:exported="true"
+      android:launchMode="singleTask"
+      android:windowSoftInputMode="adjustResize">
+
+      <!-- Standard launcher intent -->
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+
+      <!-- ── Deep link: klip4ge:// scheme ─────────────────────────────────── -->
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="klip4ge" />
+      </intent-filter>
+
+      <!-- ── HTTPS deep link: https://klip4ge.app ─────────────────────────── -->
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="https" android:host="klip4ge.app" />
+      </intent-filter>
+
+      <!-- ── Share Sheet: receive a URL from any app ──────────────────────── -->
+      <!--
+        When a user shares a link from Chrome, Facebook, Instagram, etc.,
+        Klip4ge appears in the Android share sheet.
+        The URL is delivered via intent.getStringExtra(Intent.EXTRA_TEXT).
+      -->
+      <intent-filter>
+        <action android:name="android.intent.action.SEND" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="text/plain" />
+      </intent-filter>
+
+      <!-- Share multiple URLs at once -->
+      <intent-filter>
+        <action android:name="android.intent.action.SEND_MULTIPLE" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="text/plain" />
+      </intent-filter>
+
+      <!-- Share an image URL / file -->
+      <intent-filter>
+        <action android:name="android.intent.action.SEND" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="image/*" />
+      </intent-filter>
+    </activity>
+
+    <!-- ── Background Sync Service (WorkManager) ──────────────────────────── -->
+    <!--
+      Capacitor BackgroundFetch plugin registers its own WorkManager job.
+      This entry ensures the job survives device reboots.
+    -->
+    <receiver
+      android:name=".BootReceiver"
+      android:enabled="true"
+      android:exported="false">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+      </intent-filter>
+    </receiver>
+
+    <!-- ── FileProvider (for sharing files out of Klip4ge) ─────────────────── -->
+    <provider
+      android:name="androidx.core.content.FileProvider"
+      android:authorities="${applicationId}.fileprovider"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/file_paths" />
+    </provider>
+
+  </application>
+
+</manifest>

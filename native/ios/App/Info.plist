@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Info.plist — Klip4ge iOS App
+  ────────────────────────────
+  Reference plist for the Capacitor iOS project.
+  After "npx cap add ios", merge these entries into the generated
+  ios/App/App/Info.plist in Xcode.
+
+  Key additions:
+    • CFBundleURLTypes — klip4ge:// deep link scheme
+    • NSAppTransportSecurity — allow klip4ge.app + base44.com
+    • Privacy usage descriptions (required for App Store review)
+    • UIFileSharingEnabled — allow document sharing
+-->
+<plist version="1.0">
+<dict>
+
+  <!-- ── App Identity ──────────────────────────────────────────────────────── -->
+  <key>CFBundleDisplayName</key>
+  <string>Klip4ge</string>
+
+  <key>CFBundleName</key>
+  <string>Klip4ge</string>
+
+  <key>CFBundleIdentifier</key>
+  <string>app.klip4ge.app</string>
+
+  <key>CFBundleVersion</key>
+  <string>11</string>
+
+  <key>CFBundleShortVersionString</key>
+  <string>1.1.0</string>
+
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+
+  <key>CFBundleExecutable</key>
+  <string>$(EXECUTABLE_NAME)</string>
+
+  <!-- ── Deep Link URL Scheme ──────────────────────────────────────────────── -->
+  <!--
+    Registers klip4ge:// so other apps (and the Share Extension)
+    can open Klip4ge with a specific URL.
+    Usage: klip4ge://share?url=https://...&title=...
+  -->
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleURLName</key>
+      <string>app.klip4ge.app</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>klip4ge</string>
+      </array>
+    </dict>
+  </array>
+
+  <!-- ── Associated Domains (Universal Links) ──────────────────────────────── -->
+  <!--
+    Requires adding "applinks:klip4ge.app" to the .entitlements file
+    AND hosting /.well-known/apple-app-site-association on klip4ge.app.
+  -->
+
+  <!-- ── App Transport Security ───────────────────────────────────────────── -->
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <false/>
+    <key>NSExceptionDomains</key>
+    <dict>
+      <key>klip4ge.app</key>
+      <dict>
+        <key>NSIncludesSubdomains</key>
+        <true/>
+        <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+        <false/>
+      </dict>
+      <key>base44.com</key>
+      <dict>
+        <key>NSIncludesSubdomains</key>
+        <true/>
+        <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+        <false/>
+      </dict>
+    </dict>
+  </dict>
+
+  <!-- ── Privacy Usage Descriptions (App Store required) ─────────────────── -->
+  <key>NSCameraUsageDescription</key>
+  <string>Klip4ge uses the camera to scan QR codes and take photos of items you want to save.</string>
+
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Klip4ge needs access to your photos to save images to your vault.</string>
+
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>Klip4ge may save images from your vault to your photo library.</string>
+
+  <!-- ── Background Modes ──────────────────────────────────────────────────── -->
+  <!--
+    "fetch" — enables background app refresh for periodic sync (iOS ≥ 7)
+    "remote-notification" — wakes app on push notification
+  -->
+  <key>UIBackgroundModes</key>
+  <array>
+    <string>fetch</string>
+    <string>remote-notification</string>
+  </array>
+
+  <!-- ── Orientation ───────────────────────────────────────────────────────── -->
+  <key>UISupportedInterfaceOrientations</key>
+  <array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
+
+  <key>UISupportedInterfaceOrientations~ipad</key>
+  <array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationPortraitUpsideDown</string>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
+
+  <!-- ── Document Sharing ─────────────────────────────────────────────────── -->
+  <key>UIFileSharingEnabled</key>
+  <true/>
+  <key>LSSupportsOpeningDocumentsInPlace</key>
+  <true/>
+
+  <!-- ── Main Storyboard (Capacitor default) ──────────────────────────────── -->
+  <key>UIMainStoryboardFile</key>
+  <string>LaunchScreen</string>
+
+  <key>UILaunchStoryboardName</key>
+  <string>LaunchScreen</string>
+
+  <!-- ── Status Bar ────────────────────────────────────────────────────────── -->
+  <key>UIStatusBarStyle</key>
+  <string>UIStatusBarStyleLightContent</string>
+
+  <key>UIViewControllerBasedStatusBarAppearance</key>
+  <true/>
+
+</dict>
+</plist>
