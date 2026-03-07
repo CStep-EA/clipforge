@@ -14,7 +14,8 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
   MessageCircle, Plus, Clock, CheckCircle2, Search, Bug, Lightbulb,
-  BookOpen, Map, Shield, FileText, Sparkles, ChevronRight, Loader2, Edit3, Info
+  BookOpen, Map, Shield, FileText, Sparkles, ChevronRight, Loader2, Edit3, Info,
+  Chrome, Smartphone, ExternalLink,
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
@@ -54,6 +55,104 @@ The in-app support bot is powered by a large language model and is designed to a
 
 **Disclaimer**
 AI-generated content in Klip4ge is for informational purposes only and does not constitute legal, medical, financial, or professional advice.
+`;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Facebook Sync & Browser Extension — Plain-English Technical Documentation
+// Shown in Support → Documentation tab
+// ─────────────────────────────────────────────────────────────────────────────
+const FB_SYNC_DOC = `
+## 🔌 Browser Extension & Facebook Sync — How It Works
+
+### The Short Version
+Facebook stopped letting apps access your personal Saved posts years ago. So we built something smarter: a browser extension that watches what YOU do on Facebook and quietly saves it to your Klip4ge vault the instant you hit Facebook's own Save button. No passwords, no Facebook API, no scraping tricks — it just rides along with your normal browsing.
+
+---
+
+### The Browser Extension (Chrome / Edge / Brave)
+
+**What it is:**
+A small add-on that sits in your browser toolbar. You can save any webpage to Klip4ge in one click or by pressing Alt+S. It works on every website, not just Facebook.
+
+**How to install:**
+1. Download or clone the Klip4ge repo from GitHub
+2. Open your browser and go to chrome://extensions
+3. Enable "Developer mode" (top-right toggle)
+4. Click "Load unpacked" → select the /extension folder
+5. The Klip4ge icon appears in your toolbar — you're live!
+
+> A Chrome Web Store listing is coming soon. For now, install manually using the steps above.
+
+---
+
+### How Facebook Real-Time Sync Works (Plain English)
+
+When you're browsing Facebook in the same browser where the extension is installed, the extension runs a silent background content script on every Facebook page. Here's exactly what it does:
+
+**Layer 1 — Toast Watcher**
+When you click Facebook's Save button, a small "Saved" confirmation popup appears on screen. The extension watches for this popup using a MutationObserver (a browser-native tool that monitors page changes in real time). The moment it sees that popup, it captures the post details and sends them to your vault.
+
+**Layer 2 — Click Interceptor**
+The extension also listens for clicks on any element labeled "Save" on Facebook pages. If you click a save button before the popup appears, this layer catches it.
+
+**Layer 3 — Network Hook**
+Facebook's app makes a background API call every time you save something. The extension intercepts that network request (using a window.fetch hook) and extracts the saved item details directly from the request data — even faster than waiting for the UI.
+
+**Layer 4 — Bulk Page Scrape**
+When you visit facebook.com/saved, the extension automatically scrolls through your entire Saved page and imports everything in one go. Great for the first-time setup or catching up after a gap.
+
+All four layers work simultaneously. If one misses something, another catches it. This makes the sync extremely reliable.
+
+**What gets saved:** Title, URL, preview image, description, and category (auto-detected).
+**What NEVER happens:** Your Facebook login, cookies, or session data are never sent to Klip4ge servers. Everything stays in your browser.
+
+---
+
+### The Facebook Sync Agent (Desktop — Optional)
+
+The Sync Agent is for power users who want to do a one-time bulk import of ALL their existing Facebook saves.
+
+**What it is:** A Node.js script that runs on your own computer. It opens a browser window (via Playwright), you log in to Facebook normally, and it scrolls through your saves automatically.
+
+**How to run it:**
+\`\`\`
+cd tools/fb-saves-scraper
+npm install
+npm run setup      # registers it as a system background service
+npm run scrape     # run a manual scrape right now
+\`\`\`
+
+After it completes, go to **Integrations → Facebook → Import from JSON** and upload the exported file.
+
+**After the initial import:** The browser extension handles everything going forward. You typically only run the Agent once.
+
+**Hourly Auto-Sync:** The Agent can also run every hour in the background. If it detects a recent extension heartbeat (the extension has been active within the last 2 hours), it skips the Playwright scrape and trusts the extension data instead — saving your computer resources.
+
+---
+
+### Privacy Guarantee
+
+- The extension only activates on facebook.com — it does not run on other websites unless you manually click Save
+- Your Facebook session cookies NEVER leave your device
+- Klip4ge receives only the saved item data (title, URL, image, description) — nothing else
+- You can disable Facebook sync at any time from the extension popup → Facebook tab
+- All sync activity is shown transparently in the extension popup and in Integrations → Facebook
+
+---
+
+### Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| Extension not showing FB saves | Make sure you're logged into Facebook in the same browser profile where the extension is installed |
+| Extension popup shows "⚫ Inactive" | This is normal until your first save action on Facebook. Try saving a post on Facebook to activate it |
+| Agent shows "Needs re-login" | Open a terminal, run \`npm run scrape\` in the scraper folder, and log in to Facebook again |
+| Share Sheet not showing Klip4ge on mobile | Add Klip4ge to your Home Screen first (iOS: Safari → Share → Add to Home Screen; Android: Chrome → Install App) |
+| Save didn't appear in vault | Check your internet connection. Offline saves queue automatically and sync when you reconnect |
+
+---
+
+*For further help, open a Support Ticket or ask the AI Support Bot (💬 icon, bottom-right).*
 `;
 
 export default function Support() {
@@ -411,6 +510,8 @@ export default function Support() {
               { to: "Terms", icon: FileText, color: "#9370DB", label: "Terms of Service", sub: "Usage, billing & liability" },
               { to: "Cookies", icon: BookOpen, color: "#F59E0B", label: "Cookie Policy", sub: "Minimal tracking, no ad cookies" },
               { anchor: "#ai-whitepaper", icon: Sparkles, color: "#FFB6C1", label: "AI Transparency Whitepaper", sub: "How AI is used & disclaimers" },
+              { anchor: "#fb-sync-doc", icon: Chrome, color: "#1877F2", label: "Facebook Sync & Extension Guide", sub: "How real-time FB sync works" },
+              { anchor: "#fb-sync-doc", icon: Smartphone, color: "#10B981", label: "Mobile & PWA Guide", sub: "Share Sheet, offline saves, install" },
             ].filter(d => !docSearch.trim() || d.label.toLowerCase().includes(docSearch.toLowerCase()) || d.sub.toLowerCase().includes(docSearch.toLowerCase())).map((doc, i) => (
               doc.to ? (
                 <Link key={i} to={createPageUrl(doc.to)} className="glass-card rounded-xl p-4 hover:border-[#00BFFF]/20 transition-all flex items-center gap-3 group">
@@ -474,6 +575,110 @@ export default function Support() {
               <Link to={createPageUrl("Privacy")} className="hover:text-[#00BFFF] transition-colors">Privacy Policy</Link>
               <Link to={createPageUrl("Terms")} className="hover:text-[#9370DB] transition-colors">Terms of Service</Link>
               <Link to={createPageUrl("Cookies")} className="hover:text-[#F59E0B] transition-colors">Cookie Policy</Link>
+            </div>
+          </div>
+
+          {/* Facebook Sync & Extension Guide */}
+          <div id="fb-sync-doc" className="glass-card rounded-2xl p-6 space-y-4">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Chrome className="w-5 h-5 text-[#1877F2]" />
+              <h2 className="font-semibold">Facebook Sync & Browser Extension</h2>
+              <span className="ml-auto text-[10px] text-[#8B8D97]">v1.1 · Mar 2026</span>
+            </div>
+
+            {/* Callout: Why this approach */}
+            <div className="p-3 rounded-xl bg-[#1877F2]/8 border border-[#1877F2]/25 text-[11px] text-[#8B8D97] leading-relaxed">
+              ℹ️ <strong className="text-[#1877F2]">Why not a direct Facebook connection?</strong> Facebook deprecated third-party access to personal Saved posts in 2018. Klip4ge's extension-based approach is the only compliant, privacy-safe way to sync your Facebook saves in real time.
+            </div>
+
+            <div className="prose prose-sm max-w-none text-[#8B8D97] space-y-3">
+              {FB_SYNC_DOC.trim().split("\n\n").map((paragraph, i) => {
+                if (paragraph.startsWith("### ")) {
+                  return <h4 key={i} className="text-sm font-bold text-[#00BFFF] mt-5 pt-3 border-t border-[#2A2D3A] first:border-0 first:pt-0">{paragraph.replace("### ", "")}</h4>;
+                }
+                if (paragraph.startsWith("## ")) {
+                  return <h3 key={i} className="text-base font-bold text-[#E8E8ED] mt-4">{paragraph.replace("## ", "")}</h3>;
+                }
+                if (paragraph.startsWith("---")) {
+                  return <hr key={i} className="border-[#2A2D3A] my-2" />;
+                }
+                if (paragraph.startsWith("```")) {
+                  const code = paragraph.replace(/```\w*\n?/, "").replace(/```$/, "");
+                  return (
+                    <pre key={i} className="bg-[#0F1117] rounded-lg px-4 py-3 text-[11px] text-[#10B981] font-mono overflow-x-auto border border-[#2A2D3A]">
+                      <code>{code.trim()}</code>
+                    </pre>
+                  );
+                }
+                if (paragraph.startsWith("**Layer")) {
+                  const [header, ...rest] = paragraph.split("\n");
+                  return (
+                    <div key={i} className="pl-3 border-l-2 border-[#1877F2]/40 space-y-1">
+                      <p className="text-sm font-semibold text-[#E8E8ED]">{header.replace(/\*\*/g, "")}</p>
+                      {rest.map((line, j) => <p key={j} className="text-sm text-[#8B8D97]">{line}</p>)}
+                    </div>
+                  );
+                }
+                if (paragraph.startsWith("| ")) {
+                  // Simple table — render as a styled list
+                  const rows = paragraph.split("\n").filter(r => !r.startsWith("|---") && r.includes("|"));
+                  const [headerRow, ...dataRows] = rows;
+                  const headers = headerRow.split("|").map(h => h.trim()).filter(Boolean);
+                  return (
+                    <div key={i} className="overflow-x-auto rounded-xl border border-[#2A2D3A]">
+                      <table className="w-full text-[11px]">
+                        <thead>
+                          <tr className="bg-[#1A1D27]">
+                            {headers.map((h, hi) => (
+                              <th key={hi} className="px-3 py-2 text-left text-[#8B8D97] font-semibold border-b border-[#2A2D3A]">{h}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {dataRows.map((row, ri) => {
+                            const cells = row.split("|").map(c => c.trim()).filter(Boolean);
+                            return (
+                              <tr key={ri} className="border-b border-[#2A2D3A] last:border-0 hover:bg-[#1A1D27]/50">
+                                {cells.map((cell, ci) => (
+                                  <td key={ci} className={`px-3 py-2 ${ci === 0 ? "text-[#E8E8ED] font-medium" : "text-[#8B8D97]"}`}>{cell}</td>
+                                ))}
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+                }
+                if (paragraph.startsWith("> ")) {
+                  return (
+                    <div key={i} className="pl-3 border-l-2 border-[#9370DB]/60 bg-[#9370DB]/5 rounded-r-lg py-2 pr-3">
+                      <p className="text-[11px] text-[#9370DB] italic leading-relaxed">{paragraph.replace(/^> /, "")}</p>
+                    </div>
+                  );
+                }
+                return (
+                  <div key={i} className="text-sm leading-relaxed space-y-1">
+                    {paragraph.split("\n").map((line, j) => {
+                      if (line.startsWith("- ") || line.startsWith("• ")) {
+                        return <p key={j} className="ml-4 flex gap-2"><span className="text-[#00BFFF] shrink-0">•</span><span>{line.replace(/^[-•] /, "")}</span></p>;
+                      }
+                      if (/^\d+\./.test(line)) {
+                        return <p key={j} className="ml-4">{line}</p>;
+                      }
+                      return <p key={j}>{line}</p>;
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="pt-3 border-t border-[#2A2D3A] flex gap-4 text-[10px] text-[#8B8D97] flex-wrap">
+              <a href="https://github.com/CStep-EA/clipforge" target="_blank" rel="noopener noreferrer" className="hover:text-[#00BFFF] transition-colors flex items-center gap-1">
+                GitHub Repo <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+              <Link to={createPageUrl("FAQ")} className="hover:text-[#9370DB] transition-colors">Full FAQ</Link>
+              <Link to={createPageUrl("Privacy")} className="hover:text-[#00BFFF] transition-colors">Privacy Policy</Link>
             </div>
           </div>
         </TabsContent>

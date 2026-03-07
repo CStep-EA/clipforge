@@ -209,6 +209,90 @@ const FAQ_SECTIONS = [
       },
     ],
   },
+  // ── NEW: Browser Extension & Facebook Sync ───────────────────────────────
+  {
+    id: "extension-fb-sync",
+    emoji: "🔌",
+    title: "Browser Extension & Facebook Sync",
+    videoKey: "saves",
+    badge: "New in v1.1",
+    badgeColor: "bg-[#1877F2]/15 text-[#1877F2] border-[#1877F2]/30",
+    questions: [
+      {
+        q: "What is the Klip4ge Browser Extension?",
+        a: "The Klip4ge browser extension is a small add-on you install in Chrome (or any Chromium-based browser like Edge or Brave). Once installed, it sits in your toolbar and lets you save any webpage to your vault in one click — or by pressing Alt+S. It also runs silently in the background to detect when you save something on Facebook.",
+      },
+      {
+        q: "How do I install the extension?",
+        a: "1. Download the extension folder from the Klip4ge GitHub repo (or from the Settings → Extensions page). 2. Open Chrome and go to chrome://extensions. 3. Turn on \"Developer mode\" (top-right toggle). 4. Click \"Load unpacked\" and select the extension folder. 5. The Klip4ge icon will appear in your browser toolbar. You're good to go! A Chrome Web Store version is coming soon.",
+      },
+      {
+        q: "How does the Facebook real-time sync work?",
+        a: "Here's the plain-English version: Facebook stopped letting third-party apps read your saved posts back in 2018 — so we had to get creative. When you're logged into Facebook in your browser AND the Klip4ge extension is installed, the extension watches for the moment you click Facebook's own \"Save\" button on any post. The instant that happens, it silently captures that post's details (title, URL, image, description) and sends it straight to your Klip4ge vault. No scraping, no passwords, no API keys — it just watches what you're already doing.",
+      },
+      {
+        q: "Will Facebook know I'm using Klip4ge?",
+        a: "No. The extension reads information that's already visible on your screen — it doesn't send any data to Facebook or use Facebook's API. It works the same way a friend sitting next to you would see what you saved. Your Klip4ge account never connects to Facebook directly.",
+      },
+      {
+        q: "What is the Facebook Sync Agent?",
+        a: "The Sync Agent is an optional desktop tool for power users who want to import ALL of their existing Facebook saves in one go. It runs on your own computer, opens a browser window where you log in manually (your password never leaves your machine), scrolls through your Facebook Saved page automatically, and exports everything as a file you can upload to Klip4ge. After the initial import, the browser extension handles new saves in real time — so you typically only run the Agent once.",
+      },
+      {
+        q: "How do I set up the Facebook Sync Agent?",
+        a: "1. Make sure you have Node.js installed on your computer. 2. Open the Klip4ge project folder you downloaded, navigate to tools/fb-saves-scraper, and run: npm install && npm run setup. 3. A browser window opens — log in to Facebook normally. 4. The agent automatically scrolls and collects your saves. 5. When done, go to Integrations → Facebook → Import from JSON and upload the file it created. That's it! The agent can also run on a schedule (every hour) to catch anything new.",
+      },
+      {
+        q: "What are the four ways the extension detects Facebook saves?",
+        a: "The extension uses four detection methods to make sure it never misses a save: (1) Toast watcher — it looks for Facebook's own \"Saved\" confirmation popup that appears after you click Save. (2) Click interceptor — it monitors clicks on any Save button on the page. (3) Network hook — it silently watches for the background API call Facebook makes when you save something. (4) Page watcher — when you visit your facebook.com/saved page, it scrapes all your existing saves in bulk. These four layers work together so even if one method doesn't fire, another catches it.",
+      },
+      {
+        q: "Do I need Facebook connected under Integrations for the extension to work?",
+        a: "No. The extension works completely independently of the Integrations page. You don't need to connect Facebook, grant any OAuth permissions, or enter any credentials in Klip4ge. Just install the extension, browse Facebook as normal, and your saves appear in your vault automatically.",
+      },
+      {
+        q: "Can I use the extension to save from other websites too?",
+        a: "Yes! The extension saves from ANY website, not just Facebook. Just click the Klip4ge icon in your toolbar while you're on any page, confirm the title and category, and hit Save. It auto-fills the URL, page title, and even fetches the preview image for you.",
+      },
+      {
+        q: "Why does the extension popup show a Facebook tab?",
+        a: "The Facebook tab in the extension popup shows you the live status of your Facebook sync — whether it's active, how many items have been captured in this session, and quick links to open your Facebook Saved page or manually trigger a bulk scrape. It turns green (🟢 Active) the moment the extension detects its first Facebook save action in your browser.",
+      },
+      {
+        q: "What about saving from the mobile Facebook app?",
+        a: "Browser extensions can't run inside mobile apps — that's a system restriction, not a Klip4ge limitation. On mobile, use the Share Sheet instead: tap the Share button on any Facebook post or link, then choose Klip4ge from the list. If Klip4ge doesn't appear in your share sheet, open klip4ge.app in your phone's browser and add it to your Home Screen first (iOS: Safari → Share → Add to Home Screen; Android: Chrome → menu → Add to Home Screen).",
+      },
+    ],
+  },
+
+  // ── Mobile App (PWA) ──────────────────────────────────────────────────────
+  {
+    id: "mobile-pwa",
+    emoji: "📱",
+    title: "Mobile & PWA",
+    videoKey: "saves",
+    badge: "Mobile",
+    badgeColor: "bg-emerald-400/15 text-emerald-400 border-emerald-400/30",
+    questions: [
+      {
+        q: "How do I install Klip4ge on my phone?",
+        a: "Klip4ge is a Progressive Web App (PWA) — it works like a native app without needing the App Store. On iPhone/iPad: open klip4ge.app in Safari → tap the Share icon → \"Add to Home Screen\". On Android: open klip4ge.app in Chrome → tap the menu (⋮) → \"Add to Home Screen\" or \"Install App\". Once installed, Klip4ge appears on your home screen, opens full-screen, and works offline.",
+      },
+      {
+        q: "How do I share something to Klip4ge from my phone?",
+        a: "After installing Klip4ge as a PWA, it shows up in your phone's native Share Sheet. On any app (browser, Facebook, Instagram, news app) tap the Share button and choose Klip4ge. A save screen opens, auto-fills the title and URL, and lets you confirm with one tap.",
+      },
+      {
+        q: "Does Klip4ge work offline on mobile?",
+        a: "Yes — if you save something while offline (e.g. on a plane), Klip4ge queues it in the background. As soon as your connection comes back, it automatically uploads the save to your vault. You'll see a \"Saving…\" indicator until the sync completes.",
+      },
+      {
+        q: "Will there be native iOS and Android apps?",
+        a: "Yes — native apps are on the roadmap. They will use Capacitor (a technology that wraps the Klip4ge web app in a native shell) and will unlock extra features like background sync, faster share sheets, and deeper system integration. The PWA already covers ~90% of the experience today.",
+      },
+    ],
+  },
+
   {
     id: "privacy-security",
     emoji: "🔒",

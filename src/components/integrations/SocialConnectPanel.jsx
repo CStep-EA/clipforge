@@ -199,6 +199,35 @@ export default function SocialConnectPanel() {
     retry: false,
     staleTime: 25000,
   });
+
+  // ── Chrome Extension heartbeat detection ─────────────────────────────────
+  // Reads the heartbeat written to localStorage by the extension's popup.js
+  // or background.js. Format: { ts: Date.ISO, captured: N, status: 'active'|'idle' }
+  const [extStatus, setExtStatus] = useState(() => {
+    try {
+      const raw = localStorage.getItem('klip4ge_ext_heartbeat');
+      if (!raw) return null;
+      const hb = JSON.parse(raw);
+      const ageMs = Date.now() - new Date(hb.ts).getTime();
+      return ageMs < 2 * 60 * 60 * 1000   // 2 hours
+        ? hb
+        : null;
+    } catch { return null; }
+  });
+
+  useEffect(() => {
+    // Poll localStorage every 15s for extension heartbeat updates
+    const tid = setInterval(() => {
+      try {
+        const raw = localStorage.getItem('klip4ge_ext_heartbeat');
+        if (!raw) { setExtStatus(null); return; }
+        const hb = JSON.parse(raw);
+        const ageMs = Date.now() - new Date(hb.ts).getTime();
+        setExtStatus(ageMs < 2 * 60 * 60 * 1000 ? hb : null);
+      } catch { setExtStatus(null); }
+    }, 15_000);
+    return () => clearInterval(tid);
+  }, []);
   const [fbImportOpen, setFbImportOpen] = useState(false);
   const [fbImporting, setFbImporting] = useState(false);
   const [fbImportResult, setFbImportResult] = useState(null);
@@ -461,6 +490,51 @@ export default function SocialConnectPanel() {
                       <p className="text-[10px] text-amber-300 leading-snug">{platform.syncNote}</p>
                     </div>
                   )}
+
+                  {/* ── Chrome Extension Real-Time Sync Status ─────────── */}
+                  {platform.id === "facebook" && (() => {
+                    const extOnline   = !!extStatus;
+                    const extCaptures = extStatus?.captured ?? 0;
+                    const extLastSeen = extStatus?.ts ? new Date(extStatus.ts) : null;
+                    const extColor    = extOnline ? "#1877F2" : "#6B7280";
+                    const extDot      = extOnline ? "🟢" : "⚫";
+                    const extLabel    = extOnline ? (extStatus?.status === "active" ? "Active" : "Idle") : "Not detected";
+
+                    return (
+                      <div className="mb-3 p-2.5 rounded-lg border space-y-1.5"
+                        style={{ background: `${extColor}08`, borderColor: `${extColor}30` }}>
+                        <div className="flex items-center justify-between">
+                          <p className="text-[10px] font-semibold flex items-center gap-1.5" style={{ color: extColor }}>
+                            <span className="text-[10px]">{extDot}</span>
+                            Chrome Extension — {extLabel}
+                          </p>
+                          <a
+                            href="https://github.com/CStep-EA/clipforge/tree/main/extension"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#8B8D97] hover:text-[#E8E8ED] transition-colors text-[9px] underline underline-offset-2"
+                          >
+                            Install
+                          </a>
+                        </div>
+                        {extOnline ? (
+                          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[9px] text-[#8B8D97]">
+                            {extCaptures > 0 && (
+                              <span className="text-[#1877F2]">🔖 {extCaptures} captured this session</span>
+                            )}
+                            {extLastSeen && (
+                              <span>Last seen: {extLastSeen.toLocaleTimeString("en", { hour: "2-digit", minute: "2-digit" })}</span>
+                            )}
+                          </div>
+                        ) : (
+                          <p className="text-[9px] text-[#8B8D97] leading-snug">
+                            Install the browser extension to enable real-time Facebook save detection.
+                            Saves are captured the instant you click Facebook's own Save button — no API needed.
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })()}
 
                   {/* ── Facebook Agent Status Panel ─────────────────────── */}
                   {platform.id === "facebook" && (() => {
