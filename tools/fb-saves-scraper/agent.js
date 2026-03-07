@@ -352,7 +352,7 @@ async function runScraper() {
     url:         item.url || '',
     image_url:   item.thumbnail || '',
     category:    mapCat(item),
-    source:      'facebook',
+    source:      'facebook_agent',   // distinguish from chrome extension captures
     tags:        ['facebook', item.collection !== 'All Saves' ? item.collection : ''].filter(Boolean),
     collection:  item.collection || 'All Saves',
     save_date:   item.saveDate || '',
@@ -362,6 +362,27 @@ async function runScraper() {
     rating:      null,
     is_favorite: false,
   }));
+}
+
+// ── Extension-active detection ──────────────────────────────────────────────
+/**
+ * Check if the Klip4ge Chrome extension has captured any FB items recently
+ * (within the last 2 hours). If so, skip the Playwright scrape to avoid
+ * duplicate effort — the extension is faster and more accurate.
+ *
+ * Detection: reads agent-state.json field `ext_last_capture` written by the
+ * postExtensionStatus cloud function when the extension sends its heartbeat.
+ */
+async function isExtensionActiveForFb() {
+  try {
+    const state = await readState();
+    if (!state.ext_last_capture) return false;
+    const last = new Date(state.ext_last_capture).getTime();
+    const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
+    return last > twoHoursAgo;
+  } catch {
+    return false;
+  }
 }
 
 // ── Main sync cycle ───────────────────────────────────────────────────────────
@@ -378,6 +399,14 @@ async function runSyncCycle() {
 
   let saves = [];
   try {
+    // Skip Playwright scrape if Chrome extension is active — it handles real-time saves
+    const extActive = await isExtensionActiveForFb();
+    if (extActive) {
+      await info('Chrome extension is active and capturing FB saves in real-time. Skipping Playwright scrape this cycle.');
+      await writeState({ status: 'success', last_success: new Date().toISOString(), last_imported: 0, last_skipped: 0, skipped_reason: 'extension_active' });
+      return;
+    }
+
     await info('Launching headless scraper...');
     saves = await runScraper();
     await info(`Scraper complete: ${saves.length} total saves found`);

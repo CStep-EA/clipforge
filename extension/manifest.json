@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "Klip4ge — Save smarter",
   "short_name": "Klip4ge",
-  "description": "One-click save any page, link, recipe, deal or product to your Klip4ge vault.",
-  "version": "1.0.0",
+  "description": "One-click save any page, link, recipe, deal or product to your Klip4ge vault — with real-time Facebook sync.",
+  "version": "1.1.0",
   "icons": {
     "16":  "icons/icon-16.png",
     "32":  "icons/icon-32.png",
@@ -29,18 +29,32 @@
       "matches": ["<all_urls>"],
       "js": ["content.js"],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.facebook.com/*",
+        "https://m.facebook.com/*",
+        "https://web.facebook.com/*"
+      ],
+      "js": ["fb-detector.js"],
+      "run_at": "document_start",
+      "all_frames": false
     }
   ],
   "permissions": [
     "activeTab",
     "contextMenus",
     "storage",
-    "notifications"
+    "notifications",
+    "alarms"
   ],
   "host_permissions": [
     "https://klip4ge.app/*",
     "https://clipforge.app/*",
-    "https://*.base44.com/*"
+    "https://*.base44.com/*",
+    "https://www.facebook.com/*",
+    "https://m.facebook.com/*",
+    "https://web.facebook.com/*"
   ],
   "commands": {
     "save-page": {
