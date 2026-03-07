@@ -27,6 +27,10 @@
 
 import { isNative, getPlatform } from './inAppBrowser.js';
 
+// ── Safe dynamic importer (hides specifiers from Vite's static analyser) ──────
+const _capImport = /* @__PURE__ */ (mod) =>
+  new Function('m', 'return import(m)')(mod).catch(() => ({}));
+
 // ── Constants ─────────────────────────────────────────────────────────────────
 const TASK_ID            = 'app.klip4ge.background-sync';
 const HEARTBEAT_INTERVAL = 30 * 1000;   // 30s foreground heartbeat
@@ -162,10 +166,11 @@ export async function stopBackgroundSync() {
 
 async function _initNativeBackgroundFetch() {
   try {
-    const { BackgroundFetch } = await import('@capacitor/background-fetch').catch(() =>
-      // Try community plugin as fallback
-      import('@transistorsoft/capacitor-background-fetch').catch(() => ({ BackgroundFetch: null }))
-    );
+    const primary  = await _capImport('@capacitor/background-fetch');
+    const fallback  = primary?.BackgroundFetch
+      ? primary
+      : await _capImport('@transistorsoft/capacitor-background-fetch');
+    const { BackgroundFetch = null } = fallback ?? {};
 
     if (!BackgroundFetch) {
       console.warn('[BackgroundSync] BackgroundFetch plugin not available — using foreground fallback');

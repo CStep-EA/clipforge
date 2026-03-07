@@ -34,6 +34,14 @@
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
+// ── Safe dynamic importer (hides specifiers from Vite's static analyser) ────────
+// Vite crawls bare `import('some-package')` strings at build time and errors
+// when the package isn't installed. Wrapping in new Function makes the
+// specifier opaque — the import still works at runtime in a real Capacitor
+// native build where the packages DO exist.
+const _capImport = /* @__PURE__ */ (mod) =>
+  new Function('m', 'return import(m)')(mod).catch(() => ({}));
+
 // ── Platform detection ────────────────────────────────────────────────────────
 
 /**
@@ -156,10 +164,11 @@ class InAppBrowserService {
 
     try {
       // Dynamically import to avoid crashing in web/test environments
-      const { InAppBrowser } = await import('@capacitor/inappbrowser').catch(() =>
-        // Community plugin fallback
-        import('@capacitor-community/inappbrowser').catch(() => ({ InAppBrowser: null }))
-      );
+      const primary   = await _capImport('@capacitor/inappbrowser');
+      const fallback  = primary?.InAppBrowser
+        ? primary
+        : await _capImport('@capacitor-community/inappbrowser');
+      const { InAppBrowser = null } = fallback ?? {};
       this._plugin = InAppBrowser;
       console.debug('[InAppBrowser] Native plugin loaded on', getPlatform());
     } catch (err) {

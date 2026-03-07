@@ -33,6 +33,10 @@
 
 import { isNative, getPlatform } from './inAppBrowser.js';
 
+
+// ── Safe dynamic importer (hides specifiers from Vite's static analyser) ──
+const _capImport = /* @__PURE__ */ (mod) =>
+  new Function('m', 'return import(m)')(mod).catch(() => ({}));
 // ── Intent types ──────────────────────────────────────────────────────────────
 export const INTENT_TYPE = {
   SHARE_URL:    'share_url',     // Share a URL from another app
@@ -116,7 +120,8 @@ export async function getLaunchIntent() {
 export async function shareToOtherApp(payload) {
   if (isNative()) {
     try {
-      const { Share } = await import('@capacitor/share');
+      const { Share = null } = await _capImport('@capacitor/share');
+      if (!Share) throw new Error('Capacitor Share plugin not available');
       await Share.share({
         title:        payload.title || 'Check this out',
         text:         payload.text  || payload.title || '',
@@ -207,8 +212,13 @@ export function parseIntent(url) {
 
 async function _initNativeListeners() {
   try {
-    const { App } = await import('@capacitor/app');
+    const { App = null } = await _capImport('@capacitor/app');
     _appPlugin = App;
+    if (!App) {
+      console.warn('[NativeShare] Capacitor App plugin not available — falling back to web');
+      _initWebListeners();
+      return;
+    }
 
     // URL-based deep links / share extension returns
     App.addListener('appUrlOpen', (event) => {
