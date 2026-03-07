@@ -13,18 +13,40 @@ if ('serviceWorker' in navigator) {
       .then((reg) => {
         console.debug('[SW] Registered:', reg.scope);
 
-        // ── Listen for messages from SW (share_target data) ──────────────────
+        // ── Listen for messages from SW ───────────────────────────────────────
         navigator.serviceWorker.addEventListener('message', (event) => {
-          if (event.data?.type === 'SHARE_TARGET') {
-            // Store in sessionStorage so ShareTarget page can pick it up
+          const msg = event.data;
+          if (!msg) return;
+
+          // Share target intent forwarded from SW fetch handler
+          if (msg.type === 'SHARE_TARGET') {
             sessionStorage.setItem(
               'cf_share_intent',
               JSON.stringify({
-                title: event.data.title || '',
-                url:   event.data.url   || '',
-                text:  event.data.text  || '',
+                title:  msg.title  || '',
+                url:    msg.url    || '',
+                text:   msg.text   || '',
+                source: msg.source || 'pwa_share',
               })
             );
+            // If we're not already on the share-target route, navigate there
+            if (!window.location.pathname.startsWith('/share-target')) {
+              window.location.href =
+                '/share-target?share=1' +
+                '&source=' + encodeURIComponent(msg.source || 'pwa_share') +
+                '&title='  + encodeURIComponent(msg.title  || '') +
+                '&url='    + encodeURIComponent(msg.url    || '') +
+                '&text='   + encodeURIComponent(msg.text   || '');
+            }
+          }
+
+          // Background sync: queued offline share item is ready to retry
+          if (msg.type === 'SHARE_QUEUE_ITEM') {
+            // Navigate to share-target page; ShareTarget.jsx listens for this message
+            if (!window.location.pathname.startsWith('/share-target')) {
+              window.location.href = '/share-target?from_queue=1';
+            }
+            // The message will be re-received by ShareTarget.jsx's own listener
           }
         });
 

@@ -3,63 +3,267 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Saving to Klip4ge…</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Klip4ge" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#0F1117" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <title>Save to Klip4ge</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:        #0F1117;
+      --surface:   #1A1D27;
+      --border:    #2A2D3A;
+      --text:      #E8E8ED;
+      --muted:     #8B8D97;
+      --accent:    #00BFFF;
+      --purple:    #9370DB;
+      --success:   #10B981;
+      --safe-top:  env(safe-area-inset-top, 0px);
+      --safe-bot:  env(safe-area-inset-bottom, 0px);
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
     body {
-      background: #0F1117;
-      color: #E8E8ED;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      padding: 24px;
+      padding: calc(24px + var(--safe-top)) 24px calc(24px + var(--safe-bot));
       text-align: center;
+      min-height: 100dvh;
     }
-    .logo { width: 72px; height: 72px; margin-bottom: 20px; border-radius: 18px; }
-    h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
-    p  { font-size: 0.95rem; color: #8B8D97; margin-bottom: 24px; max-width: 300px; }
-    .btn {
-      display: inline-block;
-      padding: 16px 32px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #00BFFF, #9370DB);
-      color: #fff;
-      font-size: 1.05rem;
-      font-weight: 700;
+
+    /* ── Logo ── */
+    .logo-wrap {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border-radius: 22px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0,191,255,0.25);
+    }
+    .logo-wrap span { font-size: 36px; font-weight: 900; color: #fff; }
+
+    /* ── Heading ── */
+    h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 6px; }
+    .subtitle { font-size: 0.95rem; color: var(--muted); margin-bottom: 28px; max-width: 280px; line-height: 1.5; }
+
+    /* ── Item preview card ── */
+    .card {
+      width: 100%; max-width: 340px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .card-url {
+      font-size: 11px; color: var(--accent);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 14px; font-weight: 600; color: var(--text);
+      line-height: 1.4; word-break: break-word;
+    }
+    .card-empty { font-size: 13px; color: var(--muted); font-style: italic; }
+
+    /* ── CTA button ── */
+    .btn-save {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; max-width: 340px;
+      padding: 18px 24px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: #fff; font-size: 1.05rem; font-weight: 800;
+      border: none; border-radius: 16px; cursor: pointer;
       text-decoration: none;
-      min-height: 56px;
-      line-height: 1;
+      min-height: 60px;
+      transition: filter 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
     }
-    .note { font-size: 0.78rem; color: #8B8D97; margin-top: 16px; }
+    .btn-save:active { filter: brightness(0.9); transform: scale(0.98); }
+
+    /* ── iOS Add to Home Screen hint ── */
+    .ios-hint {
+      display: none;
+      margin-top: 20px;
+      background: rgba(0,191,255,0.08);
+      border: 1px solid rgba(0,191,255,0.2);
+      border-radius: 12px;
+      padding: 14px 16px;
+      max-width: 340px;
+      text-align: left;
+    }
+    .ios-hint.show { display: block; }
+    .ios-hint-title {
+      font-size: 12px; font-weight: 700; color: var(--accent);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+    }
+    .ios-hint-steps { list-style: none; }
+    .ios-hint-steps li {
+      font-size: 12px; color: var(--muted);
+      padding: 3px 0; display: flex; align-items: flex-start; gap: 8px;
+    }
+    .ios-hint-steps .num {
+      min-width: 18px; height: 18px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: #fff; font-size: 10px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* ── Non-PWA fallback notice ── */
+    .fallback-note {
+      margin-top: 16px;
+      font-size: 11px; color: var(--muted);
+      max-width: 300px; line-height: 1.5;
+    }
+
+    /* ── Spinner ── */
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading .spinner { display: inline-block; }
+    .loading .btn-text { display: none; }
   </style>
 </head>
 <body>
-  <img src="/icons/icon-192.png" alt="Klip4ge" class="logo" />
-  <h1>Open Klip4ge to Save</h1>
-  <p id="msg">Tap below to open Klip4ge and save this page to your vault.</p>
-  <a id="deeplink" class="btn" href="/">Open Klip4ge →</a>
-  <p class="note">iOS Safari: tap Share → Add to Home Screen first for best experience.</p>
+
+  <div class="logo-wrap"><span>K</span></div>
+  <h1>Save to Klip4ge</h1>
+  <p class="subtitle" id="subtitle">One tap to add this to your vault.</p>
+
+  <!-- Item preview -->
+  <div class="card" id="card">
+    <div class="card-empty">Loading share info…</div>
+  </div>
+
+  <!-- Main CTA -->
+  <a class="btn-save" id="save-btn" href="/">
+    <span class="spinner" id="spinner"></span>
+    <span class="btn-text" id="btn-text">📌 Open Klip4ge to Save</span>
+  </a>
+
+  <!-- iOS Add-to-Home-Screen hint (shown when not installed as PWA) -->
+  <div class="ios-hint" id="ios-hint">
+    <div class="ios-hint-title">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Get 1-tap sharing — add Klip4ge to your Home Screen
+    </div>
+    <ul class="ios-hint-steps">
+      <li>
+        <span class="num">1</span>
+        <span>Tap the <strong>Share</strong> button (box with arrow) in Safari's toolbar</span>
+      </li>
+      <li>
+        <span class="num">2</span>
+        <span>Scroll down and tap <strong>"Add to Home Screen"</strong></span>
+      </li>
+      <li>
+        <span class="num">3</span>
+        <span>Next time, tap <strong>Share → Klip4ge</strong> to save in one tap</span>
+      </li>
+    </ul>
+  </div>
+
+  <p class="fallback-note" id="fallback-note"></p>
 
   <script>
-    // Grab query params passed by the browser's Share Sheet (iOS 16+ PWA share)
-    const params = new URLSearchParams(window.location.search);
-    const title  = params.get("title") || document.title || "";
-    const url    = params.get("url")   || params.get("text") || "";
+    // ── Read share params from URL query string ─────────────────────────────
+    const params  = new URLSearchParams(window.location.search);
+    const title   = params.get("title") || "";
+    const rawUrl  = params.get("url")   || params.get("text") || "";
+    const text    = params.get("text")  || "";
 
-    if (url || title) {
-      document.getElementById("msg").textContent =
-        `Ready to save: "${title || url}"`;
+    // ── Detect iOS ──────────────────────────────────────────────────────────
+    const isIos = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isInStandaloneMode = window.navigator.standalone === true ||
+                               window.matchMedia("(display-mode: standalone)").matches;
+
+    // ── Update preview card ─────────────────────────────────────────────────
+    const card = document.getElementById("card");
+    if (rawUrl || title) {
+      let html = "";
+      if (rawUrl) {
+        let domain = "";
+        try { domain = new URL(rawUrl).hostname.replace("www.", ""); } catch {}
+        html += `<div class="card-url">🔗 ${domain || rawUrl}</div>`;
+      }
+      if (title) {
+        html += `<div class="card-title">${escHtml(title)}</div>`;
+      } else if (rawUrl) {
+        html += `<div class="card-title">${escHtml(rawUrl.slice(0, 80))}</div>`;
+      }
+      card.innerHTML = html;
+      document.getElementById("subtitle").textContent =
+        "Tap below to add this to your Klip4ge vault.";
+    } else {
+      card.innerHTML = `<div class="card-empty">No share data detected — open Klip4ge manually.</div>`;
     }
 
-    // Build deep-link into the app
-    const dest = "/share-target?title=" + encodeURIComponent(title) + "&url=" + encodeURIComponent(url);
-    document.getElementById("deeplink").href = dest;
+    // ── Build deep-link into the PWA share handler ──────────────────────────
+    const dest = "/share-target" +
+      "?share=1" +
+      "&source=ios_share" +
+      "&title=" + encodeURIComponent(title) +
+      "&url="   + encodeURIComponent(rawUrl) +
+      "&text="  + encodeURIComponent(text);
 
-    // Auto-redirect after short delay
-    setTimeout(() => { window.location.href = dest; }, 900);
+    const btn = document.getElementById("save-btn");
+    btn.href = dest;
+
+    // ── Auto-redirect if already installed as PWA ───────────────────────────
+    if (isInStandaloneMode) {
+      // Already running as installed PWA — redirect immediately
+      btn.innerHTML = '<span class="spinner" style="display:inline-block"></span><span> Saving…</span>';
+      setTimeout(() => { window.location.href = dest; }, 400);
+    } else if (isIos) {
+      // Not installed — show Add to Home Screen instructions
+      document.getElementById("ios-hint").classList.add("show");
+      document.getElementById("btn-text").textContent = "📌 Open Klip4ge to Save";
+      document.getElementById("fallback-note").textContent =
+        "For the best experience, install Klip4ge from Safari and use Share → Klip4ge directly.";
+      // Still auto-redirect after delay in case they have the app open in a tab
+      setTimeout(() => { window.location.href = dest; }, 1800);
+    } else {
+      // Non-iOS (should be caught by SW, but just in case)
+      setTimeout(() => { window.location.href = dest; }, 600);
+    }
+
+    // ── Manual tap handler ──────────────────────────────────────────────────
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      btn.classList.add("loading");
+      setTimeout(() => { window.location.href = dest; }, 200);
+    });
+
+    // ── Helpers ─────────────────────────────────────────────────────────────
+    function escHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
   </script>
 </body>
 </html>
