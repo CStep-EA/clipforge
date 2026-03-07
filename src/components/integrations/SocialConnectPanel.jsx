@@ -190,7 +190,15 @@ export default function SocialConnectPanel() {
   const [tmShowFilters, setTmShowFilters] = useState(false);
   const [tmSavedIds, setTmSavedIds] = useState(new Set());
 
-  // ── Facebook JSON import state ──────────────────────────────────────────
+  // ── Facebook agent status — polls every 30s so UI stays live ───────────
+  const { data: fbAgentStatus, refetch: refetchAgentStatus } = useQuery({
+    queryKey: ["fbAgentStatus"],
+    queryFn:  () => base44.functions.invoke("getFbAgentStatus", {}),
+    refetchInterval: 30000,        // re-poll every 30s
+    refetchIntervalInBackground: false,
+    retry: false,
+    staleTime: 25000,
+  });
   const [fbImportOpen, setFbImportOpen] = useState(false);
   const [fbImporting, setFbImporting] = useState(false);
   const [fbImportResult, setFbImportResult] = useState(null);
@@ -453,6 +461,79 @@ export default function SocialConnectPanel() {
                       <p className="text-[10px] text-amber-300 leading-snug">{platform.syncNote}</p>
                     </div>
                   )}
+
+                  {/* ── Facebook Agent Status Panel ─────────────────────── */}
+                  {platform.id === "facebook" && (() => {
+                    const st = fbAgentStatus;
+                    if (!st || st.status === "not_configured") {
+                      return (
+                        <div className="mb-3 p-2.5 rounded-lg bg-[#1877F2]/6 border border-[#1877F2]/20 space-y-1.5">
+                          <p className="text-[10px] font-semibold text-[#1877F2] flex items-center gap-1.5">
+                            <Download className="w-3 h-3" /> Auto-Sync Agent
+                          </p>
+                          <p className="text-[10px] text-[#8B8D97] leading-snug">
+                            Set up the <strong className="text-[#E8E8ED]">Klip4ge FB Sync Agent</strong> on your computer for automatic hourly imports. One-command install:
+                          </p>
+                          <div className="bg-[#0F1117] rounded px-2 py-1.5 font-mono text-[9px] text-[#10B981]">
+                            cd tools/fb-saves-scraper &amp;&amp; npm run setup
+                          </div>
+                        </div>
+                      );
+                    }
+                    const online    = st.agent_online;
+                    const isRunning = st.status === "running";
+                    const isError   = st.status === "error";
+                    const needsAuth = st.status === "needs_login";
+                    const statusColor = needsAuth ? "#F59E0B" : isError ? "#EF4444" : online ? "#10B981" : "#6B7280";
+                    const statusLabel = needsAuth ? "Needs re-login" : isError ? "Error" : isRunning ? "Syncing…" : online ? "Running" : "Offline";
+                    const statusDot   = needsAuth ? "🟡" : isError ? "🔴" : isRunning ? "🔵" : online ? "🟢" : "⚫";
+                    return (
+                      <div className="mb-3 p-2.5 rounded-lg border space-y-1.5"
+                        style={{ background: `${statusColor}08`, borderColor: `${statusColor}30` }}>
+                        <div className="flex items-center justify-between">
+                          <p className="text-[10px] font-semibold flex items-center gap-1.5" style={{ color: statusColor }}>
+                            {isRunning
+                              ? <Loader2 className="w-3 h-3 animate-spin" />
+                              : <span className="text-[10px]">{statusDot}</span>
+                            }
+                            Auto-Sync Agent — {statusLabel}
+                          </p>
+                          <button onClick={() => refetchAgentStatus()} className="text-[#8B8D97] hover:text-[#E8E8ED] transition-colors" title="Refresh status">
+                            <RefreshCw className="w-3 h-3" />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[9px] text-[#8B8D97]">
+                          {st.last_success && (
+                            <span>Last sync: {new Date(st.last_success).toLocaleString("en", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
+                          )}
+                          {st.total_imported > 0 && (
+                            <span className="text-[#00BFFF]">{st.total_imported} total imported</span>
+                          )}
+                          {st.last_imported > 0 && (
+                            <span className="text-emerald-400">+{st.last_imported} last run</span>
+                          )}
+                          {st.run_count > 0 && (
+                            <span>{st.run_count} sync{st.run_count !== 1 ? "s" : ""} run</span>
+                          )}
+                        </div>
+                        {needsAuth && (
+                          <p className="text-[9px] text-amber-400 leading-snug">
+                            ⚠ Session expired on your computer. Run <code className="bg-[#0F1117] px-1 rounded">npm run scrape</code> in the scraper folder to re-login.
+                          </p>
+                        )}
+                        {isError && st.last_error && (
+                          <p className="text-[9px] text-red-400 leading-snug truncate" title={st.last_error}>
+                            ✗ {st.last_error.slice(0, 80)}
+                          </p>
+                        )}
+                        {!online && !needsAuth && (
+                          <p className="text-[9px] text-[#8B8D97]">
+                            Agent offline — it runs on your computer. Start with <code className="bg-[#0F1117] px-1 rounded">node agent.js</code>
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })()}
 
                   {/* Connected metadata */}
                   {isConnected && (

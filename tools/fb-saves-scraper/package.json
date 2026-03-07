@@ -1,13 +1,19 @@
 {
   "name": "klip4ge-fb-saves-scraper",
-  "version": "2.0.0",
-  "description": "Personal-use Playwright tool to extract your own Facebook Saved items and import them into Klip4ge",
-  "main": "scrape.js",
+  "version": "2.1.0",
+  "description": "One-click hourly Facebook Saves sync agent for Klip4ge — personal use only",
+  "main": "agent.js",
   "scripts": {
-    "setup": "npx playwright install chromium",
-    "scrape": "node scrape.js",
-    "scrape:headless": "node scrape.js --headless",
-    "import": "node import-to-klip4ge.js"
+    "setup":          "npm install && npx playwright install chromium && node setup.js",
+    "scrape":         "node scrape.js",
+    "scrape:headless":"node scrape.js --headless",
+    "agent:start":    "node agent.js",
+    "agent:now":      "node agent.js --now",
+    "agent:status":   "node -e \"const fs=require('fs');try{const s=JSON.parse(fs.readFileSync('agent-state.json'));console.log(JSON.stringify(s,null,2));}catch{console.log('No state file found — run setup first.')}\"",
+    "agent:logs":     "tail -50 agent.log 2>/dev/null || echo 'No log file yet.'",
+    "agent:stop:mac": "launchctl unload ~/Library/LaunchAgents/com.klip4ge.fbsync.plist",
+    "agent:stop:win": "schtasks /Delete /TN Klip4geFBSync /F",
+    "agent:stop:linux":"systemctl --user stop klip4ge-fbsync"
   },
   "dependencies": {
     "playwright": "^1.44.0"

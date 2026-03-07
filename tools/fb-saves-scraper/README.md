@@ -1,148 +1,137 @@
-# Klip4ge Facebook Saves Scraper
+# Klip4ge Facebook Sync Agent
 
-> **Personal-use tool** · Extracts your own Facebook Saved items and imports them into Klip4ge.
+> **One-click hourly background daemon** · Automatically imports your Facebook Saved items into Klip4ge every hour.
+
+---
+
+## TL;DR — One Command Setup
+
+```bash
+cd tools/fb-saves-scraper
+npm run setup
+```
+
+That's it. The wizard guides you through login, API config, and OS service registration. After that, your Facebook saves sync automatically every hour — no browser open, no interaction needed.
 
 ---
 
 ## Why This Exists
 
-Facebook's Graph API **deprecated the `/me/saved` endpoint in 2018** — no third-party app can automatically sync your personal saves anymore. This tool bridges that gap using a visible browser session (Playwright) so **you** log in manually, and the script extracts your data cleanly.
+Facebook deprecated `/me/saved` in **2018** — no OAuth app can read your personal saves. This tool runs a real browser session **locally on your machine**, logs in as you, extracts your saves, and pushes them to Klip4ge's API.
 
 ---
 
-## ⚠️ Important Notes
+## Architecture
+
+```
+Your computer                          Klip4ge Cloud
+──────────────────────────────         ───────────────────────────
+agent.js (background daemon)
+  │
+  ├─ every 60 min ─→ scraper          ───→  /importFacebookSaves
+  │    (Playwright, headless)                 (bulk create saves)
+  │
+  └─ every 30 sec ─→ heartbeat POST   ───→  /getFbAgentStatus
+                                             (UI polls this)
+                                       ↑
+                                  SocialConnectPanel
+                                  shows live status badge
+```
+
+---
+
+## Files
+
+| File | Purpose |
+|---|---|
+| `setup.js` | One-click wizard — login, config, OS service registration |
+| `agent.js` | Background daemon — hourly scrape + POST to Klip4ge |
+| `scrape.js` | Standalone scraper (manual use) |
+| `agent-config.json` | API URL + token (auto-created by setup) |
+| `agent-state.json` | Live status (read by UI via getFbAgentStatus) |
+| `fb-session.json` | Saved browser session (auto-created at login) |
+| `facebook-saves.json` | Latest export snapshot |
+| `agent.log` | Rolling log (last 500 lines) |
+
+---
+
+## Commands
+
+```bash
+npm run setup           # Full wizard: login + config + register OS service
+npm run agent:start     # Start agent manually (stays running)
+npm run agent:now       # Force one sync right now, then exit
+npm run agent:status    # Print current status JSON
+npm run agent:logs      # Show last 50 log lines
+npm run scrape          # Manual one-shot scrape (visible browser)
+
+# Stop OS service:
+npm run agent:stop:mac    # macOS launchd
+npm run agent:stop:win    # Windows Task Scheduler
+npm run agent:stop:linux  # systemd
+```
+
+---
+
+## OS Service Registration
+
+`setup.js` auto-registers the agent as an OS background service:
+
+| OS | Method | Auto-starts on login |
+|---|---|---|
+| macOS | LaunchAgent (`~/Library/LaunchAgents/`) | ✅ |
+| Windows | Task Scheduler (`schtasks`) + VBS silent launcher | ✅ |
+| Linux | systemd user service (falls back to crontab) | ✅ |
+
+---
+
+## Klip4ge UI Integration
+
+The Facebook card in **Integrations** shows live agent status:
+
+- 🟢 **Running** — agent online, syncing on schedule
+- 🔵 **Syncing…** — sync in progress right now
+- 🟡 **Needs re-login** — session expired, run `npm run scrape`
+- 🔴 **Error** — check `agent.log`
+- ⚫ **Offline** — agent not running on your computer
+
+The card auto-refreshes every 30 seconds.
+
+---
+
+## Security Notes
 
 | | |
 |---|---|
-| 👤 **Personal use only** | Your own account, your own data. Never use for others. |
-| 🔒 **No credentials stored** | You log in manually in a visible browser — zero credential handling in code. |
-| 🐢 **Rate limits** | Don't hammer this — Facebook will temporarily block you. |
-| 🎨 **Selector fragility** | Facebook changes class names frequently. See Troubleshooting. |
-| 📜 **Terms of Service** | Personal data export; intended for backup/portability. |
-
----
-
-## Quick Start
-
-```bash
-# 1. Navigate to this directory
-cd tools/fb-saves-scraper
-
-# 2. Install dependencies + Chromium browser
-npm install
-npm run setup
-
-# 3. Run the scraper (visible browser — you'll log in manually)
-npm run scrape
-```
-
-A Chromium window will open → log in to Facebook → the script takes over and extracts your saves → outputs `facebook-saves.json`.
-
----
-
-## Second Run (Session Reuse)
-
-After your first run, a `fb-session.json` file is saved. Future runs skip the login step:
-
-```bash
-npm run scrape:headless   # reuses saved session, runs invisibly
-```
-
-> If the session expires (Facebook logs you out), delete `fb-session.json` and run `npm run scrape` again.
-
----
-
-## Output Format
-
-```json
-{
-  "exported_at": "2026-03-07T18:00:00.000Z",
-  "total": 247,
-  "collections": ["All Saves", "Wishlist", "Travel Ideas"],
-  "saves": [
-    {
-      "id": "fb_1709843200000_0",
-      "title": "Amazing pasta carbonara recipe",
-      "description": "The authentic Italian technique...",
-      "url": "https://seriouseats.com/carbonara",
-      "image_url": "https://cdn.facebook.net/...",
-      "category": "recipe",
-      "source": "facebook",
-      "tags": ["facebook", "Recipes"],
-      "collection": "Recipes",
-      "save_date": "Saved 3 days ago",
-      "ai_summary": "Saved from Facebook (Recipes): The authentic Italian technique...",
-      "rating": null,
-      "is_favorite": false
-    }
-  ]
-}
-```
-
----
-
-## Import into Klip4ge
-
-1. Run the scraper → get `facebook-saves.json`
-2. Open Klip4ge → **Integrations** → **Facebook**
-3. Click **"Import from JSON file"**
-4. Select your `facebook-saves.json`
-5. Klip4ge will preview and import all saves, creating boards for each collection
+| 🔒 No credentials stored | Manual login only — no password ever touches this code |
+| 🏠 Runs locally | Your Facebook session never leaves your machine |
+| 🔑 API token only | Only your Klip4ge API token is stored (in `agent-config.json`) |
+| 👤 Personal use | Your own account, your own data only |
 
 ---
 
 ## Troubleshooting
 
-### Selectors Not Working
-Facebook changes its HTML class names frequently. Open Chrome DevTools on `facebook.com/saved/` and inspect the save items:
-
-```bash
-# Take a screenshot to see what loaded
-# (the script auto-saves debug-saved-page.png on every run)
-```
-
-Common item containers to look for:
-- `div[role="article"]` — most stable, rarely changes
-- `div[data-pagelet]` — pagelet-based items
-- `div[aria-label*="Saved"]` — accessible label approach
-
-### Session Expired
+**Session expired**
 ```bash
 rm fb-session.json
-npm run scrape
+npm run scrape      # log in again in visible browser
 ```
 
-### Too Few Items
-Increase `maxScrollAttempts` or `scrollPause` in `scrape.js` config section.
-
-### Facebook Blocks / CAPTCHAs
-- Reduce `maxScrollAttempts` 
-- Increase `scrollPause` to `6000+`
-- Run in visible mode (`npm run scrape`) and complete any CAPTCHA manually
-
----
-
-## File Structure
-
+**Agent not starting on macOS**
+```bash
+launchctl list | grep klip4ge
+launchctl load ~/Library/LaunchAgents/com.klip4ge.fbsync.plist
 ```
-fb-saves-scraper/
-├── scrape.js              ← main scraper script
-├── package.json           ← npm config
-├── README.md              ← this file
-├── fb-session.json        ← saved browser session (auto-created, gitignored)
-├── facebook-saves.json    ← output file (your data, gitignored)
-├── debug-saved-page.png   ← debug screenshot (auto-created)
-└── error-screenshot.png   ← error screenshot if something goes wrong
+
+**Wrong saves or missing items**
+Facebook changes HTML often. The scraper uses `div[role="article"]` (very stable) but may miss items in new layouts. Check `debug-saved-page.png` to see what the page looks like.
+
+**Force an immediate sync**
+```bash
+node agent.js --now
 ```
 
 ---
 
-## Requirements
-
-- **Node.js 18+** (`node --version`)
-- **npm** (`npm --version`)
-- **Internet connection + Facebook account**
-
----
-
-*Built for Klip4ge by Colton Stephenson — Save smarter. Share better. Live together.*
+*Built for Klip4ge by Colton Stephenson · Save smarter. Share better. Live together.*
