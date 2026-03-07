@@ -1,0 +1,20 @@
+{
+  "name": "klip4ge-fb-saves-scraper",
+  "version": "2.0.0",
+  "description": "Personal-use Playwright tool to extract your own Facebook Saved items and import them into Klip4ge",
+  "main": "scrape.js",
+  "scripts": {
+    "setup": "npx playwright install chromium",
+    "scrape": "node scrape.js",
+    "scrape:headless": "node scrape.js --headless",
+    "import": "node import-to-klip4ge.js"
+  },
+  "dependencies": {
+    "playwright": "^1.44.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT",
+  "private": true
+}

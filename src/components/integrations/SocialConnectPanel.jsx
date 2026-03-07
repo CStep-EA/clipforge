@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
@@ -14,7 +14,8 @@ import {
 import {
   CheckCircle2, Link2, RefreshCw, Loader2, AlertCircle,
   WifiOff, Clock, MapPin, Calendar, Ticket, ExternalLink,
-  Lock, Shield, Info, Filter, Sliders,
+  Lock, Shield, Info, Filter, Sliders, Upload, Download,
+  FolderOpen, CheckSquare, X,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
@@ -188,6 +189,63 @@ export default function SocialConnectPanel() {
   const [tmRadius, setTmRadius] = useState(marketPrefs.radius || "50");
   const [tmShowFilters, setTmShowFilters] = useState(false);
   const [tmSavedIds, setTmSavedIds] = useState(new Set());
+
+  // ── Facebook JSON import state ──────────────────────────────────────────
+  const [fbImportOpen, setFbImportOpen] = useState(false);
+  const [fbImporting, setFbImporting] = useState(false);
+  const [fbImportResult, setFbImportResult] = useState(null);
+  const [fbPreview, setFbPreview] = useState(null); // parsed JSON preview
+  const [fbCreateBoards, setFbCreateBoards] = useState(true);
+  const fbFileRef = useRef(null);
+
+  const handleFbFileSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      const saves = parsed.saves || parsed; // support both {saves:[]} and raw []
+      if (!Array.isArray(saves) || saves.length === 0) {
+        toast.error("Invalid file — expected a JSON array of saves from the Klip4ge scraper.");
+        return;
+      }
+      const collections = [...new Set(saves.map(s => s.collection).filter(Boolean))];
+      setFbPreview({ saves, total: saves.length, collections, fileName: file.name });
+    } catch {
+      toast.error("Could not read file. Make sure it's the JSON exported by the Klip4ge Facebook scraper.");
+    }
+  };
+
+  const handleFbImport = async () => {
+    if (!fbPreview?.saves?.length) return;
+    setFbImporting(true);
+    setFbImportResult(null);
+    try {
+      const result = await base44.functions.invoke("importFacebookSaves", {
+        saves: fbPreview.saves,
+        createBoards: fbCreateBoards,
+        overwrite: false,
+      });
+      setFbImportResult(result);
+      queryClient.invalidateQueries({ queryKey: ["savedItems"] });
+      if (result.imported > 0) {
+        toast.success(`✓ Imported ${result.imported} saves from Facebook!`);
+      } else {
+        toast.info("All items already in your vault.");
+      }
+    } catch (err) {
+      toast.error("Import failed. Please try again.");
+      console.error("[fbImport]", err);
+    } finally {
+      setFbImporting(false);
+    }
+  };
+
+  const resetFbImport = () => {
+    setFbPreview(null);
+    setFbImportResult(null);
+    if (fbFileRef.current) fbFileRef.current.value = "";
+  };
 
   const queryClient = useQueryClient();
   const { isPremium: isPremiumPlan, isFamily } = useSubscription();
@@ -440,11 +498,22 @@ export default function SocialConnectPanel() {
                         ? { background: "transparent", border: `1px solid ${platform.color}60`, color: platform.color }
                         : { background: `linear-gradient(135deg, ${platform.color}, ${platform.color}cc)`, color: "white", boxShadow: `0 0 18px ${platform.color}55` }
                       }
-                      onClick={() => isConnected ? setConnectDialog(platform) : setConsentPlatform(platform)}
+                      onClick={() => {
+                        if (platform.id === "facebook") {
+                          setFbImportOpen(true); resetFbImport();
+                        } else if (isConnected) {
+                          setConnectDialog(platform);
+                        } else {
+                          setConsentPlatform(platform);
+                        }
+                      }}
                       disabled={oauthLoading === platform.id}
                     >
                       <Link2 className="w-3 h-3" />
-                      {isConnected ? "Reconnect" : `Connect ${platform.name}`}
+                      {platform.id === "facebook"
+                        ? "Import Saves"
+                        : isConnected ? "Reconnect" : `Connect ${platform.name}`
+                      }
                     </Button>
 
                     {isConnected && platform.syncSupport && (
@@ -464,8 +533,18 @@ export default function SocialConnectPanel() {
                       </Button>
                     )}
 
-                    {/* No-API platforms: show extension link instead */}
-                    {isConnected && !platform.syncSupport && (
+                    {/* No-API platforms: Facebook → Import JSON; Allrecipes → extension tip */}
+                    {!platform.syncSupport && platform.id === "facebook" && (
+                      <Button
+                        size="sm"
+                        className="flex-1 h-8 gap-1.5 text-[10px] font-semibold"
+                        style={{ background: "linear-gradient(135deg,#1877F2,#1877F2cc)", color: "white" }}
+                        onClick={() => { setFbImportOpen(true); resetFbImport(); }}
+                      >
+                        <Upload className="w-3 h-3" /> Import from JSON
+                      </Button>
+                    )}
+                    {!platform.syncSupport && platform.id !== "facebook" && (
                       <Button
                         size="sm"
                         variant="outline"
@@ -709,6 +788,164 @@ export default function SocialConnectPanel() {
           </p>
         </div>
       )}
+
+      {/* ── Facebook JSON Import Dialog ──────────────────────────────── */}
+      <Dialog open={fbImportOpen} onOpenChange={(v) => { setFbImportOpen(v); if (!v) resetFbImport(); }}>
+        <DialogContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED] max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <span className="text-xl">👤</span>
+              <span>Import Facebook Saves</span>
+            </DialogTitle>
+            <DialogDescription className="text-[#8B8D97] text-xs leading-relaxed">
+              Facebook's API no longer provides access to personal saves. Use the <strong className="text-[#E8E8ED]">Klip4ge Facebook Scraper</strong> tool on your computer to export your saves, then upload the JSON here.
+            </DialogDescription>
+          </DialogHeader>
+
+          {!fbImportResult ? (
+            <div className="space-y-4 pt-2">
+              {/* Step 1 — Download scraper */}
+              <div className="p-3 rounded-xl bg-[#1877F2]/8 border border-[#1877F2]/20">
+                <p className="text-xs font-semibold text-[#1877F2] mb-2 flex items-center gap-1.5">
+                  <Download className="w-3.5 h-3.5" /> Step 1 — Get the Scraper Tool
+                </p>
+                <p className="text-[11px] text-[#8B8D97] mb-3 leading-snug">
+                  Download and run the Klip4ge Facebook Scraper on your computer. It opens a browser window where you log in manually — your password is never stored or sent anywhere.
+                </p>
+                <div className="bg-[#0F1117] rounded-lg p-2.5 text-[10px] font-mono text-[#10B981] space-y-1">
+                  <p># 1. Clone or download the scraper</p>
+                  <p className="text-[#8B8D97]">git clone https://github.com/CStep-EA/clipforge</p>
+                  <p>cd clipforge/tools/fb-saves-scraper</p>
+                  <p></p>
+                  <p># 2. Install &amp; run</p>
+                  <p>npm install &amp;&amp; npm run setup</p>
+                  <p>npm run scrape</p>
+                  <p></p>
+                  <p className="text-[#8B8D97]"># → exports facebook-saves.json</p>
+                </div>
+              </div>
+
+              {/* Step 2 — Upload JSON */}
+              <div className="p-3 rounded-xl bg-[#9370DB]/8 border border-[#9370DB]/20">
+                <p className="text-xs font-semibold text-[#9370DB] mb-2 flex items-center gap-1.5">
+                  <Upload className="w-3.5 h-3.5" /> Step 2 — Upload Your JSON
+                </p>
+                {!fbPreview ? (
+                  <div
+                    className="border-2 border-dashed border-[#2A2D3A] rounded-xl p-6 text-center cursor-pointer hover:border-[#9370DB]/40 transition-colors"
+                    onClick={() => fbFileRef.current?.click()}
+                    onDragOver={e => e.preventDefault()}
+                    onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) { fbFileRef.current.files = e.dataTransfer.files; handleFbFileSelect({ target: fbFileRef.current }); } }}
+                  >
+                    <FolderOpen className="w-8 h-8 text-[#8B8D97] mx-auto mb-2" />
+                    <p className="text-sm text-[#8B8D97]">Click to select <strong className="text-[#E8E8ED]">facebook-saves.json</strong></p>
+                    <p className="text-[10px] text-[#8B8D97]/60 mt-1">or drag &amp; drop it here</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {/* Preview */}
+                    <div className="bg-[#0F1117] rounded-lg p-3 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-semibold text-[#E8E8ED]">
+                          📄 {fbPreview.fileName}
+                        </p>
+                        <button onClick={resetFbImport} className="text-[#8B8D97] hover:text-red-400">
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      <div className="flex gap-4 text-[11px] text-[#8B8D97]">
+                        <span className="text-[#00BFFF] font-bold">{fbPreview.total}</span> saves
+                        {fbPreview.collections.length > 0 && (
+                          <span>{fbPreview.collections.length} collection{fbPreview.collections.length !== 1 ? "s" : ""}</span>
+                        )}
+                      </div>
+                      {fbPreview.collections.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {fbPreview.collections.slice(0, 6).map(c => (
+                            <span key={c} className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#2A2D3A] text-[#8B8D97]">{c}</span>
+                          ))}
+                          {fbPreview.collections.length > 6 && (
+                            <span className="text-[9px] text-[#8B8D97]">+{fbPreview.collections.length - 6} more</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Options */}
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-[#1A1D27]">
+                      <div>
+                        <p className="text-xs text-[#E8E8ED]">Create boards per collection</p>
+                        <p className="text-[10px] text-[#8B8D97]">Adds a SharedBoard for each Facebook collection</p>
+                      </div>
+                      <Switch checked={fbCreateBoards} onCheckedChange={setFbCreateBoards} />
+                    </div>
+                  </div>
+                )}
+
+                <input
+                  ref={fbFileRef}
+                  type="file"
+                  accept=".json,application/json"
+                  className="hidden"
+                  onChange={handleFbFileSelect}
+                />
+              </div>
+
+              {/* Import button */}
+              {fbPreview && (
+                <Button
+                  onClick={handleFbImport}
+                  disabled={fbImporting}
+                  className="w-full h-11 font-semibold gap-2"
+                  style={{ background: "linear-gradient(135deg,#1877F2,#9370DB)", color: "white" }}
+                >
+                  {fbImporting
+                    ? <><Loader2 className="w-4 h-4 animate-spin" /> Importing {fbPreview.total} saves…</>
+                    : <><Upload className="w-4 h-4" /> Import {fbPreview.total} saves into Klip4ge</>
+                  }
+                </Button>
+              )}
+            </div>
+          ) : (
+            /* Results screen */
+            <div className="space-y-4 pt-2">
+              <div className="p-4 rounded-xl bg-emerald-500/8 border border-emerald-500/20 text-center">
+                <CheckSquare className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+                <p className="font-semibold text-emerald-400 text-lg">{fbImportResult.imported} saves imported!</p>
+                {fbImportResult.skipped > 0 && (
+                  <p className="text-[11px] text-[#8B8D97] mt-1">{fbImportResult.skipped} already in vault (skipped)</p>
+                )}
+                {fbImportResult.boards_created > 0 && (
+                  <p className="text-[11px] text-emerald-400/80 mt-1">✓ {fbImportResult.boards_created} collection board{fbImportResult.boards_created !== 1 ? "s" : ""} created</p>
+                )}
+              </div>
+              {fbImportResult.errors?.length > 0 && (
+                <div className="p-3 rounded-lg bg-red-500/8 border border-red-500/20">
+                  <p className="text-xs text-red-400 font-semibold mb-1">Minor issues ({fbImportResult.errors.length})</p>
+                  {fbImportResult.errors.slice(0, 3).map((e, i) => (
+                    <p key={i} className="text-[10px] text-[#8B8D97]">{e}</p>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => { setFbImportOpen(false); resetFbImport(); }}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white h-10"
+                >
+                  Done
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={resetFbImport}
+                  className="h-10 border-[#2A2D3A] text-[#8B8D97]"
+                >
+                  Import More
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Consent Modal */}
       <ConsentModal

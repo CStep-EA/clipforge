@@ -1,0 +1,7 @@
+node_modules/
+fb-session.json
+facebook-saves.json
+facebook-saves-partial.json
+debug-saved-page.png
+error-screenshot.png
+*.png
