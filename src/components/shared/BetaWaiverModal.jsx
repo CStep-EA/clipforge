@@ -1,37 +1,81 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+const STORAGE_KEY = "cf-beta-waiver";
 
 export default function BetaWaiverModal() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const accepted = localStorage.getItem("cf-beta-waiver");
-    if (!accepted) setVisible(true);
+    try {
+      const accepted = localStorage.getItem(STORAGE_KEY);
+      if (!accepted) setVisible(true);
+    } catch {
+      // localStorage unavailable — don't block the user
+    }
   }, []);
 
-  const accept = () => {
-    localStorage.setItem("cf-beta-waiver", "accepted-" + new Date().toISOString());
+  // ── Lock body scroll while modal is open ────────────────────────────────
+  useEffect(() => {
+    if (!visible) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
+  }, [visible]);
+
+  // ── Escape key closes (and accepts) the modal ────────────────────────────
+  useEffect(() => {
+    if (!visible) return;
+    const handler = (e) => { if (e.key === "Escape") accept(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [visible]);
+
+  const accept = useCallback(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, "accepted-" + new Date().toISOString());
+    } catch { /* ignore */ }
     setVisible(false);
-  };
+  }, []);
 
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-[#1A1D27] border border-[#F59E0B]/40 rounded-2xl shadow-2xl p-6 space-y-5">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#F59E0B]/15 border border-[#F59E0B]/30 flex items-center justify-center flex-shrink-0">
+    <div
+      className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="beta-waiver-title"
+      // Clicking the backdrop also dismisses
+      onClick={(e) => { if (e.target === e.currentTarget) accept(); }}
+    >
+      <div
+        className="w-full max-w-md bg-[#1A1D27] border border-[#F59E0B]/40 rounded-2xl shadow-2xl p-6 space-y-5"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#F59E0B]/15 border border-[#F59E0B]/30 flex items-center justify-center flex-shrink-0 mt-0.5">
             <AlertTriangle className="w-5 h-5 text-[#F59E0B]" />
           </div>
-          <div>
-            <h2 className="font-bold text-[#E8E8ED]">Alpha / Beta Software</h2>
+          <div className="flex-1">
+            <h2 id="beta-waiver-title" className="font-bold text-[#E8E8ED]">Alpha / Beta Software</h2>
             <p className="text-xs text-[#8B8D97]">Tester Agreement — please read before continuing</p>
           </div>
+          {/* X close button — keyboard accessible */}
+          <button
+            onClick={accept}
+            className="p-1.5 rounded-lg text-[#8B8D97] hover:text-[#E8E8ED] hover:bg-[#2A2D3A] transition-colors flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF]"
+            aria-label="Dismiss"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
+        {/* Body */}
         <div className="space-y-3 text-sm text-[#8B8D97] leading-relaxed">
           <p>Klip4ge is <strong className="text-[#F59E0B]">pre-release software</strong>. By continuing you agree:</p>
           <ul className="space-y-1.5 pl-4">
@@ -50,15 +94,21 @@ export default function BetaWaiverModal() {
           </ul>
           <p className="text-xs">
             Full details in our{" "}
-            <Link to={createPageUrl("Terms")} className="text-[#00BFFF] hover:underline" onClick={accept}>
+            <Link
+              to={createPageUrl("Terms")}
+              className="text-[#00BFFF] hover:underline"
+              onClick={accept}
+            >
               Terms of Service
             </Link>.
           </p>
         </div>
 
+        {/* CTA */}
         <Button
           onClick={accept}
-          className="w-full bg-[#F59E0B] hover:bg-[#F59E0B]/90 text-black font-bold gap-2"
+          className="w-full bg-[#F59E0B] hover:bg-[#F59E0B]/90 text-black font-bold gap-2 min-h-[44px]"
+          aria-label="Accept beta terms and continue to Klip4ge"
         >
           <CheckCircle2 className="w-4 h-4" />
           I Understand — Continue to Klip4ge
