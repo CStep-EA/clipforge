@@ -57,8 +57,10 @@ export default function SignIn() {
     setLoading(provider);
     setError("");
     try {
-      // base44.auth.redirectToLogin() handles all OAuth flows internally
-      await base44.auth.redirectToLogin({ provider });
+      // loginWithProvider sends the user to the OAuth provider page.
+      // redirectToLogin() expects a string URL, NOT an object — passing an
+      // object would serialize as "[object Object]" and break the return URL.
+      base44.auth.loginWithProvider(provider, window.location.href);
     } catch (err) {
       setError("Something went wrong. Please try again.");
       setLoading(null);

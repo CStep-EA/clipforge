@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, Flame, Globe2, TrendingUp, ArrowRight, Check, Clock, Globe, Mail, Play, Leaf, Hammer, Heart } from "lucide-react";
+import { Rocket, Flame, Globe2, TrendingUp, ArrowRight, Check, Clock, Globe, Mail, Play, Leaf, Hammer, Heart, Tag } from "lucide-react";
 import PublicFooter from "@/components/shared/PublicFooter";
 
 const futureIntegrations = [
@@ -34,6 +34,21 @@ const futureIntegrations = [
 ];
 
 const platformIntegrations = [
+  {
+    category: "Deals & Coupons",
+    color: "#22C55E",
+    icon: Tag,
+    platforms: [
+      {
+        title: "Groupon",
+        description: "Save local deals, experiences, travel packages, and restaurant offers from Groupon directly into your ClipForge boards — never lose a deal before it expires.",
+      },
+      {
+        title: "RetailMeNot",
+        description: "Save coupon codes, cashback offers, and promo deals from RetailMeNot alongside your saved products for instant checkout savings.",
+      },
+    ],
+  },
   {
     category: "Gardening Inspiration",
     color: "#10B981",
@@ -124,6 +139,7 @@ const phases = [
       "Community boards (public curation)",
       "Creator monetization tools",
       "Affiliate link detection & tracking",
+      "Deals & coupon integrations (Groupon, RetailMeNot)",
       "Family premium growth features",
       "Partner integrations (Ticketmaster, Spotify)",
     ],

@@ -366,7 +366,9 @@ export default function SocialConnectPanel() {
     setOauthLoading(platform.id);
     setConnectDialog(null);
     try {
-      await base44.auth.redirectToLogin({ provider: platform.id });
+      // Use loginWithProvider — redirectToLogin() expects a string URL, not an object.
+      // Passing { provider: platform.id } would produce an "[object Object]" return URL.
+      base44.auth.loginWithProvider(platform.id, window.location.href);
 
       const existing = getConnection(platform.id);
       if (existing) {
