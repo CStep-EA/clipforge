@@ -43,11 +43,11 @@ const PLATFORMS = [
     emoji: "📸",
     color: "#E1306C",
     description: "Sync saved posts & collections",
-    note: "Connect via Instagram Graph API. Syncs your Saved posts (requires Business/Creator account for full access).",
+    note: "Uses Instagram API with Instagram Login (OAuth 2.0). Personal & Business accounts both supported.",
     categoryHint: "deals, products, travel, gift ideas",
     categoryFocus: ["deal", "product", "travel", "gift_idea"],
     syncSupport: true,
-    syncNote: "Syncs posts you've saved on Instagram. Requires a Business or Creator account connected to a Facebook Page for full Saved posts access.",
+    syncNote: "Syncs media you've saved on Instagram. Requires the ClipForge app to be approved in your Meta developer account.",
   },
   {
     id: "facebook",
@@ -57,12 +57,11 @@ const PLATFORMS = [
     description: "Import saved posts & marketplace finds",
     // ⚠️ Facebook's Graph API does NOT expose the user's personal Saved posts
     // endpoint to third-party apps (/me/saved is deprecated / restricted).
-    // We use the Pages + share flow instead, and guide users to manual export.
-    note: "Facebook restricts third-party access to personal Saved posts. After connecting, you can manually paste post URLs or use the browser extension to save from Facebook.",
+    note: "Facebook restricts third-party access to personal Saved posts. After connecting, use the browser extension to save from Facebook.",
     categoryHint: "deals, events, gift ideas, articles",
     categoryFocus: ["deal", "event", "gift_idea", "article"],
-    syncSupport: false,                 // <-- honest: no automatic sync possible
-    syncNote: "Facebook's API no longer allows apps to read personal Saved posts (deprecated in 2018). You can still save individual posts using the Klip4ge browser extension while browsing Facebook.",
+    syncSupport: false,
+    syncNote: "Facebook's API no longer allows apps to read personal Saved posts (deprecated 2018). Use the Klip4ge browser extension to save posts directly from Facebook — no API needed.",
     apiLimitation: true,
   },
   {
@@ -71,11 +70,11 @@ const PLATFORMS = [
     emoji: "📌",
     color: "#E60023",
     description: "Import boards & saved pins",
-    note: "Connect with Pinterest OAuth. Syncs your boards and saved pins automatically.",
+    note: "OAuth 2.0 with PKCE via Pinterest API v5. Syncs your boards and pins automatically.",
     categoryHint: "recipes, travel, gift ideas, articles",
     categoryFocus: ["recipe", "travel", "gift_idea", "article"],
     syncSupport: true,
-    syncNote: "Syncs your Pinterest boards and all pins within them.",
+    syncNote: "Syncs your Pinterest boards and all pins within them. Requires Standard API access from Pinterest.",
   },
   {
     id: "twitter",
@@ -83,11 +82,12 @@ const PLATFORMS = [
     emoji: "𝕏",
     color: "#1A1A1A",
     description: "Import bookmarks & saved tweets",
-    note: "Connect via X OAuth 2.0. Syncs your Bookmarks (requires Basic API tier or above).",
+    note: "OAuth 2.0 with PKCE via X API v2. Note: Bookmark access requires X Basic API tier ($100/mo).",
     categoryHint: "deals, articles, events",
     categoryFocus: ["deal", "article", "event"],
     syncSupport: true,
-    syncNote: "Syncs your X/Twitter Bookmarks. Note: X Basic API access is required — free tier has limited bookmark access.",
+    syncNote: "Syncs your X/Twitter Bookmarks. ⚠️ X's Bookmarks API requires Basic API tier — the free tier does not include bookmark access. Connection will succeed but sync may return 0 items on free tier.",
+    apiLimitation: true,  // honest about the tier requirement
   },
   {
     id: "tiktok",
@@ -95,11 +95,11 @@ const PLATFORMS = [
     emoji: "🎵",
     color: "#69C9D0",
     description: "Sync favorited videos & collections",
-    note: "Connect with TikTok OAuth. Syncs your Liked Videos and Collections.",
+    note: "TikTok Login Kit v2 with PKCE. Syncs your liked videos.",
     categoryHint: "recipes, products, events",
     categoryFocus: ["recipe", "product", "event"],
     syncSupport: true,
-    syncNote: "Syncs your TikTok liked videos and saved collections.",
+    syncNote: "Syncs your TikTok liked videos via the official TikTok for Developers API.",
   },
   {
     id: "web",
@@ -107,7 +107,7 @@ const PLATFORMS = [
     emoji: "🛍️",
     color: "#F56400",
     description: "Save favorites & gift ideas from Etsy",
-    note: "Connect with Etsy OAuth. Imports your favorited listings and shops.",
+    note: "Etsy Open API v3 with PKCE OAuth. Imports your favorited listings.",
     categoryHint: "gift ideas, products",
     categoryFocus: ["gift_idea", "product"],
     syncSupport: true,
@@ -119,7 +119,7 @@ const PLATFORMS = [
     emoji: "🍽️",
     color: "#D62300",
     description: "Import saved recipes from Allrecipes",
-    note: "Enter your Allrecipes username. We sync your Recipe Box via their public feed.",
+    note: "Allrecipes has no public API. Use the Klip4ge browser extension to save recipes as you browse.",
     categoryHint: "recipes",
     categoryFocus: ["recipe"],
     syncSupport: false,
@@ -285,7 +285,7 @@ export default function SocialConnectPanel() {
   };
 
   const queryClient = useQueryClient();
-  const { isPremium: isPremiumPlan, isFamily } = useSubscription();
+  const { isPremium: isPremiumPlan, isFamily, user } = useSubscription();
   const isPremiumUser = isPremiumPlan || isFamily;
 
   const toggleAutoSync = (platformId, value) => {
@@ -369,36 +369,81 @@ export default function SocialConnectPanel() {
   };
 
   // ── OAuth connect ─────────────────────────────────────────────────────────
-  // NOTE: These social platforms do NOT use Base44 user auth (loginWithProvider /
-  // redirectToLogin). We write a SocialConnection record to mark the user's intent
-  // and surface the correct workflow (extension, manual import, or future server sync).
+  // Initiates a real PKCE OAuth 2.0 flow for platforms that support it.
+  // For platforms with no OAuth API (Facebook, Allrecipes), marks as "added"
+  // with no real token — the browser extension handles actual saves.
+  //
+  // PKCE flow:
+  //   1. Call socialOAuthInit server function → { authorize_url, code_verifier }
+  //   2. Store code_verifier in sessionStorage (needed for callback)
+  //   3. Redirect browser to authorize_url
+  //   4. OAuthCallback.jsx receives code + state, calls socialOAuthCallback
+  //   5. socialOAuthCallback stores real access_token in SocialConnection
+  //
+  // Non-OAuth platforms (Facebook, Allrecipes) just record intent in DB.
   const handleOAuthConnect = async (platform) => {
     setOauthLoading(platform.id);
     setConnectDialog(null);
-    try {
-      const existing = getConnection(platform.id);
-      if (existing) {
-        await base44.entities.SocialConnection.update(existing.id, {
-          connected: true,
-          confirmed: true,
-          last_synced: new Date().toISOString(),
-        });
-      } else {
-        await base44.entities.SocialConnection.create({
-          platform: platform.id,
-          connected: true,
-          confirmed: true,
-        });
-      }
-      queryClient.invalidateQueries({ queryKey: ["socialConnections"] });
-      if (platform.syncSupport) {
-        toast.success(`${platform.name} connected! Hit "Sync Now" to import your saves.`);
-      } else {
+
+    // Platforms with no real OAuth API — just mark as added
+    const NO_OAUTH_PLATFORMS = new Set(["facebook", "manual"]);
+
+    if (NO_OAUTH_PLATFORMS.has(platform.id)) {
+      try {
+        const existing = getConnection(platform.id);
+        if (existing) {
+          await base44.entities.SocialConnection.update(existing.id, {
+            connected: true, confirmed: true,
+          });
+        } else {
+          await base44.entities.SocialConnection.create({
+            platform: platform.id, connected: true, confirmed: true,
+          });
+        }
+        queryClient.invalidateQueries({ queryKey: ["socialConnections"] });
         toast.success(`${platform.name} added — use the browser extension or manual import to save content.`);
+      } catch {
+        toast.error(`Couldn't update ${platform.name}. Please try again.`);
+      } finally {
+        setOauthLoading(null);
       }
-    } catch {
-      toast.error(`Couldn't connect ${platform.name}. Please try again.`);
-    } finally {
+      return;
+    }
+
+    // Real OAuth platforms: initiate PKCE flow via server function
+    try {
+      const res = await base44.functions.invoke("socialOAuthInit", {
+        platform: platform.id,
+        userEmail: user?.email || "",
+      });
+
+      const data = res?.data;
+
+      if (data?.needs_config) {
+        // Credentials not configured — be honest, don't fake a connection
+        toast.error(
+          `${platform.name} isn't set up yet — API credentials need to be configured. ${data.notes || ""}`,
+          { duration: 6000 }
+        );
+        setOauthLoading(null);
+        return;
+      }
+
+      if (!data?.authorize_url || !data?.code_verifier) {
+        throw new Error(data?.error || "OAuth init returned no redirect URL");
+      }
+
+      // Store PKCE verifier for OAuthCallback.jsx to retrieve
+      sessionStorage.setItem("cf_oauth_verifier", data.code_verifier);
+      sessionStorage.setItem("cf_oauth_platform", platform.id);
+      sessionStorage.setItem("cf_oauth_type", "social");
+
+      // Redirect to provider OAuth page — page will navigate away
+      window.location.href = data.authorize_url;
+
+    } catch (err) {
+      console.error(`[handleOAuthConnect:${platform.id}]`, err);
+      toast.error(`Couldn't start ${platform.name} connection: ${err?.message || "Please try again."}`);
       setOauthLoading(null);
     }
   };

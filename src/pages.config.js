@@ -61,6 +61,7 @@ import Friends from './pages/Friends';
 import Integrations from './pages/Integrations';
 import LaunchRoadmap from './pages/LaunchRoadmap';
 import MarketingLaunch from './pages/MarketingLaunch';
+import OAuthCallback from './pages/OAuthCallback';
 import Onboarding from './pages/Onboarding';
 import Pricing from './pages/Pricing';
 import Privacy from './pages/Privacy';
@@ -93,6 +94,7 @@ export const PAGES = {
     "Integrations": Integrations,
     "LaunchRoadmap": LaunchRoadmap,
     "MarketingLaunch": MarketingLaunch,
+    "OAuthCallback": OAuthCallback,
     "Onboarding": Onboarding,
     "Pricing": Pricing,
     "Privacy": Privacy,

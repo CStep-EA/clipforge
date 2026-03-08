@@ -111,21 +111,40 @@ export default function StreamingPlatformsPanel() {
   const handleOAuthRedirect = async (platform) => {
     setConnecting(prev => ({ ...prev, [platform.id]: true }));
     try {
+      // Apple Podcasts has no OAuth — record connection directly
+      if (platform.id === "apple_podcasts") {
+        await _recordConnection(platform);
+        return;
+      }
+
       const res = await base44.functions.invoke("streamingOAuthInit", {
         platform: platform.id,
-        userEmail: user.email,
+        userEmail: user?.email,
       });
-      if (res?.data?.redirect_url) {
-        // Server returned a real OAuth redirect URL — go there
-        window.location.href = res.data.redirect_url;
+
+      const data = res?.data;
+
+      if (data?.needs_config) {
+        toast.error(
+          `${platform.name} isn't configured yet — API credentials need to be set up.`,
+          { duration: 6000 }
+        );
+        return;
+      }
+
+      if (data?.redirect_url) {
+        // Store type in sessionStorage so OAuthCallback knows which function to call
+        sessionStorage.setItem("cf_oauth_type", "streaming");
+        sessionStorage.setItem("cf_oauth_platform", platform.id);
+        // streaming uses server-side secret for PKCE, no client verifier needed
+        sessionStorage.setItem("cf_oauth_verifier", "streaming_no_pkce");
+        window.location.href = data.redirect_url;
       } else {
-        // Server function exists but returned no URL — fall back to DB record
+        // Function returned no URL — fall back gracefully
         await _recordConnection(platform);
       }
     } catch {
-      // Server function not yet implemented (404/500) — record connection in DB
-      // so the UI shows "Connected" and Sync Now becomes available.
-      // Full OAuth will be wired up when the backend function is deployed.
+      // Server function missing or errored — fall back to DB record
       await _recordConnection(platform);
     } finally {
       setConnecting(prev => ({ ...prev, [platform.id]: false }));

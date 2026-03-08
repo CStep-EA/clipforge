@@ -16,7 +16,7 @@ import {
   CheckCircle2, AlertCircle, Users2, Lock, Tag, Clock,
   ChevronDown, ChevronUp, ShieldCheck
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 
@@ -58,6 +58,12 @@ export default function Integrations() {
   const [amazonDraft, setAmazonDraft] = useState({ access_key: "", secret_key: "", tag: "" });
   const queryClient = useQueryClient();
   const { plan, isPro } = useSubscription();
+  const [searchParams] = useSearchParams();
+
+  // Determine initial tab — from ?tab= query param (set by OAuthCallback on return)
+  const defaultTab = searchParams.get("tab") || "streaming";
+  // Show a success banner if returning from OAuth callback
+  const connectedPlatform = searchParams.get("connected");
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
@@ -185,6 +191,18 @@ export default function Integrations() {
 
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6">
+
+      {/* OAuth return success banner */}
+      {connectedPlatform && (
+        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-3">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <p className="text-sm text-emerald-300">
+            <strong className="capitalize">{connectedPlatform.replace("_", " ")}</strong> connected successfully!
+            Hit <strong>Sync Now</strong> to import your saves.
+          </p>
+        </div>
+      )}
+
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -221,7 +239,7 @@ export default function Integrations() {
         </div>
       )}
 
-      <Tabs defaultValue="streaming">
+      <Tabs defaultValue={defaultTab}>
          <TabsList className="bg-[#1A1D27] border border-[#2A2D3A] flex-wrap h-auto gap-1 p-1">
            <TabsTrigger value="friends" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
              👥 Find Friends
