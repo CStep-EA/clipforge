@@ -60,7 +60,7 @@ export default function OAuthCallback() {
       }
 
       // Parse state
-      let stateData: { platform?: string; userEmail?: string; type?: string } = {};
+      let stateData = {};
       try {
         stateData = JSON.parse(atob(stateB64 || ""));
       } catch {
