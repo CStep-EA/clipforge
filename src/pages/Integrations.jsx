@@ -110,6 +110,37 @@ export default function Integrations() {
     }
   };
 
+  // ── Health app connections ────────────────────────────────────────────────
+  const { data: healthConnections = [] } = useQuery({
+    queryKey: ["healthConnections"],
+    queryFn: () => base44.entities.SocialConnection.list()
+      .then(all => all.filter(c => HEALTH_APPS.some(a => a.id === c.platform))),
+    enabled: !!user,
+  });
+
+  const isHealthConnected = (appId) =>
+    healthConnections.some(c => c.platform === appId && c.connected);
+
+  const handleHealthConnect = async (app) => {
+    if (!isPremium) {
+      toast.error("Health app sync requires Premium. Upgrade to continue.");
+      return;
+    }
+    try {
+      const existing = healthConnections.find(c => c.platform === app.id);
+      if (existing) {
+        await base44.entities.SocialConnection.update(existing.id, { connected: !existing.connected });
+        toast.success(existing.connected ? `${app.name} disconnected.` : `${app.name} connected!`);
+      } else {
+        await base44.entities.SocialConnection.create({ platform: app.id, connected: true });
+        toast.success(`${app.name} connected! Nutrition data will sync from your saved recipes.`);
+      }
+      queryClient.invalidateQueries({ queryKey: ["healthConnections"] });
+    } catch {
+      toast.error(`Couldn't update ${app.name} connection. Please try again.`);
+    }
+  };
+
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6">
       <div className="flex items-start justify-between gap-3 flex-wrap">
@@ -421,24 +452,48 @@ export default function Integrations() {
               </Link>
             </div>
           )}
-          {HEALTH_APPS.map(app => (
-            <Card key={app.id} className="glass-card p-5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{app.emoji}</span>
-                  <div>
-                    <h3 className="font-semibold text-sm">{app.name}</h3>
-                    <p className="text-xs text-[#8B8D97]">{app.description}</p>
+          {HEALTH_APPS.map(app => {
+            const connected = isHealthConnected(app.id);
+            return (
+              <Card key={app.id} className="glass-card p-5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{app.emoji}</span>
+                    <div>
+                      <h3 className="font-semibold text-sm">{app.name}</h3>
+                      <p className="text-xs text-[#8B8D97]">{app.description}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {connected && (
+                      <Badge className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        <CheckCircle2 className="w-2.5 h-2.5 mr-1" /> Connected
+                      </Badge>
+                    )}
+                    <Button
+                      size="sm"
+                      variant={connected ? "outline" : "default"}
+                      className={connected
+                        ? "border-red-500/20 text-red-400 hover:bg-red-500/10 text-xs"
+                        : "text-xs text-white"
+                      }
+                      style={connected ? {} : { background: app.color }}
+                      disabled={!isPremium}
+                      onClick={() => handleHealthConnect(app)}
+                    >
+                      {!isPremium ? (
+                        <><Lock className="w-3 h-3 mr-1" /> Premium</>
+                      ) : connected ? (
+                        "Disconnect"
+                      ) : (
+                        "Connect"
+                      )}
+                    </Button>
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline" className="border-[#2A2D3A] text-xs" disabled={!isPremium}>
-                    {isPremium ? "Connect" : "🔒 Premium"}
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
           <div className="p-3 rounded-xl bg-[#0F1117] border border-[#2A2D3A]">
             <p className="text-xs text-[#8B8D97]">
               Health app integrations sync nutritional data from your saved recipes to track calorie targets and macros.

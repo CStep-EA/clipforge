@@ -81,32 +81,51 @@ export default function FindFriendsPanel({ user, plan = "free" }) {
     setConsentPlatform(null);
     setSearching(platform.id);
 
-    // Simulate follower discovery via AI (real OAuth would use a backend function)
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Generate 4-6 realistic mock friend suggestions for a user who connected their ${platform.name} account to a content-saving app called Klip4ge. Return JSON with an array of objects: { name, username, platform, mutual_interests, email_hint }. Use plausible but fictional names.`,
-      response_json_schema: {
-        type: "object",
-        properties: {
-          suggestions: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                name: { type: "string" },
-                username: { type: "string" },
-                platform: { type: "string" },
-                mutual_interests: { type: "array", items: { type: "string" } },
-                email_hint: { type: "string" },
+    // 1. Persist a SocialConnection record so isConnectedSocial() returns true
+    //    and the social panel also reflects the linked state.
+    try {
+      const existing = socialConns.find(s => s.platform === platform.id);
+      if (!existing) {
+        await base44.entities.SocialConnection.create({
+          platform: platform.id,
+          connected: true,
+        });
+        qc.invalidateQueries({ queryKey: ["social_connections"] });
+      }
+    } catch (e) {
+      console.warn("[FindFriends] SocialConnection record failed:", e);
+    }
+
+    // 2. Discover friend suggestions via AI (real OAuth follower sync is a backend task)
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Generate 4-6 realistic mock friend suggestions for a user who connected their ${platform.name} account to a content-saving app called Klip4ge. Return JSON with an array of objects: { name, username, platform, mutual_interests, email_hint }. Use plausible but fictional names.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            suggestions: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  username: { type: "string" },
+                  platform: { type: "string" },
+                  mutual_interests: { type: "array", items: { type: "string" } },
+                  email_hint: { type: "string" },
+                }
               }
             }
           }
         }
-      }
-    });
-
-    setDiscovered(prev => ({ ...prev, [platform.id]: result.suggestions || [] }));
-    setSearching(null);
-    toast.success(`Found ${result.suggestions?.length || 0} potential friends on ${platform.name}!`);
+      });
+      setDiscovered(prev => ({ ...prev, [platform.id]: result.suggestions || [] }));
+      toast.success(`Found ${result.suggestions?.length || 0} potential friends on ${platform.name}!`);
+    } catch {
+      toast.info(`${platform.name} connected! Friend suggestions coming soon.`);
+    } finally {
+      setSearching(null);
+    }
   };
 
   const sendInvite = async (suggestion, platformId) => {
