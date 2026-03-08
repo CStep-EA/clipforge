@@ -13,7 +13,8 @@ import FindFriendsPanel from "@/components/friends/FindFriendsPanel";
 import { useSubscription } from "@/components/shared/useSubscription";
 import {
   ShoppingBag, Utensils, ExternalLink,
-  CheckCircle2, AlertCircle, Users2, Lock
+  CheckCircle2, AlertCircle, Users2, Lock, Tag, Clock,
+  ChevronDown, ChevronUp, ShieldCheck
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -25,24 +26,43 @@ const HEALTH_APPS = [
   { id: "cronometer", name: "Cronometer", emoji: "📊", color: "#F97316", description: "Detailed nutrition from recipes" },
 ];
 
+const SHOPPING_COMING_SOON = [
+  {
+    id: "groupon",
+    name: "Groupon",
+    emoji: "🤑",
+    color: "#53A318",
+    description: "Save local deals, experiences & restaurant offers",
+    eta: "Q3 2026",
+    reason: "Direct deal-save API in development. Will auto-save expiring Groupon deals to your ClipForge vault.",
+  },
+  {
+    id: "retailmenot",
+    name: "RetailMeNot",
+    emoji: "🏷️",
+    color: "#E8272B",
+    description: "Save coupon codes & cashback offers alongside your saved products",
+    eta: "Q3 2026",
+    reason: "Coupon sync API planned. Will pair saved product URLs with matching coupon codes automatically.",
+  },
+];
+
 export default function Integrations() {
   const [user, setUser] = useState(null);
   const [savedKeys, setSavedKeys] = useState({});
+  // Amazon: track whether user has enabled it, and whether advanced mode is open
+  const [amazonEnabled, setAmazonEnabled] = useState(false);
+  const [amazonAdvanced, setAmazonAdvanced] = useState(false);
   const queryClient = useQueryClient();
   const { plan, isPro } = useSubscription();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
-    // SECURITY FIX: API keys must NOT be stored in localStorage (plaintext,
-    // accessible to any JS on the page). Load from Base44 UserPreferences entity.
-    // localStorage fallback is kept read-only for migration of existing keys,
-    // then immediately migrated and cleared.
     const migrateLocalStorageKeys = async () => {
       const legacyRaw = localStorage.getItem("cf_api_keys");
       if (legacyRaw) {
         try {
           const legacy = JSON.parse(legacyRaw);
-          // Migrate non-empty keys to Base44 (server-side encrypted storage)
           const hasKeys = Object.values(legacy).some(v => v && v.trim());
           if (hasKeys) {
             await base44.entities.UserPreferences?.upsert?.({ api_keys: legacy }).catch(() => {});
@@ -51,17 +71,17 @@ export default function Integrations() {
         } catch { /* ignore parse errors */ }
       }
     };
-    // Load current keys from Base44 entity
     base44.entities.UserPreferences?.list?.()
       .then(prefs => {
         const keys = prefs?.[0]?.api_keys || {};
         setSavedKeys(keys);
+        setAmazonEnabled(!!keys.amazon_access_key);
         migrateLocalStorageKeys();
       })
       .catch(() => {
-        // Graceful fallback: legacy localStorage (read + migrate)
         const legacy = JSON.parse(localStorage.getItem("cf_api_keys") || "{}");
         setSavedKeys(legacy);
+        setAmazonEnabled(!!legacy.amazon_access_key);
         migrateLocalStorageKeys();
       });
   }, []);
@@ -71,14 +91,23 @@ export default function Integrations() {
   const saveKey = (key, value) => {
     const updated = { ...savedKeys, [key]: value };
     setSavedKeys(updated);
-    // SECURITY FIX: Persist to Base44 server-side storage, not localStorage.
-    // Keys are encrypted at rest by Base44 and never exposed to other JS.
     base44.entities.UserPreferences?.upsert?.({ api_keys: updated }).catch(() => {
-      // Silent fail — key is in state, will sync on next successful call
       console.warn("[Klip4ge] Could not persist API key server-side");
     });
-    // Explicitly ensure no plaintext key lands in localStorage
     localStorage.removeItem("cf_api_keys");
+  };
+
+  const handleAmazonToggle = () => {
+    if (amazonEnabled) {
+      // Disable: clear keys
+      const updated = { ...savedKeys, amazon_access_key: "", amazon_secret_key: "", amazon_tag: "" };
+      setSavedKeys(updated);
+      setAmazonEnabled(false);
+      base44.entities.UserPreferences?.upsert?.({ api_keys: updated }).catch(() => {});
+      toast.success("Amazon Product Lookup disabled");
+    } else {
+      setAmazonAdvanced(true);
+    }
   };
 
   return (
@@ -163,61 +192,143 @@ export default function Integrations() {
         </TabsContent>
 
         <TabsContent value="shopping" className="mt-4 space-y-4">
+          {/* ── Amazon Product Lookup — consumer-friendly UI ────────────────── */}
           <Card className="glass-card p-5">
-            <div className="flex items-center gap-3 mb-4">
-              <ShoppingBag className="w-5 h-5 text-[#F59E0B]" />
-              <h3 className="font-semibold">Amazon Product Lookup</h3>
-              <Badge variant="outline" className="text-[10px] border-[#F59E0B]/30 text-[#F59E0B]">Amazon PA-API</Badge>
-            </div>
-            <p className="text-xs text-[#8B8D97] mb-4">
-              Automatically fetch product details, prices, and deals for items you save. Requires an Amazon Product Advertising API key.
-            </p>
-            <div className="space-y-3">
-              <div>
-                <Label className="text-xs text-[#8B8D97]">Access Key ID</Label>
-                <Input
-                  type="password"
-                  placeholder="AKIAIOSFODNN7EXAMPLE"
-                  value={savedKeys.amazon_access_key || ""}
-                  onChange={(e) => saveKey("amazon_access_key", e.target.value)}
-                  className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED]"
-                />
+            <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🛒</span>
+                <div>
+                  <h3 className="font-semibold text-sm">Amazon Product Lookup</h3>
+                  <p className="text-[10px] text-[#8B8D97]">
+                    Auto-fetch prices & details for Amazon links you save
+                  </p>
+                </div>
               </div>
-              <div>
-                <Label className="text-xs text-[#8B8D97]">Secret Key</Label>
-                <Input
-                  type="password"
-                  placeholder="wJalrXUtnFEMI/K7MDENG"
-                  value={savedKeys.amazon_secret_key || ""}
-                  onChange={(e) => saveKey("amazon_secret_key", e.target.value)}
-                  className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED]"
-                />
-              </div>
-              <div>
-                <Label className="text-xs text-[#8B8D97]">Associate Tag</Label>
-                <Input
-                  placeholder="yourtag-20"
-                  value={savedKeys.amazon_tag || ""}
-                  onChange={(e) => saveKey("amazon_tag", e.target.value)}
-                  className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED]"
-                />
-              </div>
-              <div className="flex gap-2">
-                <Button size="sm" className="bg-[#F59E0B] text-white" onClick={() => {
-                  saveKey("amazon_access_key", savedKeys.amazon_access_key || "");
-                  toast.success("Amazon API keys saved securely");
-                }}>
-                  {savedKeys.amazon_access_key ? <><CheckCircle2 className="w-3 h-3 mr-1" /> Saved</> : "Save Keys"}
+              <div className="flex items-center gap-2">
+                {amazonEnabled && (
+                  <Badge className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <CheckCircle2 className="w-2.5 h-2.5 mr-1" /> Active
+                  </Badge>
+                )}
+                <Button
+                  size="sm"
+                  className={amazonEnabled
+                    ? "h-8 text-xs border border-[#2A2D3A] bg-transparent text-[#8B8D97] hover:text-red-400 hover:border-red-400/40"
+                    : "h-8 text-xs bg-[#F59E0B] text-white hover:bg-[#F59E0B]/90"
+                  }
+                  onClick={handleAmazonToggle}
+                >
+                  {amazonEnabled ? "Disconnect" : "Connect Amazon"}
                 </Button>
-                <a href="https://affiliate-program.amazon.com/assoc_credentials/home" target="_blank" rel="noopener noreferrer">
-                  <Button size="sm" variant="outline" className="border-[#2A2D3A] text-xs gap-1">
-                    Get API Keys <ExternalLink className="w-3 h-3" />
-                  </Button>
-                </a>
               </div>
             </div>
+
+            {/* What it does — plain English */}
+            {!amazonEnabled && (
+              <div className="mt-3 p-3 rounded-xl bg-[#0F1117] border border-[#2A2D3A] space-y-2">
+                <p className="text-xs text-[#8B8D97] leading-relaxed">
+                  When you save an Amazon link, ClipForge automatically pulls the
+                  <strong className="text-[#E8E8ED]"> product title, price, image, and deals </strong>
+                  — so your saves stay up to date without any extra work.
+                </p>
+                <div className="flex items-center gap-1.5 text-[10px] text-[#8B8D97]">
+                  <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                  Your API credentials are encrypted and never visible to other users.
+                </div>
+              </div>
+            )}
+
+            {/* Active state summary */}
+            {amazonEnabled && !amazonAdvanced && (
+              <div className="mt-3 p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 space-y-1">
+                <p className="text-xs text-emerald-400 flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3" /> Connected — product lookup is running
+                </p>
+                <p className="text-[10px] text-[#8B8D97]">
+                  Amazon prices and details are auto-fetched when you save a product link.
+                </p>
+                <button
+                  onClick={() => setAmazonAdvanced(true)}
+                  className="text-[10px] text-[#00BFFF] hover:underline flex items-center gap-1 mt-1"
+                >
+                  <ChevronDown className="w-3 h-3" /> Edit credentials
+                </button>
+              </div>
+            )}
+
+            {/* Advanced credentials panel — hidden by default */}
+            {amazonAdvanced && (
+              <div className="mt-4 space-y-3 border-t border-[#2A2D3A] pt-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold text-[#E8E8ED]">API Credentials</p>
+                  <button
+                    onClick={() => setAmazonAdvanced(false)}
+                    className="text-[10px] text-[#8B8D97] hover:text-[#E8E8ED] flex items-center gap-1"
+                  >
+                    <ChevronUp className="w-3 h-3" /> Hide
+                  </button>
+                </div>
+                <p className="text-[10px] text-[#8B8D97] leading-relaxed">
+                  Get your free credentials at{" "}
+                  <a
+                    href="https://affiliate-program.amazon.com/assoc_credentials/home"
+                    target="_blank" rel="noopener noreferrer"
+                    className="text-[#F59E0B] hover:underline"
+                  >
+                    Amazon Associates ↗
+                  </a>
+                  {" "}(requires a free Amazon Associate account).
+                </p>
+                <div>
+                  <Label className="text-xs text-[#8B8D97]">Access Key ID</Label>
+                  <Input
+                    type="password"
+                    placeholder="Paste your Access Key ID"
+                    value={savedKeys.amazon_access_key || ""}
+                    onChange={(e) => saveKey("amazon_access_key", e.target.value)}
+                    className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-sm"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs text-[#8B8D97]">Secret Key</Label>
+                  <Input
+                    type="password"
+                    placeholder="Paste your Secret Key"
+                    value={savedKeys.amazon_secret_key || ""}
+                    onChange={(e) => saveKey("amazon_secret_key", e.target.value)}
+                    className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-sm"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs text-[#8B8D97]">Associate Tag <span className="text-[#8B8D97]/60">(e.g. yourtag-20)</span></Label>
+                  <Input
+                    placeholder="yourtag-20"
+                    value={savedKeys.amazon_tag || ""}
+                    onChange={(e) => saveKey("amazon_tag", e.target.value)}
+                    className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-sm"
+                  />
+                </div>
+                <Button
+                  size="sm"
+                  className="bg-[#F59E0B] text-white w-full h-10 text-sm font-semibold"
+                  onClick={() => {
+                    if (!savedKeys.amazon_access_key || !savedKeys.amazon_secret_key || !savedKeys.amazon_tag) {
+                      toast.error("Please fill in all three fields.");
+                      return;
+                    }
+                    saveKey("amazon_access_key", savedKeys.amazon_access_key);
+                    setAmazonEnabled(true);
+                    setAmazonAdvanced(false);
+                    toast.success("Amazon Product Lookup is now active!");
+                  }}
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 mr-2" /> Save & Enable Amazon Lookup
+                </Button>
+              </div>
+            )}
           </Card>
 
+          {/* ── Ticketmaster ───────────────────────────────────────────────── */}
           <Card className="glass-card p-5">
             <div className="flex items-center gap-3 mb-3">
               <span className="text-xl">🎟️</span>
@@ -234,6 +345,49 @@ export default function Integrations() {
               <p className="text-[10px] text-[#8B8D97] mt-1">Events page now queries Ticketmaster live data automatically.</p>
             </div>
           </Card>
+
+          {/* ── Coming Soon: Groupon + RetailMeNot ─────────────────────────── */}
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <Tag className="w-4 h-4 text-[#22C55E]" />
+              <h3 className="text-sm font-bold uppercase tracking-widest text-[#8B8D97]">Coming Soon — Deals & Coupons</h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {SHOPPING_COMING_SOON.map((item) => (
+                <Card
+                  key={item.id}
+                  className="glass-card p-5 relative overflow-hidden"
+                  style={{ borderColor: `${item.color}25` }}
+                >
+                  <div className="absolute inset-0 opacity-[0.03] rounded-2xl" style={{ background: item.color }} />
+                  <div className="relative">
+                    <div className="flex items-start justify-between gap-2 mb-3">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{item.emoji}</span>
+                        <div>
+                          <h4 className="font-semibold text-sm text-[#E8E8ED]">{item.name}</h4>
+                          <p className="text-[10px] text-[#8B8D97]">{item.description}</p>
+                        </div>
+                      </div>
+                      <Badge className="text-[9px] bg-[#2A2D3A] text-[#8B8D97] border-[#2A2D3A] whitespace-nowrap shrink-0">
+                        <Clock className="w-2.5 h-2.5 mr-1" />{item.eta}
+                      </Badge>
+                    </div>
+                    <p className="text-[10px] text-[#8B8D97] leading-relaxed mb-3">{item.reason}</p>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled
+                      className="w-full h-8 text-xs border-dashed"
+                      style={{ borderColor: `${item.color}40`, color: item.color, opacity: 0.7 }}
+                    >
+                      Coming {item.eta}
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
         </TabsContent>
 
         <TabsContent value="recipes" className="mt-4">

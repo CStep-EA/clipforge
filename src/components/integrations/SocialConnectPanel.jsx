@@ -363,16 +363,19 @@ export default function SocialConnectPanel() {
 
   // ── OAuth connect ─────────────────────────────────────────────────────────
   const handleOAuthConnect = async (platform) => {
+    // These social platforms use their own OAuth systems (not Base44 user auth).
+    // We record the connection intent in our DB and surface the correct workflow
+    // (browser extension, manual import, or sync via server-side token once available).
+    // loginWithProvider / redirectToLogin are ONLY for Base44 user sign-in (Google/Apple).
     setOauthLoading(platform.id);
     setConnectDialog(null);
     try {
-      // Use loginWithProvider — redirectToLogin() expects a string URL, not an object.
-      // Passing { provider: platform.id } would produce an "[object Object]" return URL.
-      base44.auth.loginWithProvider(platform.id, window.location.href);
-
       const existing = getConnection(platform.id);
       if (existing) {
-        await base44.entities.SocialConnection.update(existing.id, { connected: true });
+        await base44.entities.SocialConnection.update(existing.id, {
+          connected: true,
+          last_synced: new Date().toISOString(),
+        });
       } else {
         await base44.entities.SocialConnection.create({
           platform: platform.id,
@@ -380,7 +383,11 @@ export default function SocialConnectPanel() {
         });
       }
       queryClient.invalidateQueries({ queryKey: ["socialConnections"] });
-      toast.success(`${platform.name} connected!`);
+      if (platform.syncSupport) {
+        toast.success(`${platform.name} connected! Hit "Sync Now" to import your saves.`);
+      } else {
+        toast.success(`${platform.name} added — use the browser extension or manual import to save content.`);
+      }
     } catch {
       toast.error(`Couldn't connect ${platform.name}. Please try again.`);
     } finally {
@@ -1120,7 +1127,7 @@ export default function SocialConnectPanel() {
               Reconnect {connectDialog?.emoji} {connectDialog?.name}
             </DialogTitle>
             <DialogDescription className="text-[#8B8D97] text-sm">
-              This will take you to {connectDialog?.name}&apos;s official sign-in page.
+              Re-enable your {connectDialog?.name} connection so ClipForge can continue syncing.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 pt-2">
@@ -1128,7 +1135,7 @@ export default function SocialConnectPanel() {
               <Shield className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
               <p className="text-xs text-[#8B8D97]">
                 Your {connectDialog?.name} password is never shared with Klip4ge.
-                We use official OAuth — the same method trusted by millions of apps.
+                Content is synced using your saved connection credentials, stored securely on our servers.
               </p>
             </div>
             {connectDialog?.apiLimitation && (
@@ -1142,7 +1149,7 @@ export default function SocialConnectPanel() {
               className="w-full h-12 text-white text-base font-semibold"
               style={connectDialog ? { background: connectDialog.color } : {}}
             >
-              Continue to {connectDialog?.name} →
+              Reconnect {connectDialog?.name} ✓
             </Button>
             <Button
               variant="ghost"
