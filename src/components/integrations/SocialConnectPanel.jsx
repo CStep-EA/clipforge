@@ -82,12 +82,14 @@ const PLATFORMS = [
     emoji: "𝕏",
     color: "#1A1A1A",
     description: "Import bookmarks & saved tweets",
-    note: "OAuth 2.0 with PKCE via X API v2. Note: Bookmark access requires X Basic API tier ($100/mo).",
+    note: "OAuth 2.0 with PKCE via X API v2. Bookmark sync requires X Basic API tier ($100/mo) — ClipForge covers this cost for Premium subscribers.",
     categoryHint: "deals, articles, events",
     categoryFocus: ["deal", "article", "event"],
     syncSupport: true,
-    syncNote: "Syncs your X/Twitter Bookmarks. ⚠️ X's Bookmarks API requires Basic API tier — the free tier does not include bookmark access. Connection will succeed but sync may return 0 items on free tier.",
-    apiLimitation: true,  // honest about the tier requirement
+    syncNote: "Syncs your X/Twitter Bookmarks via X API v2. The Bookmarks endpoint requires X Basic API tier — available exclusively to ClipForge Premium & Family plan subscribers.",
+    apiLimitation: true,   // honest about the tier requirement
+    requiresPremium: true, // ClipForge gates this behind Premium because the X API costs $100/mo
+    premiumNote: "X's Bookmarks API costs $100/mo on the X Basic tier. ClipForge absorbs this cost for Premium subscribers — connect your X account free as part of your Premium plan.",
   },
   {
     id: "tiktok",
@@ -385,6 +387,21 @@ export default function SocialConnectPanel() {
     setOauthLoading(platform.id);
     setConnectDialog(null);
 
+    // ── Premium gate for platforms that require a paid ClipForge plan ───────
+    // Twitter/X requires X Basic API tier ($100/mo). ClipForge covers this
+    // cost for Premium/Family subscribers only.
+    if (platform.requiresPremium && !isPremiumUser) {
+      setOauthLoading(null);
+      toast.error(
+        `${platform.name} sync is a Premium feature — upgrade to unlock bookmark import.`,
+        {
+          duration: 5000,
+          action: { label: "Upgrade →", onClick: () => window.location.href = "/Pricing" },
+        }
+      );
+      return;
+    }
+
     // Platforms with no real OAuth API — just mark as added
     const NO_OAUTH_PLATFORMS = new Set(["facebook", "manual"]);
 
@@ -476,6 +493,17 @@ export default function SocialConnectPanel() {
       toast.info(`${platform.name} sync is not available — see the info below the card.`);
       return;
     }
+    // Premium gate: re-check before every sync attempt
+    if (platform.requiresPremium && !isPremiumUser) {
+      toast.error(
+        `${platform.name} sync is a Premium feature. Upgrade to continue.`,
+        {
+          duration: 5000,
+          action: { label: "Upgrade →", onClick: () => window.location.href = "/Pricing" },
+        }
+      );
+      return;
+    }
     setSyncing(platform.id);
     const conn = getConnection(platform.id);
     try {
@@ -529,6 +557,8 @@ export default function SocialConnectPanel() {
             // from showing a false "Connected" badge.
             const isConnected = isLiveConnection(platform.id);
             const recentSync = syncResults[platform.id];
+            // Premium gate flag: is this platform locked for the current user?
+            const isLockedForUser = !!platform.requiresPremium && !isPremiumUser;
             return (
               <motion.div
                 key={platform.id}
@@ -537,8 +567,8 @@ export default function SocialConnectPanel() {
                 transition={{ delay: i * 0.06 }}
               >
                 <Card
-                  className="glass-card p-4 relative overflow-hidden flex flex-col"
-                  style={{ borderColor: isConnected ? `${platform.color}50` : "" }}
+                  className={`glass-card p-4 relative overflow-hidden flex flex-col${isLockedForUser ? " opacity-80" : ""}`}
+                  style={{ borderColor: isConnected ? `${platform.color}50` : isLockedForUser ? "#9370DB40" : "" }}
                 >
                   {isConnected && (
                     <div
@@ -556,25 +586,52 @@ export default function SocialConnectPanel() {
                           <h3 className="font-semibold text-sm">{platform.name}</h3>
                           {isConnected
                             ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                            : <WifiOff className="w-3 h-3 text-[#8B8D97]" />
+                            : isLockedForUser
+                              ? <Lock className="w-3 h-3 text-[#9370DB]" />
+                              : <WifiOff className="w-3 h-3 text-[#8B8D97]" />
                           }
                         </div>
                         <p className="text-[10px] text-[#8B8D97]">{platform.description}</p>
                       </div>
                     </div>
-                    {isConnected && (
+                    {isConnected ? (
                       <Badge className="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 gap-1 shrink-0">
                         <CheckCircle2 className="w-2.5 h-2.5" /> Connected
                       </Badge>
-                    )}
+                    ) : isLockedForUser ? (
+                      <Badge className="text-[9px] bg-[#9370DB]/10 text-[#9370DB] border border-[#9370DB]/30 gap-1 shrink-0 whitespace-nowrap">
+                        <Lock className="w-2.5 h-2.5" /> Premium
+                      </Badge>
+                    ) : null}
                   </div>
 
-                  {/* API limitation warning — shown upfront */}
+                  {/* API limitation / premium info banner */}
                   {platform.apiLimitation && (
-                    <div className="mb-3 p-2 rounded-lg bg-amber-500/8 border border-amber-500/20 flex gap-1.5">
-                      <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
-                      <p className="text-[10px] text-amber-300 leading-snug">{platform.syncNote}</p>
-                    </div>
+                    isLockedForUser ? (
+                      // Free user: explain why it's locked and upsell
+                      <div className="mb-3 p-2.5 rounded-lg bg-[#9370DB]/8 border border-[#9370DB]/25 flex gap-1.5">
+                        <Lock className="w-3.5 h-3.5 text-[#9370DB] shrink-0 mt-0.5" />
+                        <div className="space-y-1">
+                          <p className="text-[10px] text-[#9370DB] font-semibold leading-snug">
+                            Premium feature
+                          </p>
+                          <p className="text-[10px] text-[#8B8D97] leading-snug">
+                            {platform.premiumNote ||
+                              `${platform.name} sync requires a paid API tier. Upgrade to Premium to unlock.`}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      // Premium user: show value-prop (we cover the cost) instead of warning
+                      <div className="mb-3 p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/15 flex gap-1.5">
+                        <Shield className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <p className="text-[10px] text-emerald-300 leading-snug">
+                          {platform.premiumNote
+                            ? <>✓ Included in your Premium plan — {platform.premiumNote.split(" — ")[1] || "bookmark sync enabled."}</>
+                            : <>✓ Included in your plan</>}
+                        </p>
+                      </div>
+                    )
                   )}
 
                   {/* ── Chrome Extension Real-Time Sync Status ─────────── */}
@@ -756,7 +813,23 @@ export default function SocialConnectPanel() {
                         }
                         Disconnect
                       </Button>
+                    ) : isLockedForUser ? (
+                      /* ── Locked: premium required — show upgrade CTA ──────── */
+                      <Button
+                        size="sm"
+                        className="flex-1 text-xs h-8 font-semibold gap-1.5"
+                        style={{
+                          background: "linear-gradient(135deg,#9370DB,#7B5EA7)",
+                          color: "white",
+                          boxShadow: "0 0 14px #9370DB44",
+                        }}
+                        onClick={() => window.location.href = "/Pricing"}
+                      >
+                        <Lock className="w-3 h-3" />
+                        Upgrade to Unlock
+                      </Button>
                     ) : (
+                      /* ── Unlocked: normal OAuth connect ─────────────────────── */
                       <Button
                         size="sm"
                         className="flex-1 text-xs h-8 font-semibold gap-1.5 animate-btn-pulse"
@@ -772,7 +845,7 @@ export default function SocialConnectPanel() {
                       </Button>
                     )}
 
-                    {isConnected && platform.syncSupport && (
+                    {isConnected && platform.syncSupport && !isLockedForUser && (
                       <Button
                         size="sm"
                         variant="outline"
