@@ -134,9 +134,9 @@ export default function OAuthCallback() {
         navigate(createPageUrl("Integrations") + `?connected=${plt}&tab=${tab}`);
       }, 2000);
 
-    } catch (err: unknown) {
+    } catch (err) {
       console.error("[OAuthCallback]", err);
-      const msg = (err as Error).message || "Unknown error";
+      const msg = (err && err.message) || "Unknown error";
       setErrorMsg(msg.includes("not configured")
         ? "This platform's API credentials haven't been configured yet. Contact the app admin."
         : `Connection failed: ${msg}`
