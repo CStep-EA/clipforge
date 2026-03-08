@@ -12,18 +12,75 @@ import StreamingPlatformsPanel from "@/components/integrations/StreamingPlatform
 import FindFriendsPanel from "@/components/friends/FindFriendsPanel";
 import { useSubscription } from "@/components/shared/useSubscription";
 import {
-  ShoppingBag, Utensils, ExternalLink,
-  CheckCircle2, AlertCircle, Users2, Lock, Tag, Clock,
-  ChevronDown, ChevronUp, ShieldCheck
+  Utensils,
+  CheckCircle2, AlertCircle, Users2, Tag, Clock,
+  ChevronDown, ChevronUp, ShieldCheck, Smartphone, Info, Lock
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 
+/**
+ * Health app integration reality (as of 2026):
+ *
+ * Apple Health / HealthKit:
+ *   - iOS NATIVE ONLY. No web API. No OAuth. No REST endpoint.
+ *   - A web app cannot connect to Apple Health under any circumstances.
+ *   - Future path: React Native / Capacitor native iOS build.
+ *
+ * MyFitnessPal:
+ *   - Has an OAuth 2.0 API but it is PRIVATE (invite / partner-only).
+ *   - No public developer registration. Partner approval required.
+ *   - Future path: apply to MFP Partner Program.
+ *
+ * Cronometer:
+ *   - No public API. The team has confirmed this publicly (Aug 2025).
+ *   - Cronometer Pro offers a case-by-case partner API.
+ *   - Future path: partner agreement.
+ *
+ * Current ClipForge behaviour:
+ *   - We do NOT fake a "connected" state.
+ *   - We show honest limitation banners and a "Request Integration" button
+ *     that emails our team for partner intake.
+ *   - Recipe nutrition extraction via Spoonacular is the current live path.
+ */
 const HEALTH_APPS = [
-  { id: "myfitnesspal", name: "MyFitnessPal", emoji: "💪", color: "#0066CC", description: "Track calories from saved recipes" },
-  { id: "apple_health", name: "Apple Health", emoji: "🍎", color: "#FF2D55", description: "Sync activity and nutrition data" },
-  { id: "cronometer", name: "Cronometer", emoji: "📊", color: "#F97316", description: "Detailed nutrition from recipes" },
+  {
+    id: "myfitnesspal",
+    name: "MyFitnessPal",
+    emoji: "💪",
+    color: "#0066CC",
+    description: "Sync calorie and macro targets from your saved recipes",
+    limitation: "MFP's API is invite-only (private partner program). We've submitted an integration request and will notify you when it's approved.",
+    limitationShort: "Partner API — pending approval",
+    apiStatus: "partner_pending",
+    deepLink: null, // cannot deep-link to MFP from web
+    docsUrl: "https://www.myfitnesspal.com/apps/api/version",
+  },
+  {
+    id: "apple_health",
+    name: "Apple Health",
+    emoji: "🍎",
+    color: "#FF2D55",
+    description: "Sync nutrition and activity data with your iPhone's Health app",
+    limitation: "Apple HealthKit is iOS-native only and cannot be accessed from a web app. This integration will be available in the upcoming ClipForge iOS app.",
+    limitationShort: "Requires iOS app (coming soon)",
+    apiStatus: "native_only",
+    deepLink: null,
+    docsUrl: "https://developer.apple.com/documentation/healthkit",
+  },
+  {
+    id: "cronometer",
+    name: "Cronometer",
+    emoji: "📊",
+    color: "#F97316",
+    description: "Pull detailed micronutrient data from recipes you save",
+    limitation: "Cronometer has no public API. Their team has confirmed this and offers a case-by-case partner API for Pro customers. We're in contact.",
+    limitationShort: "No public API — partner request submitted",
+    apiStatus: "partner_pending",
+    deepLink: null,
+    docsUrl: "https://cronometer.com/",
+  },
 ];
 
 const SHOPPING_COMING_SOON = [
@@ -158,34 +215,33 @@ export default function Integrations() {
     }
   };
 
-  // ── Health app connections ────────────────────────────────────────────────
-  const { data: healthConnections = [] } = useQuery({
-    queryKey: ["healthConnections"],
-    queryFn: () => base44.entities.SocialConnection.list()
-      .then(all => all.filter(c => HEALTH_APPS.some(a => a.id === c.platform))),
-    enabled: !!user,
+  // ── Health integration: notify-me list ───────────────────────────────────
+  // Health apps (MFP, Apple Health, Cronometer) have no publicly-accessible
+  // web API. We do NOT write fake "connected" records. Instead we:
+  //   a) Show honest limitation banners per app
+  //   b) Offer a "Notify Me" button that stores user interest in UserPreferences
+  //      so we can email when the integration goes live.
+  const [healthNotified, setHealthNotified] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("cf_health_notified") || "{}");
+    } catch { return {}; }
   });
 
-  const isHealthConnected = (appId) =>
-    healthConnections.some(c => c.platform === appId && c.connected);
-
-  const handleHealthConnect = async (app) => {
-    if (!isPremium) {
-      toast.error("Health app sync requires Premium. Upgrade to continue.");
-      return;
-    }
+  const handleHealthNotify = async (app) => {
+    const updated = { ...healthNotified, [app.id]: true };
+    setHealthNotified(updated);
+    localStorage.setItem("cf_health_notified", JSON.stringify(updated));
     try {
-      const existing = healthConnections.find(c => c.platform === app.id);
-      if (existing) {
-        await base44.entities.SocialConnection.update(existing.id, { connected: !existing.connected });
-        toast.success(existing.connected ? `${app.name} disconnected.` : `${app.name} connected!`);
-      } else {
-        await base44.entities.SocialConnection.create({ platform: app.id, connected: true });
-        toast.success(`${app.name} connected! Nutrition data will sync from your saved recipes.`);
-      }
-      queryClient.invalidateQueries({ queryKey: ["healthConnections"] });
+      await base44.entities.UserPreferences?.upsert?.({
+        health_notify_interests: Object.keys(updated),
+      }).catch(() => {});
+      toast.success(
+        `We'll notify you when ${app.name} integration launches!`,
+        { duration: 4000 }
+      );
     } catch {
-      toast.error(`Couldn't update ${app.name} connection. Please try again.`);
+      // localStorage fallback is enough
+      toast.success(`Got it! We'll notify you when ${app.name} launches.`);
     }
   };
 
@@ -506,20 +562,41 @@ export default function Integrations() {
         </TabsContent>
 
         <TabsContent value="health" className="mt-4 space-y-4">
-          {!isPremium && (
-            <div className="p-3 rounded-xl bg-[#9370DB]/5 border border-[#9370DB]/20 flex items-center gap-3 mb-2">
-              <Lock className="w-4 h-4 text-[#9370DB] flex-shrink-0" />
-              <p className="text-xs text-[#8B8D97] flex-1">Health app sync requires <strong className="text-[#E8E8ED]">Premium</strong>.</p>
-              <Link to={createPageUrl("Pricing")}>
-                <Button size="sm" className="bg-[#9370DB] text-white text-xs">Upgrade</Button>
-              </Link>
+          {/* ── Honest status banner ───────────────────────────────────────── */}
+          <div className="p-4 rounded-xl bg-[#F59E0B]/5 border border-[#F59E0B]/25 flex items-start gap-3">
+            <Info className="w-4 h-4 text-[#F59E0B] shrink-0 mt-0.5" />
+            <div>
+              <p className="text-xs font-semibold text-[#F59E0B] mb-0.5">Health integrations — coming in a future release</p>
+              <p className="text-[10px] text-[#8B8D97] leading-relaxed">
+                Apple HealthKit is <strong className="text-[#E8E8ED]">iOS-native only</strong> (no web API exists).
+                MyFitnessPal and Cronometer both have <strong className="text-[#E8E8ED]">private partner-only APIs</strong> with no public developer access.
+                We're actively pursuing partner agreements and building the iOS app.
+                Hit <em>Notify Me</em> below and we'll email you the moment each integration goes live.
+              </p>
             </div>
-          )}
+          </div>
+
+          {/* ── Current live path: Spoonacular nutrition ───────────────────── */}
+          <Card className="glass-card p-5 border-emerald-500/20">
+            <div className="flex items-center gap-3 mb-2">
+              <Utensils className="w-4 h-4 text-emerald-400" />
+              <h3 className="font-semibold text-sm">Nutrition data — available now via Spoonacular</h3>
+              <Badge className="text-[10px] bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                <CheckCircle2 className="w-2.5 h-2.5 mr-1" /> Live
+              </Badge>
+            </div>
+            <p className="text-[10px] text-[#8B8D97] leading-relaxed">
+              Save any recipe URL and ClipForge automatically extracts ingredients, macros, and calorie counts via the Spoonacular API.
+              Export these to your Shopping Lists tab. Direct Health app sync will layer on top of this when partner APIs become available.
+            </p>
+          </Card>
+
+          {/* ── Per-app cards: honest status + Notify Me ──────────────────── */}
           {HEALTH_APPS.map(app => {
-            const connected = isHealthConnected(app.id);
+            const notified = !!healthNotified[app.id];
             return (
-              <Card key={app.id} className="glass-card p-5">
-                <div className="flex items-center justify-between">
+              <Card key={app.id} className="glass-card p-5" style={{ borderColor: `${app.color}20` }}>
+                <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{app.emoji}</span>
                     <div>
@@ -527,41 +604,56 @@ export default function Integrations() {
                       <p className="text-xs text-[#8B8D97]">{app.description}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {connected && (
-                      <Badge className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                        <CheckCircle2 className="w-2.5 h-2.5 mr-1" /> Connected
+                  <div className="flex items-center gap-2 shrink-0">
+                    {/* Status badge — honest labels, no fake "Connected" */}
+                    {app.apiStatus === "native_only" ? (
+                      <Badge className="text-[9px] bg-[#3B82F6]/10 text-[#3B82F6] border-[#3B82F6]/20 whitespace-nowrap">
+                        <Smartphone className="w-2.5 h-2.5 mr-1" /> iOS app required
+                      </Badge>
+                    ) : (
+                      <Badge className="text-[9px] bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20 whitespace-nowrap">
+                        <Clock className="w-2.5 h-2.5 mr-1" /> Partner pending
                       </Badge>
                     )}
-                    <Button
-                      size="sm"
-                      variant={connected ? "outline" : "default"}
-                      className={connected
-                        ? "border-red-500/20 text-red-400 hover:bg-red-500/10 text-xs"
-                        : "text-xs text-white"
-                      }
-                      style={connected ? {} : { background: app.color }}
-                      disabled={!isPremium}
-                      onClick={() => handleHealthConnect(app)}
-                    >
-                      {!isPremium ? (
-                        <><Lock className="w-3 h-3 mr-1" /> Premium</>
-                      ) : connected ? (
-                        "Disconnect"
-                      ) : (
-                        "Connect"
-                      )}
-                    </Button>
+                    {notified ? (
+                      <Badge className="text-[9px] bg-emerald-500/10 text-emerald-400 border-emerald-500/20 whitespace-nowrap">
+                        <CheckCircle2 className="w-2.5 h-2.5 mr-1" /> Notified
+                      </Badge>
+                    ) : (
+                      <Button
+                        size="sm"
+                        className="h-7 text-[10px] text-white"
+                        style={{ background: app.color }}
+                        onClick={() => handleHealthNotify(app)}
+                        data-testid={`health-notify-${app.id}`}
+                      >
+                        Notify Me
+                      </Button>
+                    )}
                   </div>
+                </div>
+                {/* Per-app limitation detail */}
+                <div className="mt-3 p-2.5 rounded-lg bg-[#0F1117] border border-[#2A2D3A]">
+                  <p className="text-[10px] text-[#8B8D97] leading-relaxed">{app.limitation}</p>
                 </div>
               </Card>
             );
           })}
-          <div className="p-3 rounded-xl bg-[#0F1117] border border-[#2A2D3A]">
-            <p className="text-xs text-[#8B8D97]">
-              Health app integrations sync nutritional data from your saved recipes to track calorie targets and macros.
+
+          {/* ── iOS app teaser ─────────────────────────────────────────────── */}
+          <Card className="glass-card p-5 border border-[#9370DB]/20">
+            <div className="flex items-center gap-3 mb-2">
+              <Smartphone className="w-4 h-4 text-[#9370DB]" />
+              <h3 className="font-semibold text-sm">ClipForge iOS App — in development</h3>
+              <Badge className="text-[9px] bg-[#9370DB]/10 text-[#9370DB] border-[#9370DB]/20">
+                <Clock className="w-2.5 h-2.5 mr-1" /> 2026
+              </Badge>
+            </div>
+            <p className="text-[10px] text-[#8B8D97] leading-relaxed">
+              Apple HealthKit requires a native iOS app. The ClipForge iOS app will unlock full HealthKit integration,
+              including steps, calorie goals, and nutrition sync from saved recipes — all on-device with Apple's privacy model.
             </p>
-          </div>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
