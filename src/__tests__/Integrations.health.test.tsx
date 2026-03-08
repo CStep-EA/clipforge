@@ -155,6 +155,39 @@ describe('Health tab — renders all app cards', () => {
       await screen.findByText(/clipforge ios app.*in development/i)
     ).toBeInTheDocument();
   });
+
+  it('renders "View full health roadmap" link to LaunchRoadmap', async () => {
+    renderIntegrations();
+    expect(
+      await screen.findByText(/view full health roadmap/i)
+    ).toBeInTheDocument();
+  });
+});
+
+// ── 1b. Tab trigger label ─────────────────────────────────────────────────────
+
+describe('Health tab — tab trigger label', () => {
+  it('health tab trigger shows a "Soon" badge', async () => {
+    renderIntegrations(''); // render without pre-selecting health so we can see tab list
+    expect(await screen.findByText('Soon')).toBeInTheDocument();
+  });
+
+  it('premium banner mentions health is "coming soon" not "requires Premium"', async () => {
+    // Override subscription to free so the banner renders
+    jest.spyOn(
+      require('@/components/shared/useSubscription'),
+      'useSubscription'
+    ).mockReturnValue({ isPro: false, plan: 'free', isPremiumPlan: false, isFamily: false });
+
+    renderIntegrations('');
+    await screen.findByText('Soon');
+    const bannerText = document.body.textContent || '';
+    expect(bannerText).not.toMatch(/health require.*Premium/i);
+    expect(bannerText).toMatch(/health integrations are.*coming soon/i);
+
+    // Restore
+    jest.restoreAllMocks();
+  });
 });
 
 // ── 2. NO fake connection UI ───────────────────────────────────────────────────

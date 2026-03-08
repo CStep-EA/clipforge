@@ -288,7 +288,7 @@ export default function Integrations() {
       {!isPremium && (
         <div className="p-3 rounded-xl bg-[#9370DB]/5 border border-[#9370DB]/20 flex items-center gap-3">
           <AlertCircle className="w-4 h-4 text-[#9370DB] flex-shrink-0" />
-          <p className="text-xs text-[#8B8D97] flex-1">Social, recipe & shopping connections are <strong className="text-[#E8E8ED]">free</strong>. Streaming & health require <strong className="text-[#E8E8ED]">Premium</strong>.</p>
+          <p className="text-xs text-[#8B8D97] flex-1">Social, recipe & shopping connections are <strong className="text-[#E8E8ED]">free</strong>. Streaming requires <strong className="text-[#E8E8ED]">Premium</strong>. Health integrations are <strong className="text-[#E8E8ED]">coming soon</strong>.</p>
           <Button size="sm" className="bg-[#9370DB] text-white text-xs" asChild>
             <a href="/Pricing">Upgrade</a>
           </Button>
@@ -312,8 +312,11 @@ export default function Integrations() {
            <TabsTrigger value="recipes" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
              Recipes
            </TabsTrigger>
-           <TabsTrigger value="health" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs">
-             Health
+           <TabsTrigger value="health" className="data-[state=active]:bg-[#00BFFF]/10 data-[state=active]:text-[#00BFFF] text-xs flex items-center gap-1.5">
+             🏥 Health
+             <span className="text-[8px] font-bold uppercase tracking-wide bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30 rounded-full px-1.5 py-0.5 leading-none">
+               Soon
+             </span>
            </TabsTrigger>
          </TabsList>
 
@@ -653,6 +656,9 @@ export default function Integrations() {
               Apple HealthKit requires a native iOS app. The ClipForge iOS app will unlock full HealthKit integration,
               including steps, calorie goals, and nutrition sync from saved recipes — all on-device with Apple's privacy model.
             </p>
+            <Link to={createPageUrl("LaunchRoadmap")} className="inline-flex items-center gap-1.5 text-[10px] text-[#00BFFF] hover:underline mt-2">
+              View full health roadmap →
+            </Link>
           </Card>
         </TabsContent>
       </Tabs>

@@ -3,10 +3,18 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, Flame, Globe2, TrendingUp, ArrowRight, Check, Clock, Globe, Mail, Play, Leaf, Hammer, Heart, Tag } from "lucide-react";
+import { Rocket, Flame, Globe2, TrendingUp, ArrowRight, Check, Clock, Globe, Mail, Play, Leaf, Hammer, Heart, Tag, Activity } from "lucide-react";
 import PublicFooter from "@/components/shared/PublicFooter";
 
 const futureIntegrations = [
+  {
+    icon: Activity,
+    color: "#EC4899",
+    title: "Health & Fitness Apps",
+    subtitle: "MyFitnessPal · Apple Health · Cronometer",
+    description: "Sync calorie targets and macro breakdowns from your saved recipes directly into MyFitnessPal, Apple Health, and Cronometer. Requires iOS app (HealthKit) and partner API approvals — actively in progress.",
+    eta: "2026–2027",
+  },
   {
     icon: Globe,
     color: "#00BFFF",
@@ -34,6 +42,28 @@ const futureIntegrations = [
 ];
 
 const platformIntegrations = [
+  {
+    category: "Health & Fitness",
+    color: "#EC4899",
+    icon: Activity,
+    platforms: [
+      {
+        title: "MyFitnessPal",
+        description: "Auto-export ingredient lists and nutritional data from saved recipes to your MFP diary. Pending partner API approval — integration request submitted to MyFitnessPal.",
+        eta: "TBD (Partner API)",
+      },
+      {
+        title: "Apple Health (HealthKit)",
+        description: "Sync nutrition and activity goals from your saved content directly to the iPhone Health app. Requires the native ClipForge iOS app — currently in development.",
+        eta: "2026 iOS App",
+      },
+      {
+        title: "Cronometer",
+        description: "Push detailed micronutrient data from saved recipes into Cronometer for precision macro and vitamin tracking. Pending Cronometer partner agreement.",
+        eta: "TBD (Partner API)",
+      },
+    ],
+  },
   {
     category: "Deals & Coupons",
     color: "#22C55E",
@@ -140,6 +170,7 @@ const phases = [
       "Creator monetization tools",
       "Affiliate link detection & tracking",
       "Deals & coupon integrations (Groupon, RetailMeNot)",
+      "Health & fitness integrations (MyFitnessPal, Apple Health, Cronometer)",
       "Family premium growth features",
       "Partner integrations (Ticketmaster, Spotify)",
     ],
@@ -328,11 +359,14 @@ export default function LaunchRoadmap() {
                     >
                       <div className="flex items-start justify-between gap-2">
                         <h4 className="font-semibold text-sm text-[#E8E8ED]">{platform.title}</h4>
-                        <Badge className="text-[8px] bg-[#2A2D3A] text-[#8B8D97] border-[#2A2D3A] whitespace-nowrap">
-                          <Clock className="w-2 h-2 mr-0.5" /> Q2/Q3
+                        <Badge className="text-[8px] bg-[#2A2D3A] text-[#8B8D97] border-[#2A2D3A] whitespace-nowrap shrink-0">
+                          <Clock className="w-2 h-2 mr-0.5" /> {platform.eta || "Q2/Q3"}
                         </Badge>
                       </div>
-                      <p className="text-xs text-[#8B8D97] leading-relaxed">Users will be able to ethically import and organize saves from {platform.title} — ideas, photos, products, and tips — directly into personal/family boards.</p>
+                      <p className="text-xs text-[#8B8D97] leading-relaxed">
+                        {platform.description ||
+                          `Users will be able to ethically import and organize saves from ${platform.title} — ideas, photos, products, and tips — directly into personal/family boards.`}
+                      </p>
                     </motion.div>
                   ))}
                 </div>
