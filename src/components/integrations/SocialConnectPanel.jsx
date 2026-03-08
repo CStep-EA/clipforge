@@ -307,6 +307,13 @@ export default function SocialConnectPanel() {
   const getConnection = (platformId) =>
     connections.find((c) => c.platform === platformId);
 
+  // A connection is only "live" when both connected AND confirmed flags are true.
+  // This prevents stale / partially-created records from showing the Connected badge.
+  const isLiveConnection = (platformId) => {
+    const c = getConnection(platformId);
+    return !!(c?.connected && c?.confirmed);
+  };
+
   // ── Ticketmaster: search with real filters, manual save-to-vault ──────────
   const fetchTicketmasterEvents = async () => {
     if (!tmCity.trim()) {
@@ -362,11 +369,10 @@ export default function SocialConnectPanel() {
   };
 
   // ── OAuth connect ─────────────────────────────────────────────────────────
+  // NOTE: These social platforms do NOT use Base44 user auth (loginWithProvider /
+  // redirectToLogin). We write a SocialConnection record to mark the user's intent
+  // and surface the correct workflow (extension, manual import, or future server sync).
   const handleOAuthConnect = async (platform) => {
-    // These social platforms use their own OAuth systems (not Base44 user auth).
-    // We record the connection intent in our DB and surface the correct workflow
-    // (browser extension, manual import, or sync via server-side token once available).
-    // loginWithProvider / redirectToLogin are ONLY for Base44 user sign-in (Google/Apple).
     setOauthLoading(platform.id);
     setConnectDialog(null);
     try {
@@ -374,12 +380,14 @@ export default function SocialConnectPanel() {
       if (existing) {
         await base44.entities.SocialConnection.update(existing.id, {
           connected: true,
+          confirmed: true,
           last_synced: new Date().toISOString(),
         });
       } else {
         await base44.entities.SocialConnection.create({
           platform: platform.id,
           connected: true,
+          confirmed: true,
         });
       }
       queryClient.invalidateQueries({ queryKey: ["socialConnections"] });
@@ -390,6 +398,27 @@ export default function SocialConnectPanel() {
       }
     } catch {
       toast.error(`Couldn't connect ${platform.name}. Please try again.`);
+    } finally {
+      setOauthLoading(null);
+    }
+  };
+
+  // ── Disconnect ────────────────────────────────────────────────────────────
+  const handleDisconnect = async (platform) => {
+    setOauthLoading(platform.id);
+    setConnectDialog(null);
+    try {
+      const existing = getConnection(platform.id);
+      if (existing) {
+        await base44.entities.SocialConnection.update(existing.id, {
+          connected: false,
+          confirmed: false,
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ["socialConnections"] });
+      toast.success(`${platform.name} disconnected.`);
+    } catch {
+      toast.error(`Couldn't disconnect ${platform.name}. Please try again.`);
     } finally {
       setOauthLoading(null);
     }
@@ -450,7 +479,10 @@ export default function SocialConnectPanel() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {PLATFORMS.map((platform, i) => {
             const conn = getConnection(platform.id);
-            const isConnected = conn?.connected;
+            // isConnected requires BOTH connected=true AND confirmed=true.
+            // This prevents DB records that were created without user confirmation
+            // from showing a false "Connected" badge.
+            const isConnected = isLiveConnection(platform.id);
             const recentSync = syncResults[platform.id];
             return (
               <motion.div
@@ -655,30 +687,45 @@ export default function SocialConnectPanel() {
 
                   {/* Action buttons */}
                   <div className="flex gap-2 mt-auto">
-                    <Button
-                      size="sm"
-                      className={`flex-1 text-xs h-8 font-semibold gap-1.5 transition-all duration-200 ${!isConnected ? "animate-btn-pulse" : ""}`}
-                      style={isConnected
-                        ? { background: "transparent", border: `1px solid ${platform.color}60`, color: platform.color }
-                        : { background: `linear-gradient(135deg, ${platform.color}, ${platform.color}cc)`, color: "white", boxShadow: `0 0 18px ${platform.color}55` }
-                      }
-                      onClick={() => {
-                        if (platform.id === "facebook") {
-                          setFbImportOpen(true); resetFbImport();
-                        } else if (isConnected) {
-                          setConnectDialog(platform);
-                        } else {
-                          setConsentPlatform(platform);
+                    {/* Primary action: Connect (unconnected) or Disconnect (connected) */}
+                    {platform.id === "facebook" ? (
+                      <Button
+                        size="sm"
+                        className="flex-1 text-xs h-8 font-semibold gap-1.5"
+                        style={{ background: "linear-gradient(135deg,#1877F2,#1877F2cc)", color: "white" }}
+                        onClick={() => { setFbImportOpen(true); resetFbImport(); }}
+                        disabled={oauthLoading === platform.id}
+                      >
+                        <Upload className="w-3 h-3" /> Import Saves
+                      </Button>
+                    ) : isConnected ? (
+                      <Button
+                        size="sm"
+                        className="flex-1 text-xs h-8 font-semibold gap-1.5 bg-transparent border border-red-500/40 text-red-400 hover:bg-red-500/10 hover:border-red-500/60"
+                        onClick={() => setConnectDialog(platform)}
+                        disabled={oauthLoading === platform.id}
+                      >
+                        {oauthLoading === platform.id
+                          ? <Loader2 className="w-3 h-3 animate-spin" />
+                          : <X className="w-3 h-3" />
                         }
-                      }}
-                      disabled={oauthLoading === platform.id}
-                    >
-                      <Link2 className="w-3 h-3" />
-                      {platform.id === "facebook"
-                        ? "Import Saves"
-                        : isConnected ? "Reconnect" : `Connect ${platform.name}`
-                      }
-                    </Button>
+                        Disconnect
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        className="flex-1 text-xs h-8 font-semibold gap-1.5 animate-btn-pulse"
+                        style={{ background: `linear-gradient(135deg, ${platform.color}, ${platform.color}cc)`, color: "white", boxShadow: `0 0 18px ${platform.color}55` }}
+                        onClick={() => setConsentPlatform(platform)}
+                        disabled={oauthLoading === platform.id}
+                      >
+                        {oauthLoading === platform.id
+                          ? <Loader2 className="w-3 h-3 animate-spin" />
+                          : <Link2 className="w-3 h-3" />
+                        }
+                        Connect {platform.name}
+                      </Button>
+                    )}
 
                     {isConnected && platform.syncSupport && (
                       <Button
@@ -1119,37 +1166,36 @@ export default function SocialConnectPanel() {
         onAccept={() => { handleOAuthConnect(consentPlatform); setConsentPlatform(null); }}
       />
 
-      {/* Reconnect dialog */}
+      {/* Disconnect confirmation dialog */}
       <Dialog open={!!connectDialog} onOpenChange={() => setConnectDialog(null)}>
         <DialogContent className="bg-[#1A1D27] border-[#2A2D3A] text-[#E8E8ED]">
           <DialogHeader>
             <DialogTitle>
-              Reconnect {connectDialog?.emoji} {connectDialog?.name}
+              Disconnect {connectDialog?.emoji} {connectDialog?.name}?
             </DialogTitle>
             <DialogDescription className="text-[#8B8D97] text-sm">
-              Re-enable your {connectDialog?.name} connection so ClipForge can continue syncing.
+              This removes the {connectDialog?.name} connection from your ClipForge account.
+              Your existing saves are not deleted.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 pt-2">
-            <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 flex gap-2">
-              <Shield className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+            <div className="p-3 rounded-xl bg-[#2A2D3A]/50 border border-[#2A2D3A] flex gap-2">
+              <Info className="w-4 h-4 text-[#8B8D97] mt-0.5 shrink-0" />
               <p className="text-xs text-[#8B8D97]">
-                Your {connectDialog?.name} password is never shared with Klip4ge.
-                Content is synced using your saved connection credentials, stored securely on our servers.
+                You can reconnect {connectDialog?.name} at any time from this page.
+                Saved items already in your vault will remain untouched.
               </p>
             </div>
-            {connectDialog?.apiLimitation && (
-              <div className="p-3 rounded-xl bg-amber-500/8 border border-amber-500/20 flex gap-2">
-                <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
-                <p className="text-xs text-amber-300">{connectDialog.syncNote}</p>
-              </div>
-            )}
             <Button
-              onClick={() => handleOAuthConnect(connectDialog)}
-              className="w-full h-12 text-white text-base font-semibold"
-              style={connectDialog ? { background: connectDialog.color } : {}}
+              onClick={() => handleDisconnect(connectDialog)}
+              className="w-full h-12 bg-red-500/10 border border-red-500/40 text-red-400 hover:bg-red-500/20 text-base font-semibold"
+              disabled={oauthLoading === connectDialog?.id}
             >
-              Reconnect {connectDialog?.name} ✓
+              {oauthLoading === connectDialog?.id
+                ? <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                : <X className="w-4 h-4 mr-2" />
+              }
+              Yes, Disconnect {connectDialog?.name}
             </Button>
             <Button
               variant="ghost"

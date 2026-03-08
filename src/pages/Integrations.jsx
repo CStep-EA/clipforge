@@ -53,6 +53,9 @@ export default function Integrations() {
   // Amazon: track whether user has enabled it, and whether advanced mode is open
   const [amazonEnabled, setAmazonEnabled] = useState(false);
   const [amazonAdvanced, setAmazonAdvanced] = useState(false);
+  const [amazonSaving, setAmazonSaving] = useState(false);
+  // Local draft state for Amazon credential fields (so we only persist on Save click)
+  const [amazonDraft, setAmazonDraft] = useState({ access_key: "", secret_key: "", tag: "" });
   const queryClient = useQueryClient();
   const { plan, isPro } = useSubscription();
 
@@ -91,21 +94,60 @@ export default function Integrations() {
   const saveKey = (key, value) => {
     const updated = { ...savedKeys, [key]: value };
     setSavedKeys(updated);
+    // Fire-and-forget for non-Amazon keys only — Amazon uses handleAmazonSave
     base44.entities.UserPreferences?.upsert?.({ api_keys: updated }).catch(() => {
       console.warn("[Klip4ge] Could not persist API key server-side");
     });
     localStorage.removeItem("cf_api_keys");
   };
 
+  // Amazon save: explicit button click only — never on keystroke.
+  // Uses draft state to avoid persisting incomplete credentials.
+  const handleAmazonSave = async () => {
+    const { access_key, secret_key, tag } = amazonDraft;
+    if (!access_key.trim() || !secret_key.trim() || !tag.trim()) {
+      toast.error("Please fill in all three fields before saving.");
+      return;
+    }
+    setAmazonSaving(true);
+    const updated = {
+      ...savedKeys,
+      amazon_access_key: access_key.trim(),
+      amazon_secret_key: secret_key.trim(),
+      amazon_tag: tag.trim(),
+    };
+    try {
+      await base44.entities.UserPreferences?.upsert?.({ api_keys: updated });
+      setSavedKeys(updated);
+      setAmazonEnabled(true);
+      setAmazonAdvanced(false);
+      localStorage.removeItem("cf_api_keys");
+      toast.success("Amazon Product Lookup is now active!");
+    } catch {
+      toast.error("Couldn't save your Amazon credentials. Please try again.");
+    } finally {
+      setAmazonSaving(false);
+    }
+  };
+
   const handleAmazonToggle = () => {
     if (amazonEnabled) {
-      // Disable: clear keys
+      // Disable: clear keys from DB and local state
       const updated = { ...savedKeys, amazon_access_key: "", amazon_secret_key: "", amazon_tag: "" };
       setSavedKeys(updated);
       setAmazonEnabled(false);
-      base44.entities.UserPreferences?.upsert?.({ api_keys: updated }).catch(() => {});
+      setAmazonDraft({ access_key: "", secret_key: "", tag: "" });
+      base44.entities.UserPreferences?.upsert?.({ api_keys: updated }).catch(() => {
+        toast.error("Couldn't clear Amazon credentials. Please try again.");
+      });
       toast.success("Amazon Product Lookup disabled");
     } else {
+      // Pre-fill draft with any existing saved keys
+      setAmazonDraft({
+        access_key: savedKeys.amazon_access_key || "",
+        secret_key: savedKeys.amazon_secret_key || "",
+        tag: savedKeys.amazon_tag || "",
+      });
       setAmazonAdvanced(true);
     }
   };
@@ -279,7 +321,14 @@ export default function Integrations() {
                   Amazon prices and details are auto-fetched when you save a product link.
                 </p>
                 <button
-                  onClick={() => setAmazonAdvanced(true)}
+                  onClick={() => {
+                    setAmazonDraft({
+                      access_key: savedKeys.amazon_access_key || "",
+                      secret_key: savedKeys.amazon_secret_key || "",
+                      tag: savedKeys.amazon_tag || "",
+                    });
+                    setAmazonAdvanced(true);
+                  }}
                   className="text-[10px] text-[#00BFFF] hover:underline flex items-center gap-1 mt-1"
                 >
                   <ChevronDown className="w-3 h-3" /> Edit credentials
@@ -310,13 +359,14 @@ export default function Integrations() {
                   </a>
                   {" "}(requires a free Amazon Associate account).
                 </p>
+                {/* Draft inputs — credentials are NOT saved until the button is clicked */}
                 <div>
                   <Label className="text-xs text-[#8B8D97]">Access Key ID</Label>
                   <Input
                     type="password"
                     placeholder="Paste your Access Key ID"
-                    value={savedKeys.amazon_access_key || ""}
-                    onChange={(e) => saveKey("amazon_access_key", e.target.value)}
+                    value={amazonDraft.access_key}
+                    onChange={(e) => setAmazonDraft(d => ({ ...d, access_key: e.target.value }))}
                     className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-sm"
                   />
                 </div>
@@ -325,8 +375,8 @@ export default function Integrations() {
                   <Input
                     type="password"
                     placeholder="Paste your Secret Key"
-                    value={savedKeys.amazon_secret_key || ""}
-                    onChange={(e) => saveKey("amazon_secret_key", e.target.value)}
+                    value={amazonDraft.secret_key}
+                    onChange={(e) => setAmazonDraft(d => ({ ...d, secret_key: e.target.value }))}
                     className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-sm"
                   />
                 </div>
@@ -334,26 +384,21 @@ export default function Integrations() {
                   <Label className="text-xs text-[#8B8D97]">Associate Tag <span className="text-[#8B8D97]/60">(e.g. yourtag-20)</span></Label>
                   <Input
                     placeholder="yourtag-20"
-                    value={savedKeys.amazon_tag || ""}
-                    onChange={(e) => saveKey("amazon_tag", e.target.value)}
+                    value={amazonDraft.tag}
+                    onChange={(e) => setAmazonDraft(d => ({ ...d, tag: e.target.value }))}
                     className="mt-1 bg-[#0F1117] border-[#2A2D3A] text-[#E8E8ED] text-sm"
                   />
                 </div>
                 <Button
                   size="sm"
                   className="bg-[#F59E0B] text-white w-full h-10 text-sm font-semibold"
-                  onClick={() => {
-                    if (!savedKeys.amazon_access_key || !savedKeys.amazon_secret_key || !savedKeys.amazon_tag) {
-                      toast.error("Please fill in all three fields.");
-                      return;
-                    }
-                    saveKey("amazon_access_key", savedKeys.amazon_access_key);
-                    setAmazonEnabled(true);
-                    setAmazonAdvanced(false);
-                    toast.success("Amazon Product Lookup is now active!");
-                  }}
+                  onClick={handleAmazonSave}
+                  disabled={amazonSaving}
                 >
-                  <CheckCircle2 className="w-3.5 h-3.5 mr-2" /> Save & Enable Amazon Lookup
+                  {amazonSaving
+                    ? <><span className="animate-spin mr-2">⏳</span> Saving…</>
+                    : <><CheckCircle2 className="w-3.5 h-3.5 mr-2" /> Save & Enable Amazon Lookup</>
+                  }
                 </Button>
               </div>
             )}
