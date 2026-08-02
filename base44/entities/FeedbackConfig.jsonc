@@ -1,0 +1,56 @@
+{
+  "name": "FeedbackConfig",
+  "type": "object",
+  "properties": {
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Enabled source IDs"
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Keywords to track"
+    },
+    "escalation_threshold": {
+      "type": "string",
+      "enum": [
+        "high",
+        "urgent"
+      ],
+      "default": "urgent",
+      "description": "Min priority to auto-create tickets"
+    },
+    "escalation_negative_count": {
+      "type": "number",
+      "default": 5,
+      "description": "Auto-escalate if negative mentions exceed this count in a single run"
+    },
+    "auto_ticket": {
+      "type": "boolean",
+      "default": true
+    },
+    "fetch_frequency": {
+      "type": "string",
+      "enum": [
+        "hourly",
+        "daily",
+        "weekly"
+      ],
+      "default": "daily"
+    },
+    "last_run": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": []
+}

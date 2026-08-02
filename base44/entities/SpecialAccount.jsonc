@@ -1,0 +1,83 @@
+{
+  "name": "SpecialAccount",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "Email of the special account"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Display name"
+    },
+    "account_type": {
+      "type": "string",
+      "enum": [
+        "development",
+        "gift"
+      ],
+      "default": "development",
+      "description": "Internal dev or gift account"
+    },
+    "tier": {
+      "type": "string",
+      "enum": [
+        "free",
+        "pro",
+        "premium",
+        "family"
+      ],
+      "default": "premium",
+      "description": "Assigned tier (bypasses billing)"
+    },
+    "special_status": {
+      "type": "string",
+      "enum": [
+        "free_forever",
+        "free_months",
+        "discounted"
+      ],
+      "default": "free_forever",
+      "description": "How access is granted"
+    },
+    "free_months": {
+      "type": "number",
+      "description": "Number of free months (if special_status is free_months)"
+    },
+    "discount_amount": {
+      "type": "number",
+      "description": "Discounted monthly rate in USD"
+    },
+    "discount_months": {
+      "type": "number",
+      "description": "How many months discount applies"
+    },
+    "expiration_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When access expires (null = forever)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal admin notes/tags"
+    },
+    "created_by_admin": {
+      "type": "string",
+      "description": "Email of admin who created this"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this exemption is still active"
+    },
+    "welcome_email_sent": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "email",
+    "account_type",
+    "tier"
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "name": "StreamingConnection",
+  "type": "object",
+  "properties": {
+    "platform": {
+      "type": "string",
+      "enum": [
+        "discord",
+        "twitch",
+        "youtube",
+        "spotify",
+        "apple_podcasts"
+      ],
+      "description": "Streaming platform"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Connected user email"
+    },
+    "platform_user_id": {
+      "type": "string",
+      "description": "User ID on the platform"
+    },
+    "platform_username": {
+      "type": "string",
+      "description": "Username on the platform"
+    },
+    "access_token": {
+      "type": "string",
+      "description": "OAuth access token (encrypted at rest)"
+    },
+    "refresh_token": {
+      "type": "string",
+      "description": "OAuth refresh token"
+    },
+    "scope": {
+      "type": "string",
+      "description": "Granted OAuth scopes"
+    },
+    "connected": {
+      "type": "boolean",
+      "default": false
+    },
+    "last_synced": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sync_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of successful syncs"
+    },
+    "selected_channel": {
+      "type": "string",
+      "description": "For Discord: selected channel ID for sharing"
+    },
+    "items_this_month": {
+      "type": "number",
+      "default": 0,
+      "description": "Items fetched this month for rate limiting"
+    }
+  },
+  "required": [
+    "platform",
+    "user_email"
+  ]
+}

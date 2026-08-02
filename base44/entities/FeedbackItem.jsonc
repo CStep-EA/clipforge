@@ -1,0 +1,95 @@
+{
+  "name": "FeedbackItem",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": [
+        "reddit",
+        "twitter",
+        "producthunt",
+        "g2",
+        "capterra",
+        "appstore",
+        "playstore",
+        "technews",
+        "cnet",
+        "pcmag",
+        "wired",
+        "facebook",
+        "manual"
+      ],
+      "description": "Where this feedback came from"
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string",
+      "description": "Raw feedback text"
+    },
+    "sentiment": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "negative",
+        "neutral",
+        "mixed"
+      ],
+      "default": "neutral"
+    },
+    "sentiment_score": {
+      "type": "number",
+      "description": "-1 to 1 score"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "bug",
+        "feature_request",
+        "praise",
+        "complaint",
+        "question",
+        "other"
+      ],
+      "default": "other"
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ai_summary": {
+      "type": "string"
+    },
+    "ticket_created": {
+      "type": "boolean",
+      "default": false
+    },
+    "ticket_id": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "fetch_run_id": {
+      "type": "string",
+      "description": "ID of the fetch run that created this"
+    }
+  },
+  "required": [
+    "source",
+    "content"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "PremiumTrial",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "trial_plan": {
+      "type": "string",
+      "enum": [
+        "premium",
+        "family"
+      ],
+      "default": "premium"
+    },
+    "trial_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "trial_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "converted": {
+      "type": "boolean",
+      "default": false,
+      "description": "Did user subscribe after trial"
+    }
+  },
+  "required": [
+    "user_email",
+    "trial_plan",
+    "trial_start",
+    "trial_end"
+  ]
+}

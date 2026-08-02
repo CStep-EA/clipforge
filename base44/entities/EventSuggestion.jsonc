@@ -1,0 +1,83 @@
+{
+  "name": "EventSuggestion",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "venue": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "city": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "min_price": {
+      "type": "number"
+    },
+    "max_price": {
+      "type": "number"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "ticketmaster_url": {
+      "type": "string"
+    },
+    "ticketmaster_id": {
+      "type": "string"
+    },
+    "ai_review": {
+      "type": "string"
+    },
+    "saved_item_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "suggested",
+        "interested",
+        "booked",
+        "declined"
+      ],
+      "default": "suggested"
+    },
+    "ticket_purchased": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user has confirmed ticket purchase"
+    },
+    "reminder_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "User opted in to event reminders"
+    },
+    "reminder_email": {
+      "type": "string",
+      "description": "Email to send reminders to"
+    },
+    "reminder_7d_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminder_24h_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminder_1h_sent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Premium/Family only \u2014 1-hour reminder"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

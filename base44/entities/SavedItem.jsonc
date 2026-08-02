@@ -1,0 +1,152 @@
+{
+  "name": "SavedItem",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the saved item"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description or summary"
+    },
+    "url": {
+      "type": "string",
+      "description": "Original URL of the content"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Thumbnail or preview image"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "deal",
+        "recipe",
+        "event",
+        "article",
+        "product",
+        "travel",
+        "gift_idea",
+        "stream",
+        "podcast",
+        "video",
+        "other"
+      ],
+      "description": "Auto-categorized type"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "instagram",
+        "pinterest",
+        "twitter",
+        "tiktok",
+        "manual",
+        "web",
+        "discord",
+        "twitch",
+        "youtube",
+        "spotify",
+        "apple_podcasts"
+      ],
+      "description": "Where the item was saved from"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "User or AI-generated tags"
+    },
+    "ai_summary": {
+      "type": "string",
+      "description": "AI-generated summary"
+    },
+    "price": {
+      "type": "number",
+      "description": "Price if applicable"
+    },
+    "rating": {
+      "type": "number",
+      "description": "AI-assigned relevance score 1-10"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false
+    },
+    "shared_with": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Emails of users this is shared with"
+    },
+    "reminder_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When to remind about this item"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Personal notes"
+    },
+    "board_id": {
+      "type": "string",
+      "description": "ID of the shared board this belongs to"
+    },
+    "platform_item_id": {
+      "type": "string",
+      "description": "ID on the platform"
+    },
+    "platform_author": {
+      "type": "string",
+      "description": "Author/creator on the platform"
+    },
+    "event_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "For event category: the event date/time"
+    },
+    "event_venue": {
+      "type": "string",
+      "description": "For event category: venue name"
+    },
+    "event_city": {
+      "type": "string",
+      "description": "For event category: city"
+    },
+    "ticket_url": {
+      "type": "string",
+      "description": "Direct ticket purchase link"
+    },
+    "ticket_purchased": {
+      "type": "boolean",
+      "default": false,
+      "description": "User confirmed ticket purchase"
+    },
+    "reminder_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminder_email": {
+      "type": "string"
+    },
+    "reminder_7d_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminder_24h_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminder_1h_sent": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "category"
+  ]
+}

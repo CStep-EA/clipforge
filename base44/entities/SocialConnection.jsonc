@@ -1,0 +1,36 @@
+{
+  "name": "SocialConnection",
+  "type": "object",
+  "properties": {
+    "platform": {
+      "type": "string",
+      "enum": [
+        "instagram",
+        "pinterest",
+        "twitter",
+        "tiktok"
+      ]
+    },
+    "connected": {
+      "type": "boolean",
+      "default": false
+    },
+    "access_token": {
+      "type": "string"
+    },
+    "username": {
+      "type": "string"
+    },
+    "last_synced": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sync_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "platform"
+  ]
+}

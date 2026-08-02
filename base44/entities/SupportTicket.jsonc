@@ -1,0 +1,51 @@
+{
+  "name": "SupportTicket",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "in_progress",
+        "resolved",
+        "closed"
+      ],
+      "default": "open"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "bug",
+        "feature_request",
+        "billing",
+        "account",
+        "general"
+      ],
+      "default": "general"
+    },
+    "response": {
+      "type": "string",
+      "description": "Admin response"
+    }
+  },
+  "required": [
+    "subject",
+    "message"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "name": "FriendConnection",
+  "type": "object",
+  "properties": {
+    "requester_email": {
+      "type": "string",
+      "description": "Email of the user who sent the friend request"
+    },
+    "recipient_email": {
+      "type": "string",
+      "description": "Email of the invited friend"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Display name of the recipient"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "declined"
+      ],
+      "default": "pending"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "instagram",
+        "twitter",
+        "pinterest",
+        "referral"
+      ],
+      "default": "manual",
+      "description": "How the friend was discovered"
+    },
+    "share_level": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "full"
+      ],
+      "default": "basic",
+      "description": "What this friend can see"
+    }
+  },
+  "required": [
+    "requester_email",
+    "recipient_email"
+  ]
+}

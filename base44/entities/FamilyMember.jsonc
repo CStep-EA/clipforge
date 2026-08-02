@@ -1,0 +1,69 @@
+{
+  "name": "FamilyMember",
+  "type": "object",
+  "properties": {
+    "family_owner_email": {
+      "type": "string",
+      "description": "Email of the parent/owner who created the family group"
+    },
+    "member_email": {
+      "type": "string",
+      "description": "Email of the invited member"
+    },
+    "member_name": {
+      "type": "string",
+      "description": "Display name"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "parent",
+        "child"
+      ],
+      "default": "child",
+      "description": "Role within the family group"
+    },
+    "age_verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "COPPA: parent confirmed child is under 13 and consented"
+    },
+    "is_under_13": {
+      "type": "boolean",
+      "default": false,
+      "description": "COPPA flag for child accounts"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "suspended"
+      ],
+      "default": "pending",
+      "description": "Invite/account status"
+    },
+    "child_safe_mode": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable child-safe content filters"
+    },
+    "content_filters": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Blocked keyword categories"
+    },
+    "consented_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of parental consent"
+    }
+  },
+  "required": [
+    "family_owner_email",
+    "member_email",
+    "role"
+  ]
+}

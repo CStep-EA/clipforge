@@ -1,0 +1,30 @@
+{
+  "name": "RateLimitHit",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the rate-limited user"
+    },
+    "endpoint": {
+      "type": "string",
+      "description": "Function/endpoint that was rate limited"
+    },
+    "hits_in_window": {
+      "type": "number",
+      "description": "Number of requests made in the current window"
+    },
+    "limit": {
+      "type": "number",
+      "description": "Configured limit"
+    },
+    "window_minutes": {
+      "type": "number",
+      "description": "Window size in minutes"
+    }
+  },
+  "required": [
+    "user_email",
+    "endpoint"
+  ]
+}

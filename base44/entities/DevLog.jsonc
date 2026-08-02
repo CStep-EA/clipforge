@@ -1,0 +1,58 @@
+{
+  "name": "DevLog",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Feature or fix title"
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "in_progress",
+        "committed",
+        "shipped",
+        "cancelled"
+      ],
+      "default": "planned"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "feature",
+        "bug_fix",
+        "improvement",
+        "security",
+        "other"
+      ],
+      "default": "feature"
+    },
+    "eta": {
+      "type": "string",
+      "format": "date",
+      "description": "Estimated ship date"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show in user-facing roadmap"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

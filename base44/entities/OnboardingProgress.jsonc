@@ -1,0 +1,30 @@
+{
+  "name": "OnboardingProgress",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "completed_steps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "current_step": {
+      "type": "number",
+      "default": 0
+    },
+    "completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "skipped": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "name": "SharedBoard",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Board name"
+    },
+    "description": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Emoji or icon identifier"
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Member email addresses"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false
+    },
+    "color": {
+      "type": "string",
+      "description": "Theme color for the board"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

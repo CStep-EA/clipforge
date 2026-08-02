@@ -1,0 +1,46 @@
+{
+  "name": "Referral",
+  "type": "object",
+  "properties": {
+    "referrer_email": {
+      "type": "string",
+      "description": "Email of user who referred"
+    },
+    "referral_code": {
+      "type": "string",
+      "description": "Unique referral code"
+    },
+    "referred_email": {
+      "type": "string",
+      "description": "Email of the person who signed up via referral"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "signed_up",
+        "subscribed",
+        "rewarded"
+      ],
+      "default": "pending"
+    },
+    "bonus_applied": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the referrer bonus was applied"
+    },
+    "bonus_type": {
+      "type": "string",
+      "enum": [
+        "free_month",
+        "credit_5",
+        "none"
+      ],
+      "default": "none"
+    }
+  },
+  "required": [
+    "referrer_email",
+    "referral_code"
+  ]
+}

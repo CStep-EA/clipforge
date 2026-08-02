@@ -1,0 +1,42 @@
+{
+  "name": "ShoppingList",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "string"
+          },
+          "checked": {
+            "type": "boolean"
+          },
+          "category": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "source_item_id": {
+      "type": "string",
+      "description": "ID of the recipe SavedItem this was generated from"
+    },
+    "shared_with": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
