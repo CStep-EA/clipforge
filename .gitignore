@@ -33,3 +33,4 @@ coverage/
 core
 core.*
 *.core
+base44/.app.jsonc
